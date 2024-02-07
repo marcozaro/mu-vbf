@@ -1,0 +1,395 @@
+      program driver
+      implicit none
+
+      double precision p2(0:3,6), p1a(0:3,5), p1b(0:3,5), p0(0:3,4)
+      double precision y1, y2, xi1, xi2, ph1, ph2, phi, cth
+      double precision shat, mmin, thresh, jac, mtop
+      double precision x(99)
+      integer i
+      logical check
+      parameter(check=.true.)
+
+      shat = (1000d0)**2
+      mtop = 173d0
+      jac = 1d0
+      mmin = 2d0*mtop
+      thresh = mmin**2/shat
+
+      call fill_vegas_x(x, i)
+
+      call generate_kinematics(x, thresh, y1, y2, xi1, xi2, ph1, ph2, phi, cth, jac)
+     &
+      call generate_momenta(shat, mtop, y1, y2, xi1, xi2, ph1, ph2, cth, phi,
+     &                      p2, p1a, p1b, p0)
+      if (check) then
+          call check_momenta(p2,6,mtop)
+          call check_momenta(p1a,5,mtop)
+          call check_momenta(p1b,5,mtop)
+          call check_momenta(p0,4,mtop)
+      endif
+
+      return
+      end
+
+
+      subroutine fill_vegas_x(x,i)
+C     fill the vegas x. In case i is passed, do something with it as an
+C     external variable (e.g. use it to scale one variable towards some
+C     limit
+      implicit none
+      double precision x(99)
+      integer i
+
+      call random_number(x)
+      return 
+      end
+
+
+      subroutine check_momenta(pp,n,mass)
+C    check momentum conservation and on-shell relations
+      implicit none
+      double precision pp(0:3,*), mass
+      integer n
+      double precision tiny
+      parameter (tiny=1d-5)
+      double precision ptot(0:3), etot
+      integer i, j
+      double precision dot
+      external dot
+
+      etot = pp(0,1) + pp(0,2)
+
+      if (etot.lt.2*mass) then
+          write(*,*) 'ERROR1', etot, mass
+          call write_momenta(pp,n)
+      endif
+
+      ptot(:) = 0d0
+
+      do i = 1, n
+        if (i.le.2) ptot(:) = ptot(:) - pp(:,i)
+        if (i.gt.2) ptot(:) = ptot(:) + pp(:,i)
+      enddo
+
+      do j = 0,3
+        if (abs(ptot(j))/etot.gt.tiny) then
+            write(*,*) 'ERROR2', j, ptot
+            call write_momenta(pp,n)
+        endif
+      enddo
+
+      ! check massless momenta
+      do i = 1,n
+        if (i.eq.3.or.i.eq.4) then
+          if ((sqrt(dot(pp(0,i),pp(0,i)))-mass)/etot.gt.tiny) then
+              write(*,*) 'ERROR3', i, dot(pp(0,i),pp(0,i)), etot
+            call write_momenta(pp,n)
+          endif
+
+        else
+          if (sqrt(abs(dot(pp(0,i),pp(0,i))/etot**2)).gt.tiny) then
+              write(*,*) 'ERROR4', i, dot(pp(0,i),pp(0,i)), etot
+            call write_momenta(pp,n)
+          endif
+        endif
+      enddo 
+      
+
+      return
+      end
+
+
+      subroutine write_momenta(pp,n)
+      implicit none
+      double precision pp(0:3,*)
+      integer n
+      integer i
+
+      do i = 1,n
+        write(*,*) i, pp(:,i)
+      enddo
+
+      return
+      end
+
+
+      subroutine generate_momenta(shat, m, y1, y2, xi1, xi2, ph1, ph2, cth, phi,
+     &                      p2, p1a, p1b, p0)
+      implicit none
+C starting from the kinematic variables, generates 4 sets of momenta:
+C  - p2 with the double real emission
+C  - p1a/b with a single real emission, from the first/second leg
+C  - p0 without emissions
+      double precision shat, m
+      double precision y1, y2, xi1, xi2, ph1, ph2, phi, cth
+      double precision p0(0:3,4), p1a(0:3,5), p1b(0:3,5), p2(0:3,6)
+      double precision omega, sborn
+      double precision prec(0:3)
+
+      p0(:,:)=0d0
+      p1a(:,:)=0d0
+      p1b(:,:)=0d0
+      p2(:,:)=0d0
+
+!      write(*,*) 'shat =',shat
+!      write(*,*) 'm=', m
+!      write(*,*) 'y1=', y1
+!      write(*,*) 'y2=', y2
+!      write(*,*) 'xi1=', xi1
+!      write(*,*) 'xi2=', xi2
+!      write(*,*) 'ph1=', ph1
+!      write(*,*) 'ph2=', ph2
+!      write(*,*) 'cth=', cth
+!      write(*,*) 'phi=', phi
+
+      ! p0
+      call generate_is(shat, p0(0,1))
+      call generate_born_fs(shat,m,cth,phi,p0(0,3))
+      ! p1a
+      call generate_is(shat, p1a(0,1))
+      call generate_born_fs(shat*(1d0-xi1),m,cth,phi,p1a(0,3))
+      call generate_fks_momentum(shat,xi1,y1,ph1,1,p1a(0,5))
+      call boost_momenta_born(p1a(0,3),p1a(0,5))
+      ! p1b
+      call generate_is(shat, p1b(0,1))
+      call generate_born_fs(shat*(1d0-xi2),m,cth,phi,p1b(0,3))
+      call generate_fks_momentum(shat,xi2,y2,ph2,2,p1b(0,5))
+      call boost_momenta_born(p1b(0,3),p1b(0,5))
+      ! p2
+      !omega = sqrt(1d0-y1**2)*sqrt(1d0-y2**2)*dcos(ph1-ph2)+y1*y2
+      omega = sqrt(1d0-y1**2)*sqrt(1d0-y2**2)*dcos(ph1-ph2)-y1*y2
+      sborn = shat*(1d0-xi1-xi2+xi1*xi2*(1d0-omega)/2d0) 
+      call generate_is(shat, p2(0,1))
+      call generate_born_fs(sborn,m,cth,phi,p2(0,3))
+      call generate_fks_momentum(shat,xi1,y1,ph1,1,p2(0,5))
+      call generate_fks_momentum(shat,xi2,y2,ph2,2,p2(0,6))
+      prec(:) = p2(:,5)+p2(:,6)
+      call boost_momenta_born(p2(0,3),prec)
+
+      return 
+      end
+
+
+      subroutine boost_momenta_born(pcm, prec)
+      implicit none
+C boost the born momenta in ther c.o.m so that they
+C recoil against prec
+      double precision pcm(0:3,2), prec(0:3)
+      double precision pboost(0:3), minvb
+      double precision sumdot
+      external sumdot
+      integer i
+
+      double precision dot
+      external dot
+
+      ! the invariant mass of the born
+      minvb = sumdot(pcm(0,1),pcm(0,2),1d0)
+      ! the total momentum of the born system after the boost
+      pboost(1:3) = -prec(1:3)
+      pboost(0) = dsqrt(minvb+prec(1)**2+prec(2)**2+prec(3)**2)
+
+      do i = 1,2
+        call boostx(pcm(0,i),pboost,pcm(0,i))
+      enddo
+
+      return
+      end
+
+
+
+      subroutine boostx(p,q , pboost)
+c
+c This subroutine performs the Lorentz boost of a four-momentum.  The
+c momentum p is assumed to be given in the rest frame of q.  pboost is
+c the momentum p boosted to the frame in which q is given.  q must be a
+c timelike momentum.
+c
+c input:
+c       real    p(0:3)         : four-momentum p in the q rest  frame
+c       real    q(0:3)         : four-momentum q in the boosted frame
+c
+c output:
+c       real    pboost(0:3)    : four-momentum p in the boosted frame
+c
+      implicit none
+      double precision p(0:3),q(0:3),pboost(0:3),pq,qq,m,lf
+
+      double precision rZero
+      parameter( rZero = 0.0d0 )
+
+      qq = q(1)**2+q(2)**2+q(3)**2
+
+      if ( qq.ne.rZero ) then
+         pq = p(1)*q(1)+p(2)*q(2)+p(3)*q(3)
+         m = sqrt(max(q(0)**2-qq,1d-99))
+         lf = ((q(0)-m)*pq/qq+p(0))/m
+         pboost(0) = (p(0)*q(0)+pq)/m
+         pboost(1) =  p(1)+q(1)*lf
+         pboost(2) =  p(2)+q(2)*lf
+         pboost(3) =  p(3)+q(3)*lf
+      else
+         pboost(0) = p(0)
+         pboost(1) = p(1)
+         pboost(2) = p(2)
+         pboost(3) = p(3)
+      endif
+c
+      return
+      end
+
+
+      subroutine generate_fks_momentum(shat,xi,y,ph,ileg,p)
+      implicit none
+C generate the FKS radiated particle, ie a massless particle
+C with energy xi, angles y and phi, w.r.t. the initial leg i
+      double precision shat,xi,y,ph
+      integer ileg
+      double precision p(0:3)
+      double precision sth
+
+      sth = dsqrt(max(1d0-y**2,0d0))
+
+      p(:) = xi*sqrt(shat)/2d0
+      p(1) = p(1)*sth*cos(ph)
+      p(2) = p(2)*sth*sin(ph)
+      if (ileg.eq.1) then
+          p(3) = p(3)*y
+      else if (ileg.eq.2) then
+          p(3) =-p(3)*y
+      endif
+      return
+      end
+
+
+      subroutine generate_is(shat, p)
+      implicit none
+C generate the center-of-mass initial-state momenta
+C along the beam axis
+      double precision shat, p(0:3,2) ! read only the first two momenta
+      double precision sqrtso2
+
+
+      sqrtso2 = sqrt(shat)/2d0
+      p(0,1) = sqrtso2
+      p(3,1) = sqrtso2
+      p(0,2) = sqrtso2
+      p(3,2) =-sqrtso2
+      return
+      end
+
+
+      subroutine generate_born_fs(shat,m,cth,phi,p)
+      implicit none
+C generate the Born outgoing momenta, with angles ct,phi
+C in their partonic c.o.m fram
+      double precision shat, m, cth, phi, p(0:3,2) ! read only the first two momenta
+      double precision pmod,sth
+
+      sth = dsqrt(max(1d0-cth**2,0d0))
+
+      pmod = sqrt(shat/4-m**2)
+      p(0,1) = sqrt(shat)/2d0
+      p(1,1) = pmod*sth*dcos(phi)
+      p(2,1) = pmod*sth*dsin(phi)
+      p(3,1) = pmod*cth
+      p(0,2) = sqrt(shat)/2d0
+      p(1,2) =-pmod*sth*dcos(phi)
+      p(2,2) =-pmod*sth*dsin(phi)
+      p(3,2) =-pmod*cth
+      return
+      end
+
+
+      subroutine generate_kinematics(x, thresh, y1, y2, xi1, xi2, ph1, ph2, phi, cth, jac)
+      implicit none
+C generates the kinematic variables (y_i,xi_i,ph_i, i=1,2) for each of
+C the two collinear splittings
+C Generates phi,cth, the angles in the 2->2 scattering
+      double precision x(99)
+      double precision thresh
+      double precision y1, y2, xi1, xi2, ph1, ph2, phi, cth, jac
+      double precision omega
+      double precision pi
+      parameter (pi=3.14159265359d0)
+      ! born angles
+      cth = x(1)*2d0-1d0
+      jac = jac*2d0
+      phi = x(2)*2d0*pi
+      jac = jac*2d0*pi
+
+      ! y, phi, flat (may be better to be adaptive towards y->1)
+      y1 = x(3)*2d0-1d0
+      jac = jac*2d0
+      y2 = x(4)*2d0-1d0
+      jac = jac*2d0
+      ph1 = x(5)*2d0*pi
+      jac = jac*2d0*pi
+      ph2 = x(6)*2d0*pi
+      jac = jac*2d0*pi
+      ! xi1/2 following the formulae on the note.
+      ! randomize which one is generated first
+      !omega = sqrt(1d0-y1**2)*sqrt(1d0-y2**2)*dcos(ph1-ph2)+y1*y2
+      omega = sqrt(1d0-y1**2)*sqrt(1d0-y2**2)*dcos(ph1-ph2)-y1*y2
+
+      if (x(7).lt.0.5d0) then
+          xi1 = x(7)*2d0*(1d0-thresh)
+          jac = jac*2d0*(1d0-thresh)
+          xi2 = x(8)*2d0*(1d0-thresh-xi1)/(2d0-(1d0-omega)*xi1)
+          jac = jac*2d0*(1d0-thresh-xi1)/(2d0-(1d0-omega)*xi1)
+      else
+          xi2 = (x(7)-0.5d0)*2d0*(1d0-thresh)
+          jac = jac*2d0*(1d0-thresh)
+          xi1 = x(8)*2d0*(1d0-thresh-xi2)/(2d0-(1d0-omega)*xi2)
+          jac = jac*2d0*(1d0-thresh-xi2)/(2d0-(1d0-omega)*xi2)
+      endif
+
+      return
+      end
+
+
+
+      DOUBLE PRECISION FUNCTION SumDot(P1,P2,dsign)
+c************************************************************************
+c     Invarient mass of 2 particles
+c************************************************************************
+      IMPLICIT NONE
+c
+c     Arguments
+c
+      double precision p1(0:3),p2(0:3),dsign
+c
+c     Local
+c      
+      integer i
+      double precision ptot(0:3)
+c
+c     External
+c
+      double precision dot
+      external dot
+c-----
+c  Begin Code
+c-----
+
+      do i=0,3
+         ptot(i)=p1(i)+dsign*p2(i)
+      enddo
+      SumDot = dot(ptot,ptot)
+      RETURN
+      END
+
+
+      double precision function dot(p1,p2)
+C****************************************************************************
+C     4-Vector Dot product
+C****************************************************************************
+      implicit none
+      double precision p1(0:3),p2(0:3)
+      dot=p1(0)*p2(0)-p1(1)*p2(1)-p1(2)*p2(2)-p1(3)*p2(3)
+
+      if(dabs(dot).lt.1d-6)then ! solve numerical problem 
+         dot=0d0
+      endif
+
+      end
