@@ -1,0 +1,79 @@
+Le cartelle che devono essere coordinate sono quelle dentro il file
+
+lista_cartellemumumassive.dat  			(FILE USATO DA NB MATHEMATICA)
+
+ossia:
+
+(1) aatottformuu				partonico a a > t t~ con due WW (Weizsäcker–Williams approximation) scala di fattorizzazione muf=ptcut
+
+----------------
+
+(2) altottl					partonico a mu+ > t t~ mu+ (+ scambiato) con una WW, muf=ptcut, ptl=ptcut (equivalente a caso sotto (3) mupemtomupemtt)
+
+(3) mupemtomupemtt				partonico mu+ mu- > t t mu+ mu- no WW, ptl1min=ptcut, ptl2max=ptcut
+
+(4) mupemtomupemtt_v0           	        partonico mu+ mu- > t t mu+ mu- no WW, ptl1max=ptcut, ptl2max=ptcut (equivalente a (1), aatottformuu)
+
+(5) mupemtomupemtt_v2				partonico mu+ mu- > t t mu+ mu- no WW, ptl1min=ptcut, ptl2min=ptcut ossia ptl=ptcut
+
+(6) nocut_mupemtomupemtt			partonico mu+ mu- > t t mu+ mu- no WW, nessun cut
+
+(7) nocuts_altottl				come altottl (2), ma senza cut. Quindi mentre aatottformuu ha due WW (e quindi due div allo stesso momento, questo ha sia una (WW )che due(WW + numerico))
+
+-------------------
+
+(2b) onlyphoton_altottl				come la cartella con nome uguale senza onlyphoton_, ma vieto gli z e h
+
+(3b) onlyphoton_mupemtomupemtt			same story
+
+(4b) onlyphoton_mupemtomupemtt_v0        	same story
+
+(5b) onlyphoton_mupemtomupemtt_v2        	same story
+
+(6b) onlyphoton_nocut_mupemtomupemtt            same story
+
+(7b) onlyphoton_nocuts_altottl                  same story
+
+----------------
+
+in aggiunta ho anche di interessante, ma NON COORDINATI NELLO SCRIPT DESCRITTO DOPO:
+
+(6c) mupemtottbar_nophotons                     come nocut_mupemtomupemtt (6), ma ho vietato i fotoni. Nome del cazzo sembra simile a (3) o (3b), ma non lo é.
+
+(6d) mupemtottbar_Wbosons                       ispirata alla mupemtottbar_nophotons (6c), ms in effetti é con i neutrini uscenti, quindi seleziono solo i W
+
+--------------------------------------------------------
+
+Lo script coordinateddistr.sh chiede un nome e dopodiché entra in ognuna delle cartelle della lista in lista_cartellemumumassive.dat e in ognuna di quelle scrive un file chiamato nometagperdistribuzioni.dat che viene dato successivamente in pasto al corrispondente script gen_distr.sh. .
+
+!!!!!!!!!! ATTENTION PLEASE !!!!!!!! in ogni cartella i file gen_distr.sh sono diversi e sono una copia del corrispondente genera*.sh, in questo caso con nomei diversi, che sono anche presenti nella cartella.
+L'unica cosa di diverso é che gen_distr.sh é stato usato per fare le distribuzioni, e con pochi step in ptcut/mufac, gli altri per la sezione d'urto totale al variare di ptcut/mufac.
+
+Tutte le cartelle hanno in Cards/ un soflink a /Users/pagani/mu-vbf/massive_mu/codestuff/madanalysis5_parton_card.dat. Di fatto, eventualmente cambiando gli step in ptcut/mufac, si possono rifare tutti i run necessari sia per le distribuzioni che lo scan in ptcut/mufac direttamente con coordinateddistr.sh.
+
+--------------------------------------------------------
+
+Ognuno dei file gen_distr.sh o genera*.sh richiede un nome (quello presente in nometagperdistribuzioni.dat se invocato da coordinateddistr.sh) e fa uno scan in ptcut/mufac settando ogni volta i cut per la corrispondente cartella e la scala della WW.
+
+-------------------------------------------------------
+
+!!!!!!!!!!                                                  !!!!!!!!!!
+!!!!!!!!!!     COME SONO STATE GENERATE LE VARIE CARTELLE   !!!!!!!!!!
+!!!!!!!!!!                                                  !!!!!!!!!!
+
+
+per semplificare ogni volta la cosa ho usato in realtà il processo mu+ e- > t t~ > mu+ e-
+
+In ogni processo la param_card.dat é la stessa e LA MASSA DELL'ELETTRONE É QUELLA DEL MUONE! SAME FOR THE YUKAWA!
+
+La Runcard é diversa, ma anche lí bisogna fare attenzione ad avere la WW del muone, non dell'elettrone!
+
+---------------
+---------  ULTERIORI CARTELLE
+---------------
+
+
+
+
+
+
