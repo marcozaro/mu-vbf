@@ -40,7 +40,7 @@ c         if(q2min.lt.q2max) then
 c             f = alpha/2d0/PI*
 c     &           ((1d0+(1d0-x)**2d0)/x*(dlog(q2max/xin(imode)**2d0)-2d0*dlog(x)-1d0)
 c     &           +0d0 )
-c !!!!! PDF  PDF: (4.189) of 1909.03886 with K_gammae such that -2logz -1 disappears (Delta)    !!!!!
+c !!!!! PDF  PDF: (4.189) of 1909.03886 with K_gammae such that -2logz -1 disappears (Delta, i.e., (3.5) of 2105.06688)    !!!!!
          if(q2min.lt.q2max) then
              f = alpha/2d0/PI*
      &           ((1d0+(1d0-x)**2d0)/x*(dlog(q2max/xin(imode)**2d0))
