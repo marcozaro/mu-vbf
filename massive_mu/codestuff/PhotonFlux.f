@@ -36,15 +36,15 @@ c             f = alpha/2d0/PI*
 c     &           (2d0*xin(imode)*xin(imode)*x*(-1/q2min+1/q2max)+
 c     &           (2-2d0*x+x*x)/x*dlog(q2max/q2min))
 c !!!!! PDF: (4.189) of 1909.03886 with K_gammae=0  (MSbar) !!!!!
-         if(q2min.lt.q2max) then 
-             f = 2d0 *alpha/2d0/PI*
-     &           ((1d0+(1d0-x)**2d0)/x*(dlog(q2max/xin(imode)**2d0)-2d0*dlog(x)-1d0)
-     &           +0d0 )
-c !!!!! PDF  PDF: (4.189) of 1909.03886 with K_gammae such that -2logz -1 disappears (Delta)    !!!!!
-c         if(q2min.lt.q2max) then
+c         if(q2min.lt.q2max) then 
 c             f = alpha/2d0/PI*
-c     &           ((1d0+(1d0-x)**2d0)/x*(dlog(q2max/xin(imode)**2d0))
+c     &           ((1d0+(1d0-x)**2d0)/x*(dlog(q2max/xin(imode)**2d0)-2d0*dlog(x)-1d0)
 c     &           +0d0 )
+c !!!!! PDF  PDF: (4.189) of 1909.03886 with K_gammae such that -2logz -1 disappears (Delta)    !!!!!
+         if(q2min.lt.q2max) then
+             f = alpha/2d0/PI*
+     &           ((1d0+(1d0-x)**2d0)/x*(dlog(q2max/xin(imode)**2d0))
+     &           +0d0 )
          else
            f = 0. 
          endif
