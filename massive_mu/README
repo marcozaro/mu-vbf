@@ -51,6 +51,10 @@ L'unica cosa di diverso é che gen_distr.sh é stato usato per fare le distribuz
 
 Tutte le cartelle hanno in Cards/ un soflink a /Users/pagani/mu-vbf/massive_mu/codestuff/madanalysis5_parton_card.dat. Di fatto, eventualmente cambiando gli step in ptcut/mufac, si possono rifare tutti i run necessari sia per le distribuzioni che lo scan in ptcut/mufac direttamente con coordinateddistr.sh.
 
+
+Successivamente é stato anche creato lo script coordinaterates.sh, che funziona come coordinateddistr.sh ma usa gli script genera*.sh nelle varie cartelle. Qui ho nometagperrates.dat, invece di nometagperdistribuzioni.dat.
+Inoltre crea ogni volta e forza un soflink a /Users/pagani/mu-vbf/massive_mu/codestuff/PhotonFlux.f, dove ho modificato la WW in modo da avere la PDF del fotone troncata ad order alpha.
+
 --------------------------------------------------------
 
 Ognuno dei file gen_distr.sh o genera*.sh richiede un nome (quello presente in nometagperdistribuzioni.dat se invocato da coordinateddistr.sh) e fa uno scan in ptcut/mufac settando ogni volta i cut per la corrispondente cartella e la scala della WW.
