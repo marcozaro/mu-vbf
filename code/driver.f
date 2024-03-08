@@ -9,11 +9,17 @@
       logical check
       parameter(check=.true.)
 
+      double precision ans(0:7)
+      include 'coupl.inc'
+
       shat = (1000d0)**2
-      mtop = 173d0
+      call setpara('Cards/param_card.dat')
+      call printout()
+      mtop = mdl_mt
       jac = 1d0
       mmin = 2d0*mtop
       thresh = mmin**2/shat
+
 
       call fill_vegas_x(x, i)
 
@@ -27,6 +33,12 @@
           call check_momenta(p1b,5,mtop)
           call check_momenta(p0,4,mtop)
       endif
+
+      call ME_ACCESSOR_HOOK_4(p2,-1,0.118d0,ANS)
+      write(*,*) 'ANS', ANS
+      call write_momenta(p2,6)
+
+
 
       return
       end
@@ -198,7 +210,7 @@ C recoil against prec
 
 
 
-      subroutine boostx(p,q , pboost)
+CCC      subroutine boostx(p,q , pboost)
 c
 c This subroutine performs the Lorentz boost of a four-momentum.  The
 c momentum p is assumed to be given in the rest frame of q.  pboost is
@@ -206,37 +218,37 @@ c the momentum p boosted to the frame in which q is given.  q must be a
 c timelike momentum.
 c
 c input:
-c       real    p(0:3)         : four-momentum p in the q rest  frame
-c       real    q(0:3)         : four-momentum q in the boosted frame
+cCCC       real    p(0:3)         : four-momentum p in the q rest  frame
+cCCC       real    q(0:3)         : four-momentum q in the boosted frame
 c
 c output:
-c       real    pboost(0:3)    : four-momentum p in the boosted frame
+cCCC       real    pboost(0:3)    : four-momentum p in the boosted frame
 c
-      implicit none
-      double precision p(0:3),q(0:3),pboost(0:3),pq,qq,m,lf
+CCC      implicit none
+CCC      double precision p(0:3),q(0:3),pboost(0:3),pq,qq,m,lf
 
-      double precision rZero
-      parameter( rZero = 0.0d0 )
+CCC      double precision rZero
+CCC      parameter( rZero = 0.0d0 )
 
-      qq = q(1)**2+q(2)**2+q(3)**2
+CCC      qq = q(1)**2+q(2)**2+q(3)**2
 
-      if ( qq.ne.rZero ) then
-         pq = p(1)*q(1)+p(2)*q(2)+p(3)*q(3)
-         m = sqrt(max(q(0)**2-qq,1d-99))
-         lf = ((q(0)-m)*pq/qq+p(0))/m
-         pboost(0) = (p(0)*q(0)+pq)/m
-         pboost(1) =  p(1)+q(1)*lf
-         pboost(2) =  p(2)+q(2)*lf
-         pboost(3) =  p(3)+q(3)*lf
-      else
-         pboost(0) = p(0)
-         pboost(1) = p(1)
-         pboost(2) = p(2)
-         pboost(3) = p(3)
-      endif
+CCC      if ( qq.ne.rZero ) then
+CCC         pq = p(1)*q(1)+p(2)*q(2)+p(3)*q(3)
+CCC         m = sqrt(max(q(0)**2-qq,1d-99))
+CCC         lf = ((q(0)-m)*pq/qq+p(0))/m
+CCC         pboost(0) = (p(0)*q(0)+pq)/m
+CCC         pboost(1) =  p(1)+q(1)*lf
+CCC         pboost(2) =  p(2)+q(2)*lf
+CCC         pboost(3) =  p(3)+q(3)*lf
+CCC      else
+CCC         pboost(0) = p(0)
+CCC         pboost(1) = p(1)
+CCC         pboost(2) = p(2)
+CCC         pboost(3) = p(3)
+CCC      endif
 c
-      return
-      end
+CCC      return
+CCC      end
 
 
       subroutine generate_fks_momentum(shat,xi,y,ph,ileg,p)
