@@ -52,27 +52,19 @@
       kp1(:) = (/0d0,cos(ph1),sin(ph1),0d0/)
       ksq1 = -2 * p(0,1,1)**2 * xi1 * (1d0-y1)
       z1 = 1d0 - xi1
-      write(*,*) 'K1', ksq1, dot(k1,k1)
       k2(:) =  p(:,6,1) - p(:,2,1)
       kp2(:) = (/0d0,cos(ph2),sin(ph2),0d0/)
       ksq2 = -2 * p(0,2,1)**2 * xi2 * (1d0-y2)
       z2 = 1d0 - xi2
-      write(*,*) 'K2', ksq2, dot(k2,k2)
-      write(*,*) 'z1,z2', z1, z2
 
       !if (1d0-y1.gt.tiny.and.1d0-y2.gt.tiny) then
          call write_momenta(p(0,1,1),6)
           p_pass(:,3:6) = p(:,3:6,1)
           p_pass(:,1) = p(:,2,1)
           p_pass(:,2) = p(:,1,1)
-          write(*,*)'MM2MUFS', dot(p_pass(0,5),p_pass(0,6))
           call write_momenta(p_pass,6)
           call ME_ACCESSOR_HOOK_4(p_pass,-1,0.118d0,ANS_splitorders)
-          WRITE (*,*) 'ANS_SO', ANS_splitorders(0:7)
           ans = ans_splitorders(0)
-          write(*,*) 'ANS 4real0', ans
-          call smatrix_4(p_pass,ans)
-          write(*,*) 'ANS 4realbis', ans
           real2 = ans
       !else if (1d0-y1.lt.tiny.and.1d0-y2.gt.tiny) then !collinear on leg 1 (mu+)
           p_pass(:,3:4) = p(:,3:4,2)
@@ -80,7 +72,6 @@
           p_pass(:,2) = p(:,2,2)
           p_pass(:,1) = p(:,1,2) * (1d0-xi1)
           p_pass(:,6) = 0d0
-
 
           call write_momenta(p_pass,6)
           call check_momenta(p_pass,6,174.3d0)
@@ -94,11 +85,7 @@
           call SMATRIX_SPLITORDERS_3(p_pass,ANS_splitorders)
           ansk1 = ans_splitorders(0)
           call reset_spin_correlation_vectors_3()
-          write(*,*) 'ANS 1+real', ans, ansk1
-          write(*,*) 'PLUS',alp8pi/-ksq1*(z1*ans+ansk1*4d0*(1d0-z1)/z1)
-          write(*,*)'PLUSoZ1',alp8pi/-ksq1*(z1*ans+ansk1*4d0*(1d0-z1)/z1)/z1
 
-          write(*,*)'RPLUS',alp8pi/-ksq1*(z1*ans+ansk1*4d0*(1d0-z1)/z1)/real2
           write(*,*)'RPLUSoZ1',alp8pi/-ksq1*(z1*ans+ansk1*4d0*(1d0-z1)/z1)/z1/real2
       !else if (1d0-y1.gt.tiny.and.1d0-y2.lt.tiny) then !collinear on leg 2 (mu-)
           p_pass(:,3:4) = p(:,3:4,3)

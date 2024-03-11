@@ -29,7 +29,6 @@
       mmin = 2d0*mtop
       thresh = mmin**2/shat
 
-
       call fill_vegas_x(x)
 
       do j = 1,8
@@ -244,48 +243,6 @@ C recoil against prec
       end
 
 
-
-CCC      subroutine boostx(p,q , pboost)
-c
-c This subroutine performs the Lorentz boost of a four-momentum.  The
-c momentum p is assumed to be given in the rest frame of q.  pboost is
-c the momentum p boosted to the frame in which q is given.  q must be a
-c timelike momentum.
-c
-c input:
-cCCC       real    p(0:3)         : four-momentum p in the q rest  frame
-cCCC       real    q(0:3)         : four-momentum q in the boosted frame
-c
-c output:
-cCCC       real    pboost(0:3)    : four-momentum p in the boosted frame
-c
-CCC      implicit none
-CCC      double precision p(0:3),q(0:3),pboost(0:3),pq,qq,m,lf
-
-CCC      double precision rZero
-CCC      parameter( rZero = 0.0d0 )
-
-CCC      qq = q(1)**2+q(2)**2+q(3)**2
-
-CCC      if ( qq.ne.rZero ) then
-CCC         pq = p(1)*q(1)+p(2)*q(2)+p(3)*q(3)
-CCC         m = sqrt(max(q(0)**2-qq,1d-99))
-CCC         lf = ((q(0)-m)*pq/qq+p(0))/m
-CCC         pboost(0) = (p(0)*q(0)+pq)/m
-CCC         pboost(1) =  p(1)+q(1)*lf
-CCC         pboost(2) =  p(2)+q(2)*lf
-CCC         pboost(3) =  p(3)+q(3)*lf
-CCC      else
-CCC         pboost(0) = p(0)
-CCC         pboost(1) = p(1)
-CCC         pboost(2) = p(2)
-CCC         pboost(3) = p(3)
-CCC      endif
-c
-CCC      return
-CCC      end
-
-
       subroutine generate_fks_momentum(shat,xi,y,ph,ileg,p)
       implicit none
 C generate the FKS radiated particle, ie a massless particle
@@ -385,7 +342,6 @@ C Generates phi,cth, the angles in the 2->2 scattering
 
       ! xi1/2 following the formulae on the note.
       ! randomize which one is generated first
-      !omega = sqrt(1d0-y1**2)*sqrt(1d0-y2**2)*dcos(ph1-ph2)+y1*y2
       omega = sqrt(1d0-y1**2)*sqrt(1d0-y2**2)*dcos(ph1-ph2)-y1*y2
 
       if (x(7).lt.0.5d0) then
