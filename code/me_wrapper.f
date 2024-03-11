@@ -1,0 +1,120 @@
+
+      ! matrix elements:
+      ! 4: P1_mummup_ttxmupmum
+      ! 3: P1_amum_ttxmum 
+      ! 2: P1_amup_ttxmup 
+      ! 1: P1_aa_ttx
+
+      subroutine compute_me_doublereal(p,y1,y2,xi1,xi2,ph1,ph2,ans)
+      implicit none
+      include 'coupl.inc'
+      double precision p(0:3,6,4)
+      ! the last index of the momenta array:
+      ! 1-> doubly resolved collinear emissions
+      ! 2-> single resolved collinear emission (y1=1)
+      ! 3-> single resolved collinear emission (y2=1)
+      ! 4-> no resolved collinear emission (y1=y2=1)
+      double precision y1,y2,xi1,xi2,ph1,ph2
+      double precision ans, ansk1, ansk2
+      double precision ans_splitorders(0:99)
+      integer max_sc_vectors
+      parameter(max_sc_vectors=20)
+      double precision scvec(max_sc_vectors,4)
+
+      double precision tiny
+      parameter (tiny=1d-3)
+      double precision alp8pi
+
+      double precision p_pass(0:3,6)
+      double precision k1(0:3), k2(0:3), kp1(0:3), kp2(0:3), ksq1, ksq2
+      double precision z1, z2
+
+      double precision dot
+      external dot 
+      double precision pi
+      parameter (pi=3.14159265359d0)
+
+      double precision real2, real1c
+
+      ! need to rearrange the momenta, as we assume mu+ mu-, while
+      ! ME's have been generated accodring to what's written at the top
+      ! of this file
+      p_pass(:,:) = 0d0
+      scvec(:,:) = 0d0
+
+      alp8pi = dble(gal(1))**2*2
+      write(*,*) 'ALPHA*8pi', alp8pi
+
+
+      ! k is the momentum entering the reduced matrix element
+      ! kp is the direction in the orthogonal plane
+      k1(:) = p(:,5,1) - p(:,1,1)
+      kp1(:) = (/0d0,cos(ph1),sin(ph1),0d0/)
+      ksq1 = -2 * p(0,1,1)**2 * xi1 * (1d0-y1)
+      z1 = 1d0 - xi1
+      write(*,*) 'K1', ksq1, dot(k1,k1)
+      k2(:) =  p(:,6,1) - p(:,2,1)
+      kp2(:) = (/0d0,cos(ph2),sin(ph2),0d0/)
+      ksq2 = -2 * p(0,2,1)**2 * xi2 * (1d0-y2)
+      z2 = 1d0 - xi2
+      write(*,*) 'K2', ksq2, dot(k2,k2)
+      write(*,*) 'z1,z2', z1, z2
+
+      !if (1d0-y1.gt.tiny.and.1d0-y2.gt.tiny) then
+         call write_momenta(p(0,1,1),6)
+          p_pass(:,3:6) = p(:,3:6,1)
+          p_pass(:,1) = p(:,2,1)
+          p_pass(:,2) = p(:,1,1)
+          write(*,*)'MM2MUFS', dot(p_pass(0,5),p_pass(0,6))
+          call write_momenta(p_pass,6)
+          call ME_ACCESSOR_HOOK_4(p_pass,-1,0.118d0,ANS_splitorders)
+          WRITE (*,*) 'ANS_SO', ANS_splitorders(0:7)
+          ans = ans_splitorders(0)
+          write(*,*) 'ANS 4real0', ans
+          call smatrix_4(p_pass,ans)
+          write(*,*) 'ANS 4realbis', ans
+          real2 = ans
+      !else if (1d0-y1.lt.tiny.and.1d0-y2.gt.tiny) then !collinear on leg 1 (mu+)
+          p_pass(:,3:4) = p(:,3:4,2)
+          p_pass(:,5) = p(:,6,2)
+          p_pass(:,2) = p(:,2,2)
+          p_pass(:,1) = p(:,1,2) * (1d0-xi1)
+          p_pass(:,6) = 0d0
+
+
+          call write_momenta(p_pass,6)
+          call check_momenta(p_pass,6,174.3d0)
+          call ME_ACCESSOR_HOOK_3(p_pass,-1,0.118d0,ANS_splitorders)
+          ans = ans_splitorders(0)
+          scvec(1,1) = kp1(0)
+          scvec(1,2) = kp1(1)
+          scvec(1,3) = kp1(2)
+          scvec(1,4) = kp1(3)
+          call set_spin_correlation_vectors_3(1,3,scvec)
+          call SMATRIX_SPLITORDERS_3(p_pass,ANS_splitorders)
+          ansk1 = ans_splitorders(0)
+          call reset_spin_correlation_vectors_3()
+          write(*,*) 'ANS 1+real', ans, ansk1
+          write(*,*) 'PLUS',alp8pi/-ksq1*(z1*ans+ansk1*4d0*(1d0-z1)/z1)
+          write(*,*)'PLUSoZ1',alp8pi/-ksq1*(z1*ans+ansk1*4d0*(1d0-z1)/z1)/z1
+
+          write(*,*)'RPLUS',alp8pi/-ksq1*(z1*ans+ansk1*4d0*(1d0-z1)/z1)/real2
+          write(*,*)'RPLUSoZ1',alp8pi/-ksq1*(z1*ans+ansk1*4d0*(1d0-z1)/z1)/z1/real2
+      !else if (1d0-y1.gt.tiny.and.1d0-y2.lt.tiny) then !collinear on leg 2 (mu-)
+          p_pass(:,3:4) = p(:,3:4,3)
+          p_pass(:,5) = p(:,5,3)
+          p_pass(:,2) = p(:,1,3)
+          p_pass(:,1) = p(:,2,3) * (1d0-xi2)
+          !call ME_ACCESSOR_HOOK_2(p_pass,-1,0.118d0,ANS_splitorders)
+          !ans = ans_splitorders(0)
+          !write(*,*) 'ANS 1-real', ans
+      !else if (1d0-y1.lt.tiny.and.1d0-y2.lt.tiny) then !collinear on legs 1/2
+          p_pass(:,3:4) = p(:,3:4,4)
+          p_pass(:,2) = p(:,2,4) * (1d0-xi2)
+          p_pass(:,1) = p(:,1,4) * (1d0-xi1)
+          !call ME_ACCESSOR_HOOK_1(p_pass,-1,0.118d0,ANS_splitorders)
+          !ans = ans_splitorders(0)
+          !write(*,*) 'ANS 0real', ans
+      !endif
+
+      end

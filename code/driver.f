@@ -1,15 +1,24 @@
       program driver
       implicit none
 
-      double precision p2(0:3,6), p1a(0:3,5), p1b(0:3,5), p0(0:3,4)
+      ! the last index of the momenta array:
+      ! 1-> doubly resolved collinear emissions
+      ! 2-> single resolved collinear emission (y1=1)
+      ! 3-> single resolved collinear emission (y2=1)
+      ! 4-> no resolved collinear emission (y1=y2=1)
+      double precision p2(0:3,6,4), p1a(0:3,5,4), p1b(0:3,5,4),p0(0:3,4,4)
       double precision y1, y2, xi1, xi2, ph1, ph2, phi, cth
       double precision shat, mmin, thresh, jac, mtop
       double precision x(99)
-      integer i
+      integer i,j
       logical check
       parameter(check=.true.)
+      double precision y1fix
+      common/to_y1_fix/y1fix
+      double precision y2fix
+      common/to_y2_fix/y2fix
 
-      double precision ans(0:7)
+      double precision ans
       include 'coupl.inc'
 
       shat = (1000d0)**2
@@ -21,22 +30,44 @@
       thresh = mmin**2/shat
 
 
-      call fill_vegas_x(x, i)
+      call fill_vegas_x(x)
+
+      do j = 1,8
+        y1fix=1d0-10d0**(-j*0.5d0)
+        write(*,*) 'Y1', y1fix
+        !y2fix=1d0-10d0**(-j*0.5)
+        !write(*,*) 'Y2', y2fix
 
       call generate_kinematics(x, thresh, y1, y2, xi1, xi2, ph1, ph2, phi, cth, jac)
-     &
+      
       call generate_momenta(shat, mtop, y1, y2, xi1, xi2, ph1, ph2, cth, phi,
-     &                      p2, p1a, p1b, p0)
+     &                      p2(0,1,1), p1a(0,1,1), p1b(0,1,1), p0(0,1,1))
+
+      call generate_momenta(shat, mtop, 1d0, y2, xi1, xi2, ph1, ph2, cth, phi,
+     &                      p2(0,1,2), p1a(0,1,2), p1b(0,1,2), p0(0,1,2))
+
+      call generate_momenta(shat, mtop, y1, 1d0, xi1, xi2, ph1, ph2, cth, phi,
+     &                      p2(0,1,3), p1a(0,1,3), p1b(0,1,3), p0(0,1,3))
+
+      call generate_momenta(shat, mtop, 1d0, 1d0, xi1, xi2, ph1, ph2, cth, phi,
+     &                      p2(0,1,4), p1a(0,1,4), p1b(0,1,4), p0(0,1,4))
+
+      call write_momenta(p2(0,1,1),6)
+
       if (check) then
-          call check_momenta(p2,6,mtop)
-          call check_momenta(p1a,5,mtop)
-          call check_momenta(p1b,5,mtop)
-          call check_momenta(p0,4,mtop)
+          do i = 1,4
+              call check_momenta(p2(0,1,i),6,mtop)
+              call check_momenta(p1a(0,1,i),5,mtop)
+              call check_momenta(p1b(0,1,i),5,mtop)
+              call check_momenta(p0(0,1,i),4,mtop)
+          enddo
       endif
 
-      call ME_ACCESSOR_HOOK_4(p2,-1,0.118d0,ANS)
-      write(*,*) 'ANS', ANS
-      call write_momenta(p2,6)
+
+      call compute_me_doublereal(p2,y1,y2,xi1,xi2,ph1,ph2,ANS)
+      write(*,*) ANS
+
+      enddo
 
 
 
@@ -44,15 +75,19 @@
       end
 
 
-      subroutine fill_vegas_x(x,i)
+      subroutine fill_vegas_x(x)
 C     fill the vegas x. In case i is passed, do something with it as an
 C     external variable (e.g. use it to scale one variable towards some
 C     limit
       implicit none
       double precision x(99)
       integer i
+      double precision ran2
+      external ran2
+      do i = 1,99
+         x(i) = ran2()
+      enddo
 
-      call random_number(x)
       return 
       end
 
@@ -118,7 +153,8 @@ C    check momentum conservation and on-shell relations
       integer i
 
       do i = 1,n
-        write(*,*) i, pp(:,i)
+        write(*,*) 'p(:,',i,')=(/', pp(0,i),',', pp(1,i),',',
+     #                              pp(2,i),',',pp(3,i),'/)'
       enddo
 
       return
@@ -168,8 +204,7 @@ C  - p0 without emissions
       call generate_fks_momentum(shat,xi2,y2,ph2,2,p1b(0,5))
       call boost_momenta_born(p1b(0,3),p1b(0,5))
       ! p2
-      !omega = sqrt(1d0-y1**2)*sqrt(1d0-y2**2)*dcos(ph1-ph2)+y1*y2
-      omega = sqrt(1d0-y1**2)*sqrt(1d0-y2**2)*dcos(ph1-ph2)-y1*y2
+      omega = dsqrt(1d0-y1**2)*dsqrt(1d0-y2**2)*dcos(ph1-ph2)-y1*y2
       sborn = shat*(1d0-xi1-xi2+xi1*xi2*(1d0-omega)/2d0) 
       call generate_is(shat, p2(0,1))
       call generate_born_fs(sborn,m,cth,phi,p2(0,3))
@@ -262,9 +297,9 @@ C with energy xi, angles y and phi, w.r.t. the initial leg i
 
       sth = dsqrt(max(1d0-y**2,0d0))
 
-      p(:) = xi*sqrt(shat)/2d0
-      p(1) = p(1)*sth*cos(ph)
-      p(2) = p(2)*sth*sin(ph)
+      p(:) = xi*dsqrt(shat)/2d0
+      p(1) = p(1)*sth*dcos(ph)
+      p(2) = p(2)*sth*dsin(ph)
       if (ileg.eq.1) then
           p(3) = p(3)*y
       else if (ileg.eq.2) then
@@ -324,6 +359,10 @@ C Generates phi,cth, the angles in the 2->2 scattering
       double precision omega
       double precision pi
       parameter (pi=3.14159265359d0)
+      double precision y1fix
+      common/to_y1_fix/y1fix
+      double precision y2fix
+      common/to_y2_fix/y2fix
       ! born angles
       cth = x(1)*2d0-1d0
       jac = jac*2d0
@@ -339,6 +378,11 @@ C Generates phi,cth, the angles in the 2->2 scattering
       jac = jac*2d0*pi
       ph2 = x(6)*2d0*pi
       jac = jac*2d0*pi
+      write(*,*) 'FORCING y1', y1fix
+      y1 = y1fix
+      !write(*,*) 'FORCING y2', y2fix
+      !y2 = y2fix
+
       ! xi1/2 following the formulae on the note.
       ! randomize which one is generated first
       !omega = sqrt(1d0-y1**2)*sqrt(1d0-y2**2)*dcos(ph1-ph2)+y1*y2
