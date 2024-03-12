@@ -15,7 +15,7 @@
       ! 3-> single resolved collinear emission (y2=1)
       ! 4-> no resolved collinear emission (y1=y2=1)
       double precision y1,y2,xi1,xi2,ph1,ph2
-      double precision ans, ansk1, ansk2
+      double precision ans, ansk1, ansk2, ansk12
       double precision ans_splitorders(0:99)
       integer max_sc_vectors
       parameter(max_sc_vectors=20)
@@ -73,8 +73,8 @@
           p_pass(:,1) = p(:,1,2) * (1d0-xi1)
           p_pass(:,6) = 0d0
 
-          call write_momenta(p_pass,6)
-          call check_momenta(p_pass,6,174.3d0)
+          !call write_momenta(p_pass,6)
+          !call check_momenta(p_pass,6,174.3d0)
           call ME_ACCESSOR_HOOK_3(p_pass,-1,0.118d0,ANS_splitorders)
           ans = ans_splitorders(0)
           scvec(1,1) = kp1(0)
@@ -85,22 +85,72 @@
           call SMATRIX_SPLITORDERS_3(p_pass,ANS_splitorders)
           ansk1 = ans_splitorders(0)
           call reset_spin_correlation_vectors_3()
+          ans = alp8pi/-ksq1*(z1*ans+ansk1*4d0*(1d0-z1)/z1)/z1
 
-          write(*,*)'RPLUSoZ1',alp8pi/-ksq1*(z1*ans+ansk1*4d0*(1d0-z1)/z1)/z1/real2
+          write(*,*)'RPLUSoZ1',ans/real2
       !else if (1d0-y1.gt.tiny.and.1d0-y2.lt.tiny) then !collinear on leg 2 (mu-)
+          call write_momenta(p(0,1,3),6)
           p_pass(:,3:4) = p(:,3:4,3)
           p_pass(:,5) = p(:,5,3)
           p_pass(:,2) = p(:,1,3)
           p_pass(:,1) = p(:,2,3) * (1d0-xi2)
-          !call ME_ACCESSOR_HOOK_2(p_pass,-1,0.118d0,ANS_splitorders)
-          !ans = ans_splitorders(0)
+          call write_momenta(p_pass,6)
+          call check_momenta(p_pass,6,174.3d0)
+          call ME_ACCESSOR_HOOK_2(p_pass,-1,0.118d0,ANS_splitorders)
+          ans = ans_splitorders(0)
+          scvec(1,1) = kp2(0)
+          scvec(1,2) = kp2(1)
+          scvec(1,3) = kp2(2)
+          scvec(1,4) = kp2(3)
+          call set_spin_correlation_vectors_2(1,3,scvec)
+          call SMATRIX_SPLITORDERS_2(p_pass,ANS_splitorders)
+          ansk2 = ans_splitorders(0)
+          call reset_spin_correlation_vectors_2()
+          write(*,*)'RPLUSoZ2',ans, ansk2
+          ans = alp8pi/-ksq2*(z2*ans+ansk2*4d0*(1d0-z2)/z2)/z2
+          write(*,*)'RPLUSoZ2',ans /real2, ans, ksq2, real2, z2
           !write(*,*) 'ANS 1-real', ans
       !else if (1d0-y1.lt.tiny.and.1d0-y2.lt.tiny) then !collinear on legs 1/2
           p_pass(:,3:4) = p(:,3:4,4)
           p_pass(:,2) = p(:,2,4) * (1d0-xi2)
           p_pass(:,1) = p(:,1,4) * (1d0-xi1)
-          !call ME_ACCESSOR_HOOK_1(p_pass,-1,0.118d0,ANS_splitorders)
-          !ans = ans_splitorders(0)
+          call ME_ACCESSOR_HOOK_1(p_pass,-1,0.118d0,ANS_splitorders)
+          ans = ans_splitorders(0)
+          scvec(1,1) = kp1(0)
+          scvec(1,2) = kp1(1)
+          scvec(1,3) = kp1(2)
+          scvec(1,4) = kp1(3)
+          call set_spin_correlation_vectors_1(1,3,scvec)
+          call SMATRIX_SPLITORDERS_1(p_pass,ANS_splitorders)
+          ansk1 = ans_splitorders(0)
+          call reset_spin_correlation_vectors_1()
+          scvec(1,1) = kp2(0)
+          scvec(1,2) = kp2(1)
+          scvec(1,3) = kp2(2)
+          scvec(1,4) = kp2(3)
+          call set_spin_correlation_vectors_1(2,3,scvec)
+          call SMATRIX_SPLITORDERS_1(p_pass,ANS_splitorders)
+          ansk2 = ans_splitorders(0)
+          call reset_spin_correlation_vectors_1()
+          scvec(1,1) = kp1(0)
+          scvec(1,2) = kp1(1)
+          scvec(1,3) = kp1(2)
+          scvec(1,4) = kp1(3)
+          call set_spin_correlation_vectors_1(1,3,scvec)
+          scvec(1,1) = kp2(0)
+          scvec(1,2) = kp2(1)
+          scvec(1,3) = kp2(2)
+          scvec(1,4) = kp2(3)
+          call set_spin_correlation_vectors_1(2,3,scvec)
+          call SMATRIX_SPLITORDERS_1(p_pass,ANS_splitorders)
+          ansk12 = ans_splitorders(0)
+          call reset_spin_correlation_vectors_1()
+          ans = alp8pi**2 / -ksq1 / -ksq2 * 
+     #        (z1*z2*ans + z2*ansk1*4d0*(1d0-z1)/z1 + 
+     #          z1*ansk2*4d0*(1d0-z2)/z2 +     
+     #         ansk12*4d0*(1d0-z1)/z1*4d0*(1d0-z2)/z2) / z1 / z2
+          write(*,*)'RPLUSoZ12',ans /real2 
+
           !write(*,*) 'ANS 0real', ans
       !endif
 

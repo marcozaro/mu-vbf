@@ -31,11 +31,11 @@
 
       call fill_vegas_x(x)
 
-      do j = 1,8
+      do j = 1,10
         y1fix=1d0-10d0**(-j*0.5d0)
         write(*,*) 'Y1', y1fix
-        !y2fix=1d0-10d0**(-j*0.5)
-        !write(*,*) 'Y2', y2fix
+        y2fix=1d0-10d0**(-j*0.5d0)
+        write(*,*) 'Y2', y2fix
 
       call generate_kinematics(x, thresh, y1, y2, xi1, xi2, ph1, ph2, phi, cth, jac)
       
@@ -61,7 +61,6 @@
               call check_momenta(p0(0,1,i),4,mtop)
           enddo
       endif
-
 
       call compute_me_doublereal(p2,y1,y2,xi1,xi2,ph1,ph2,ANS)
       write(*,*) ANS
@@ -204,12 +203,17 @@ C  - p0 without emissions
       call boost_momenta_born(p1b(0,3),p1b(0,5))
       ! p2
       omega = dsqrt(1d0-y1**2)*dsqrt(1d0-y2**2)*dcos(ph1-ph2)-y1*y2
+      write(*,*) 'OM', omega
       sborn = shat*(1d0-xi1-xi2+xi1*xi2*(1d0-omega)/2d0) 
+      write(*,*) 'SQRTSBORN', sqrt(sborn)
       call generate_is(shat, p2(0,1))
+      write(*,*)'12', p2(0:3,1:2)
       call generate_born_fs(sborn,m,cth,phi,p2(0,3))
+      write(*,*)'34', p2(0:3,3:4)
       call generate_fks_momentum(shat,xi1,y1,ph1,1,p2(0,5))
       call generate_fks_momentum(shat,xi2,y2,ph2,2,p2(0,6))
       prec(:) = p2(:,5)+p2(:,6)
+      write(*,*) 'REC', prec
       call boost_momenta_born(p2(0,3),prec)
 
       return 
@@ -337,24 +341,34 @@ C Generates phi,cth, the angles in the 2->2 scattering
       jac = jac*2d0*pi
       write(*,*) 'FORCING y1', y1fix
       y1 = y1fix
-      !write(*,*) 'FORCING y2', y2fix
-      !y2 = y2fix
+      write(*,*) 'FORCING y2', y2fix
+      y2 = y2fix
+
 
       ! xi1/2 following the formulae on the note.
       ! randomize which one is generated first
       omega = sqrt(1d0-y1**2)*sqrt(1d0-y2**2)*dcos(ph1-ph2)-y1*y2
+      write(*,*) 'THRESH=', thresh
+      write(*,*) 'PH1=',ph1
+      write(*,*) 'PH2=',ph2
+      write(*,*) ' Y1=', Y1
+      write(*,*) ' Y2=', Y2
 
       if (x(7).lt.0.5d0) then
+          write(*,*) 'IF'
           xi1 = x(7)*2d0*(1d0-thresh)
           jac = jac*2d0*(1d0-thresh)
           xi2 = x(8)*2d0*(1d0-thresh-xi1)/(2d0-(1d0-omega)*xi1)
           jac = jac*2d0*(1d0-thresh-xi1)/(2d0-(1d0-omega)*xi1)
       else
+          write(*,*) 'ELSE'
           xi2 = (x(7)-0.5d0)*2d0*(1d0-thresh)
           jac = jac*2d0*(1d0-thresh)
           xi1 = x(8)*2d0*(1d0-thresh-xi2)/(2d0-(1d0-omega)*xi2)
           jac = jac*2d0*(1d0-thresh-xi2)/(2d0-(1d0-omega)*xi2)
       endif
+      write(*,*) 'XI1=', xi1
+      write(*,*) 'XI2=', xi2
 
       return
       end

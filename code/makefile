@@ -11,8 +11,6 @@ LINKLIBS_ME =  -Llib/ -ldhelas -lmodel
 MEFILES = $(patsubst %.f,%.o,$(wildcard */matrix_mod.f))
 FILES = ranmar.o driver.o me_wrapper.o $(MEFILES) 
 
-MELIBS: $(MEFILES)
-
 
 driver: libs $(FILES)
 	$(FC) -o driver $(FILES) $(LINKLIBS_ME) 
