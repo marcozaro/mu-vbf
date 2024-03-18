@@ -6,6 +6,7 @@
       ! 2-> single resolved collinear emission (y1=1)
       ! 3-> single resolved collinear emission (y2=1)
       ! 4-> no resolved collinear emission (y1=y2=1)
+      integer icoll
       double precision p2(0:3,6,4), p1a(0:3,5,4), p1b(0:3,5,4),p0(0:3,4,4)
       double precision y1, y2, xi1, xi2, ph1, ph2, phi, cth
       double precision shat, mmin, thresh, jac, mtop
@@ -43,7 +44,7 @@
         y2fix=1d0-10d0**(-j*0.5d0)
         write(*,*) 'Y2', y2fix
 
-      call generate_kinematics(x, shat, thresh, y1, y2, xi1, xi2, ph1, ph2, phi, cth, jac)
+      call generate_kinematics(x, shat, thresh, icoll, y1, y2, xi1, xi2, ph1, ph2, phi, cth, jac)
       
       call generate_momenta(shat, mtop, y1, y2, xi1, xi2, ph1, ph2, cth, phi,
      &                      p2(0,1,1), p1a(0,1,1), p1b(0,1,1), p0(0,1,1))
@@ -71,12 +72,14 @@
       call compute_me_doublereal(p2,y1,y2,xi1,xi2,ph1,ph2,ANS)
       write(*,*) ANS
 
+      enddo
+
+      nprn = 0
       call vegas01(10,integrand,0,10000,
      1        10,nprn,integral,error,prob)
       call vegas01(10,integrand,1,50000,
      1        4,nprn,integral,error,prob)
 
-      enddo
 
       return
       end
@@ -88,15 +91,37 @@
       double precision shat
       common /to_shat/shat
       double precision thresh
-      double precision mtop, mmin, jac
-      double precision y1, y2, xi1, xi2, ph1, ph2, phi, cth
+      double precision mtop, mmin, jac(4), me(4)
+      double precision y1(4), y2(4), xi1(4), xi2(4), ph1(4), ph2(4), phi(4), cth(4)
+      integer icoll
+      logical passcuts2
+      external passcuts2
+      double precision p2(0:3,6,4), p1a(0:3,5,4), p1b(0:3,5,4),p0(0:3,4,4)
 
       mtop = mdl_mt
-      jac = 1d0
       mmin = 2d0*mtop
       thresh = mmin**2/shat
-      call generate_kinematics(x, shat, thresh, y1, y2, xi1, xi2, ph1, ph2, phi, cth, jac)
-      integrand = jac
+
+      ! generate the momenta for all kinematic configs
+      do icoll = 1, 4
+        jac(icoll) = 1d0
+        call generate_kinematics(x, shat, thresh, icoll, 
+     &       y1(icoll), y2(icoll), xi1(icoll), xi2(icoll), ph1(icoll), ph2(icoll), phi(icoll), cth(icoll), jac(icoll))
+        call generate_momenta(shat, mtop, y1(icoll), y2(icoll), xi1(icoll), xi2(icoll), 
+     &                      ph1(icoll), ph2(icoll), cth(icoll), phi(icoll),
+     &                      p2(0,1,icoll), p1a(0,1,icoll), p1b(0,1,icoll), p0(0,1,icoll))
+      enddo
+
+      do icoll = 1, 4
+        me(icoll) = 0d0
+        if (passcuts2(p2(0,1,icoll))) then 
+          call compute_me_doublereal(p2,y1(icoll),y2(icoll),xi1(icoll),
+     &                             xi2(icoll),ph1(icoll),ph2(icoll),me(icoll))
+        endif
+      enddo
+
+      integrand = jac(1) * me(1) - jac(2) * me(2) - jac(3) * me(3) + jac(4) * me(4)
+      integrand = integrand / (1d0-y1(1)) / (1d0-y2(1))
 
       return
       end
@@ -134,6 +159,8 @@ C    check momentum conservation and on-shell relations
       if (etot.lt.2*mass) then
           write(*,*) 'ERROR1', etot, mass
           call write_momenta(pp,n)
+            call backtrace()
+            stop
       endif
 
       ptot(:) = 0d0
@@ -147,21 +174,27 @@ C    check momentum conservation and on-shell relations
         if (abs(ptot(j))/etot.gt.tiny) then
             write(*,*) 'ERROR2', j, ptot
             call write_momenta(pp,n)
+            call backtrace()
+            stop
         endif
       enddo
 
       ! check massless momenta
       do i = 1,n
         if (i.eq.3.or.i.eq.4) then
-          if ((sqrt(dot(pp(0,i),pp(0,i)))-mass)/etot.gt.tiny) then
+          if ((dot(pp(0,i),pp(0,i))-mass**2)/etot.gt.tiny) then
               write(*,*) 'ERROR3', i, dot(pp(0,i),pp(0,i)), etot
             call write_momenta(pp,n)
+            call backtrace()
+            stop
           endif
 
         else
-          if (sqrt(abs(dot(pp(0,i),pp(0,i))/etot**2)).gt.tiny) then
+          if (abs(dot(pp(0,i),pp(0,i))/etot**2).gt.tiny) then
               write(*,*) 'ERROR4', i, dot(pp(0,i),pp(0,i)), etot
             call write_momenta(pp,n)
+            call backtrace()
+            stop
           endif
         endif
       enddo 
@@ -230,17 +263,12 @@ C  - p0 without emissions
       call boost_momenta_born(p1b(0,3),p1b(0,5))
       ! p2
       omega = dsqrt(1d0-y1**2)*dsqrt(1d0-y2**2)*dcos(ph1-ph2)-y1*y2
-      write(*,*) 'OM', omega
       sborn = shat*(1d0-xi1-xi2+xi1*xi2*(1d0-omega)/2d0) 
-      write(*,*) 'SQRTSBORN', sqrt(sborn)
       call generate_is(shat, p2(0,1))
-      write(*,*)'12', p2(0:3,1:2)
       call generate_born_fs(sborn,m,cth,phi,p2(0,3))
-      write(*,*)'34', p2(0:3,3:4)
       call generate_fks_momentum(shat,xi1,y1,ph1,1,p2(0,5))
       call generate_fks_momentum(shat,xi2,y2,ph2,2,p2(0,6))
       prec(:) = p2(:,5)+p2(:,6)
-      write(*,*) 'REC', prec
       call boost_momenta_born(p2(0,3),prec)
 
       return 
@@ -336,17 +364,27 @@ C in their partonic c.o.m fram
       end
 
 
-      subroutine generate_kinematics(x, shat, thresh, y1, y2, xi1, xi2, ph1, ph2, phi, cth, jac)
+      subroutine generate_kinematics(x, shat, thresh, icoll, y1, y2, xi1, xi2, ph1, ph2, phi, cth, jac)
       implicit none
 C generates the kinematic variables (y_i,xi_i,ph_i, i=1,2) for each of
 C the two collinear splittings
 C Generates phi,cth, the angles in the 2->2 scattering
+C   icoll:
+C   1-> doubly resolved collinear emissions
+C   2-> single resolved collinear emission (y1=1)
+C   3-> single resolved collinear emission (y2=1)
+C   4-> no resolved collinear emission (y1=y2=1)
+C
+C  jac includes the PS volumes, times flux (1/2shat) and converted to PB
       double precision x(10)
       double precision shat, thresh
+      integer icoll
       double precision y1, y2, xi1, xi2, ph1, ph2, phi, cth, jac
       double precision omega, sborn
       double precision pi
       parameter (pi=3.14159265359d0)
+      double precision conv
+      parameter (conv=389379.66*1000)  !conv to picobarns
       double precision y1fix
       common/to_y1_fix/y1fix
       double precision y2fix
@@ -358,9 +396,17 @@ C Generates phi,cth, the angles in the 2->2 scattering
       jac = jac*2d0*pi
 
       ! y, phi, flat (may be better to be adaptive towards y->1)
-      y1 = x(3)*2d0-1d0
+      if (icoll.ne.2.and.icoll.ne.4) then
+        y1 = x(3)*2d0-1d0
+      else
+        y1 = 1d0
+      endif
       jac = jac*2d0
-      y2 = x(4)*2d0-1d0
+      if (icoll.ne.3.and.icoll.ne.4) then
+        y2 = x(4)*2d0-1d0
+      else
+        y2 = 1d0
+      endif
       jac = jac*2d0
       ph1 = x(5)*2d0*pi
       jac = jac*2d0*pi
@@ -394,6 +440,10 @@ C Generates phi,cth, the angles in the 2->2 scattering
       sborn = shat*(1d0-xi1-xi2+xi1*xi2*(1d0-omega)/2d0) 
       ! 1/32pi^2 p/sqrt[mt^2+p^2]
       jac = jac / 32d0 / pi**2 * sqrt(1d0-thresh*shat/sborn)
+      ! to pb and flux
+      jac = jac * conv / 2d0 /shat
+
+      if (jac.ne.jac) jac = 0d0
 
       return
       end
