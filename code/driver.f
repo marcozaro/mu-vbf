@@ -71,9 +71,9 @@
       call compute_me_doublereal(p2,y1,y2,xi1,xi2,ph1,ph2,ANS)
       write(*,*) ANS
 
-      call vegas(10,integrand,0,10000,
+      call vegas01(10,integrand,0,10000,
      1        10,nprn,integral,error,prob)
-      call vegas(10,integrand,1,50000,
+      call vegas01(10,integrand,1,50000,
      1        4,nprn,integral,error,prob)
 
       enddo
@@ -366,28 +366,21 @@ C Generates phi,cth, the angles in the 2->2 scattering
       jac = jac*2d0*pi
       ph2 = x(6)*2d0*pi
       jac = jac*2d0*pi
-      write(*,*) 'FORCING y1', y1fix
-      y1 = y1fix
-      write(*,*) 'FORCING y2', y2fix
-      y2 = y2fix
+      !write(*,*) 'FORCING y1', y1fix
+      !y1 = y1fix
+      !write(*,*) 'FORCING y2', y2fix
+      !y2 = y2fix
 
       ! xi1/2 following the formulae on the note.
       ! randomize which one is generated first
       omega = sqrt(1d0-y1**2)*sqrt(1d0-y2**2)*dcos(ph1-ph2)-y1*y2
-      write(*,*) 'THRESH=', thresh
-      write(*,*) 'PH1=',ph1
-      write(*,*) 'PH2=',ph2
-      write(*,*) ' Y1=', Y1
-      write(*,*) ' Y2=', Y2
 
       if (x(7).lt.0.5d0) then
-          write(*,*) 'IF'
           xi1 = x(7)*2d0*(1d0-thresh)
           jac = jac*2d0*(1d0-thresh)
           xi2 = x(8)*2d0*(1d0-thresh-xi1)/(2d0-(1d0-omega)*xi1)
           jac = jac*2d0*(1d0-thresh-xi1)/(2d0-(1d0-omega)*xi1)
       else
-          write(*,*) 'ELSE'
           xi2 = (x(7)-0.5d0)*2d0*(1d0-thresh)
           jac = jac*2d0*(1d0-thresh)
           xi1 = x(8)*2d0*(1d0-thresh-xi2)/(2d0-(1d0-omega)*xi2)
@@ -398,10 +391,9 @@ C Generates phi,cth, the angles in the 2->2 scattering
       ! this is the contribution from the two radiations
       jac = jac * (shat / 64d0 / pi**3)**2 * xi1 * xi2
       ! this is for the underlying born
-      omega = dsqrt(1d0-y1**2)*dsqrt(1d0-y2**2)*dcos(ph1-ph2)-y1*y2
       sborn = shat*(1d0-xi1-xi2+xi1*xi2*(1d0-omega)/2d0) 
       ! 1/32pi^2 p/sqrt[mt^2+p^2]
-      jac = jac / 32d0 / pi**2 / sqrt(shat) * sqrt(shat-thresh)
+      jac = jac / 32d0 / pi**2 * sqrt(1d0-thresh*shat/sborn)
 
       return
       end
