@@ -9,7 +9,8 @@
       double precision p2(0:3,6,4), p1a(0:3,5,4), p1b(0:3,5,4),p0(0:3,4,4)
       double precision y1, y2, xi1, xi2, ph1, ph2, phi, cth
       double precision shat, mmin, thresh, jac, mtop
-      double precision x(99)
+      common /to_shat/shat
+      double precision x(10)
       integer i,j
       logical check
       parameter(check=.true.)
@@ -20,6 +21,11 @@
 
       double precision ans
       include 'coupl.inc'
+
+      double precision integrand
+      external integrand
+      double precision integral,error,prob
+      integer nprn
 
       shat = (1000d0)**2
       call setpara('Cards/param_card.dat')
@@ -37,7 +43,7 @@
         y2fix=1d0-10d0**(-j*0.5d0)
         write(*,*) 'Y2', y2fix
 
-      call generate_kinematics(x, thresh, y1, y2, xi1, xi2, ph1, ph2, phi, cth, jac)
+      call generate_kinematics(x, shat, thresh, y1, y2, xi1, xi2, ph1, ph2, phi, cth, jac)
       
       call generate_momenta(shat, mtop, y1, y2, xi1, xi2, ph1, ph2, cth, phi,
      &                      p2(0,1,1), p1a(0,1,1), p1b(0,1,1), p0(0,1,1))
@@ -65,24 +71,45 @@
       call compute_me_doublereal(p2,y1,y2,xi1,xi2,ph1,ph2,ANS)
       write(*,*) ANS
 
+      call vegas(10,integrand,0,10000,
+     1        10,nprn,integral,error,prob)
+      call vegas(10,integrand,1,50000,
+     1        4,nprn,integral,error,prob)
+
       enddo
 
+      return
+      end
 
+      double precision function integrand(x)
+      implicit none
+      double precision x(10)
+      include 'coupl.inc'
+      double precision shat
+      common /to_shat/shat
+      double precision thresh
+      double precision mtop, mmin, jac
+      double precision y1, y2, xi1, xi2, ph1, ph2, phi, cth
+
+      mtop = mdl_mt
+      jac = 1d0
+      mmin = 2d0*mtop
+      thresh = mmin**2/shat
+      call generate_kinematics(x, shat, thresh, y1, y2, xi1, xi2, ph1, ph2, phi, cth, jac)
+      integrand = jac
 
       return
       end
 
 
       subroutine fill_vegas_x(x)
-C     fill the vegas x. In case i is passed, do something with it as an
-C     external variable (e.g. use it to scale one variable towards some
-C     limit
+C     fill the vegas x.
       implicit none
-      double precision x(99)
+      double precision x(10)
       integer i
       double precision ran2
       external ran2
-      do i = 1,99
+      do i = 1,10
          x(i) = ran2()
       enddo
 
@@ -309,15 +336,15 @@ C in their partonic c.o.m fram
       end
 
 
-      subroutine generate_kinematics(x, thresh, y1, y2, xi1, xi2, ph1, ph2, phi, cth, jac)
+      subroutine generate_kinematics(x, shat, thresh, y1, y2, xi1, xi2, ph1, ph2, phi, cth, jac)
       implicit none
 C generates the kinematic variables (y_i,xi_i,ph_i, i=1,2) for each of
 C the two collinear splittings
 C Generates phi,cth, the angles in the 2->2 scattering
-      double precision x(99)
-      double precision thresh
+      double precision x(10)
+      double precision shat, thresh
       double precision y1, y2, xi1, xi2, ph1, ph2, phi, cth, jac
-      double precision omega
+      double precision omega, sborn
       double precision pi
       parameter (pi=3.14159265359d0)
       double precision y1fix
@@ -344,7 +371,6 @@ C Generates phi,cth, the angles in the 2->2 scattering
       write(*,*) 'FORCING y2', y2fix
       y2 = y2fix
 
-
       ! xi1/2 following the formulae on the note.
       ! randomize which one is generated first
       omega = sqrt(1d0-y1**2)*sqrt(1d0-y2**2)*dcos(ph1-ph2)-y1*y2
@@ -367,8 +393,15 @@ C Generates phi,cth, the angles in the 2->2 scattering
           xi1 = x(8)*2d0*(1d0-thresh-xi2)/(2d0-(1d0-omega)*xi2)
           jac = jac*2d0*(1d0-thresh-xi2)/(2d0-(1d0-omega)*xi2)
       endif
-      write(*,*) 'XI1=', xi1
-      write(*,*) 'XI2=', xi2
+
+      ! finally, turn jac into the proper phase-space volume
+      ! this is the contribution from the two radiations
+      jac = jac * (shat / 64d0 / pi**3)**2 * xi1 * xi2
+      ! this is for the underlying born
+      omega = dsqrt(1d0-y1**2)*dsqrt(1d0-y2**2)*dcos(ph1-ph2)-y1*y2
+      sborn = shat*(1d0-xi1-xi2+xi1*xi2*(1d0-omega)/2d0) 
+      ! 1/32pi^2 p/sqrt[mt^2+p^2]
+      jac = jac / 32d0 / pi**2 / sqrt(shat) * sqrt(shat-thresh)
 
       return
       end
