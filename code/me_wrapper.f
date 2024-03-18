@@ -16,7 +16,8 @@ C (1-y1)*(1-y2), possibly approximated in the collinear limit(s)
       ! 2-> single resolved collinear emission (y1=1)
       ! 3-> single resolved collinear emission (y2=1)
       ! 4-> no resolved collinear emission (y1=y2=1)
-      double precision y1,y2,xi1,xi2,ph1,ph2
+      !!! note that xi are different in the various kinematics
+      double precision y1,y2,xi1(4),xi2(4),ph1,ph2 
       double precision ans, ansk1, ansk2, ansk12
       double precision ans_splitorders(0:99)
       integer max_sc_vectors
@@ -28,7 +29,7 @@ C (1-y1)*(1-y2), possibly approximated in the collinear limit(s)
       double precision alp8pi
 
       double precision p_pass(0:3,6)
-      double precision k1(0:3), k2(0:3), kp1(0:3), kp2(0:3), ksq1, ksq2
+      double precision kp1(0:3), kp2(0:3), ksq1, ksq2
       double precision z1, z2
 
       double precision dot
@@ -48,18 +49,8 @@ C (1-y1)*(1-y2), possibly approximated in the collinear limit(s)
 
       ! k is the momentum entering the reduced matrix element
       ! kp is the direction in the orthogonal plane
-      k1(:) = p(:,5,1) - p(:,1,1)
       kp1(:) = (/0d0,cos(ph1),sin(ph1),0d0/)
-      !! ksq1/2 do not include the 1-y1 factor
-      !ksq1 = -2 * p(0,1,1)**2 * xi1 * (1d0-y1)
-      ksq1 = -2 * p(0,1,1)**2 * xi1 
-
-      z1 = 1d0 - xi1
-      k2(:) =  p(:,6,1) - p(:,2,1)
       kp2(:) = (/0d0,cos(ph2),sin(ph2),0d0/)
-      !ksq2 = -2 * p(0,2,1)**2 * xi2 * (1d0-y2)
-      ksq2 = -2 * p(0,2,1)**2 * xi2 
-      z2 = 1d0 - xi2
 
       if (1d0-y1.gt.tiny.and.1d0-y2.gt.tiny) then
          !call write_momenta(p(0,1,1),6)
@@ -75,7 +66,7 @@ C (1-y1)*(1-y2), possibly approximated in the collinear limit(s)
           p_pass(:,3:4) = p(:,3:4,2)
           p_pass(:,5) = p(:,6,2)
           p_pass(:,2) = p(:,2,2)
-          p_pass(:,1) = p(:,1,2) * (1d0-xi1)
+          p_pass(:,1) = p(:,1,2) * (1d0-xi1(2))
           p_pass(:,6) = 0d0
 
           !call write_momenta(p_pass,6)
@@ -90,6 +81,8 @@ C (1-y1)*(1-y2), possibly approximated in the collinear limit(s)
           call SMATRIX_SPLITORDERS_3(p_pass,ANS_splitorders)
           ansk1 = ans_splitorders(0)
           call reset_spin_correlation_vectors_3()
+          ksq1 = -2 * p(0,1,1)**2 * xi1(2)
+          z1 = 1d0 - xi1(2)
           ans = alp8pi/-ksq1*(z1*ans+ansk1*4d0*(1d0-z1)/z1)/z1*(1d0-y2)
 
       else if (1d0-y1.gt.tiny.and.1d0-y2.lt.tiny) then !collinear on leg 2 (mu-)
@@ -97,7 +90,7 @@ C (1-y1)*(1-y2), possibly approximated in the collinear limit(s)
           p_pass(:,3:4) = p(:,3:4,3)
           p_pass(:,5) = p(:,5,3)
           p_pass(:,2) = p(:,1,3)
-          p_pass(:,1) = p(:,2,3) * (1d0-xi2)
+          p_pass(:,1) = p(:,2,3) * (1d0-xi2(3))
           !call write_momenta(p_pass,6)
           call check_momenta(p_pass,5,174.3d0)
           call ME_ACCESSOR_HOOK_2(p_pass,-1,0.118d0,ANS_splitorders)
@@ -110,12 +103,15 @@ C (1-y1)*(1-y2), possibly approximated in the collinear limit(s)
           call SMATRIX_SPLITORDERS_2(p_pass,ANS_splitorders)
           ansk2 = ans_splitorders(0)
           call reset_spin_correlation_vectors_2()
+          ksq2 = -2 * p(0,2,1)**2 * xi2(3)
+          z2 = 1d0 - xi2(3)
           ans = alp8pi/-ksq2*(z2*ans+ansk2*4d0*(1d0-z2)/z2)/z2*(1d0-y1)
-          !write(*,*) 'ANS 1-real', ans
+
       else if (1d0-y1.lt.tiny.and.1d0-y2.lt.tiny) then !collinear on legs 1/2
           p_pass(:,3:4) = p(:,3:4,4)
-          p_pass(:,2) = p(:,2,4) * (1d0-xi2)
-          p_pass(:,1) = p(:,1,4) * (1d0-xi1)
+          p_pass(:,2) = p(:,2,4) * (1d0-xi2(4))
+          p_pass(:,1) = p(:,1,4) * (1d0-xi1(4))
+          !call write_momenta(p(0,1,4),6)
           call check_momenta(p_pass,6,174.3d0)
           call ME_ACCESSOR_HOOK_1(p_pass,-1,0.118d0,ANS_splitorders)
           ans = ans_splitorders(0)
@@ -148,6 +144,10 @@ C (1-y1)*(1-y2), possibly approximated in the collinear limit(s)
           call SMATRIX_SPLITORDERS_1(p_pass,ANS_splitorders)
           ansk12 = ans_splitorders(0)
           call reset_spin_correlation_vectors_1()
+          ksq1 = -2 * p(0,1,1)**2 * xi1(4)
+          z1 = 1d0 - xi1(4)
+          ksq2 = -2 * p(0,2,1)**2 * xi2(4)
+          z2 = 1d0 - xi2(4)
           ans = alp8pi**2 / -ksq1 / -ksq2 * 
      #        (z1*z2*ans + z2*ansk1*4d0*(1d0-z1)/z1 + 
      #          z1*ansk2*4d0*(1d0-z2)/z2 +     

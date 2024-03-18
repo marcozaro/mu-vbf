@@ -69,8 +69,8 @@
           enddo
       endif
 
-      call compute_me_doublereal(p2,y1,y2,xi1,xi2,ph1,ph2,ANS)
-      write(*,*) ANS
+      !call compute_me_doublereal(p2,y1,y2,xi1,xi2,ph1,ph2,ANS)
+      !write(*,*) ANS
 
       enddo
 
@@ -115,8 +115,8 @@
       do icoll = 1, 4
         me(icoll) = 0d0
         if (passcuts2(p2(0,1,icoll))) then 
-          call compute_me_doublereal(p2,y1(icoll),y2(icoll),xi1(icoll),
-     &                             xi2(icoll),ph1(icoll),ph2(icoll),me(icoll))
+          call compute_me_doublereal(p2,y1(icoll),y2(icoll),xi1,
+     &                             xi2,ph1(icoll),ph2(icoll),me(icoll))
         endif
       enddo
 
