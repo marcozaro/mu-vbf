@@ -47,6 +47,8 @@ C
         integer npdf
         common/pdf_sets/npdf
         logical set_ilast
+        logical fill_histos
+        common /to_fill_histos/fill_histos
         SAVE
         ! MZ 2024 added
         ilast = 0
@@ -183,6 +185,7 @@ C
              do 22 k=ndim,1,-1
                  kg(k)=mod(kg(k),ng)+1
                  if(kg(k).ne.1) goto 10
+             
  22          enddo
              tsi=tsi*dv2g
              wgt=1.d0/tsi
@@ -235,6 +238,9 @@ C
  26             enddo
                 call rebin(rc/xnd,nd,r,xin,xi(1,j))
  27          enddo
+        if (fill_histos) call HwU_accum_iter(.true.,1,(/tsi,tsi/))
+        ! MZ the second argument should be NPSpoints, but vegas includes
+        ! the corresponding contribution already in the vegas_wgt.
  28     enddo
         return
  200  FORMAT(/' input parameters for vegas: ndim=',i3,' ncall=',f8.0

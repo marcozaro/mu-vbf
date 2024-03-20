@@ -9,7 +9,7 @@ LINKLIBS_ME =  -Llib/ -ldhelas -lmodel
 
 
 MEFILES = $(patsubst %.f,%.o,$(wildcard */matrix_mod.f))
-FILES = ranmar.o vegas.o cuts.o me_wrapper.o driver.o $(MEFILES) 
+FILES = ranmar.o vegas.o cuts.o me_wrapper.o HwU.o analysis_HwU_template.o driver.o $(MEFILES) 
 
 
 driver: libs $(FILES)
@@ -25,4 +25,4 @@ $(LIBDIR)/$(LIBRARY): $(patsubst %.f,%.o,$(wildcard */matrix.f))  all_matrix.o
 clean:
 	rm *.o */*.o
 	cd Source/MODEL ; make clean
-	cd ../DHELAS ; make clean
+	cd Source/DHELAS ; make clean

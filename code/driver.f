@@ -1,24 +1,12 @@
       program driver
       implicit none
 
-      ! the last index of the momenta array:
-      ! 1-> doubly resolved collinear emissions
-      ! 2-> single resolved collinear emission (y1=1)
-      ! 3-> single resolved collinear emission (y2=1)
-      ! 4-> no resolved collinear emission (y1=y2=1)
-      integer icoll
-      double precision p2(0:3,6,4), p1a(0:3,5,4), p1b(0:3,5,4),p0(0:3,4,4)
-      double precision y1, y2, xi1, xi2, ph1, ph2, phi, cth
       double precision shat, mmin, thresh, jac, mtop
       common /to_shat/shat
       double precision x(10)
       integer i,j
       logical check
       parameter(check=.true.)
-      double precision y1fix
-      common/to_y1_fix/y1fix
-      double precision y2fix
-      common/to_y2_fix/y2fix
 
       double precision ans
       include 'coupl.inc'
@@ -27,6 +15,8 @@
       external integrand
       double precision integral,error,prob
       integer nprn
+      logical fill_histos
+      common /to_fill_histos/fill_histos
 
       shat = (1000d0)**2
       call setpara('Cards/param_card.dat')
@@ -35,78 +25,58 @@
       jac = 1d0
       mmin = 2d0*mtop
       thresh = mmin**2/shat
-
+      !MZ leave this for now, to keep the RN sequence
       call fill_vegas_x(x)
 
-      do j = 1,10
-        y1fix=1d0-10d0**(-j*0.5d0)
-        write(*,*) 'Y1', y1fix
-        y2fix=1d0-10d0**(-j*0.5d0)
-        write(*,*) 'Y2', y2fix
-
-      call generate_kinematics(x, shat, thresh, icoll, y1, y2, xi1, xi2, ph1, ph2, phi, cth, jac)
-      
-      call generate_momenta(shat, mtop, y1, y2, xi1, xi2, ph1, ph2, cth, phi,
-     &                      p2(0,1,1), p1a(0,1,1), p1b(0,1,1), p0(0,1,1))
-
-      call generate_momenta(shat, mtop, 1d0, y2, xi1, xi2, ph1, ph2, cth, phi,
-     &                      p2(0,1,2), p1a(0,1,2), p1b(0,1,2), p0(0,1,2))
-
-      call generate_momenta(shat, mtop, y1, 1d0, xi1, xi2, ph1, ph2, cth, phi,
-     &                      p2(0,1,3), p1a(0,1,3), p1b(0,1,3), p0(0,1,3))
-
-      call generate_momenta(shat, mtop, 1d0, 1d0, xi1, xi2, ph1, ph2, cth, phi,
-     &                      p2(0,1,4), p1a(0,1,4), p1b(0,1,4), p0(0,1,4))
-
-      call write_momenta(p2(0,1,1),6)
-
-      if (check) then
-          do i = 1,4
-              call check_momenta(p2(0,1,i),6,mtop)
-              call check_momenta(p1a(0,1,i),5,mtop)
-              call check_momenta(p1b(0,1,i),5,mtop)
-              call check_momenta(p0(0,1,i),4,mtop)
-          enddo
-      endif
-
-      !call compute_me_doublereal(p2,y1,y2,xi1,xi2,ph1,ph2,ANS)
-      !write(*,*) ANS
-
-      enddo
-
       nprn = 0
+      ! fill histogram only in the refine phase
+      fill_histos = .false.
       call vegas01(10,integrand,0,10000,
      1        10,nprn,integral,error,prob)
+
+      fill_histos = .true.
+      call analysis_begin(1,"central")
       call vegas01(10,integrand,1,50000,
      1        4,nprn,integral,error,prob)
-
+      call analysis_end(1d0)
 
       return
       end
 
-      double precision function integrand(x)
+
+      double precision function integrand(x, vegas_wgt)
       implicit none
-      double precision x(10)
+      double precision x(10), vegas_wgt
       include 'coupl.inc'
       double precision shat
       common /to_shat/shat
       double precision thresh
       double precision mtop, mmin, jac(4), me(4)
-      double precision y1(4), y2(4), xi1(4), xi2(4), ph1(4), ph2(4), phi(4), cth(4)
+      double precision y1(4), y2(4), omy1(4), omy2(4), xi1(4), xi2(4), ph1(4), ph2(4), phi(4), cth(4)
       integer icoll
       logical passcuts2
       external passcuts2
       double precision p2(0:3,6,4), p1a(0:3,5,4), p1b(0:3,5,4),p0(0:3,4,4)
+      ! stuff for the analysis
+      integer pdgs2(6), status2(6)
+      double precision wgt_an(1)
+      logical fill_histos
+      common /to_fill_histos/fill_histos
+      
 
       mtop = mdl_mt
       mmin = 2d0*mtop
       thresh = mmin**2/shat
 
+      status2 = (/-1,-1,1,1,1,1/)
+      pdgs2 = (/-13,13,6,-6,-13,13/)
+
       ! generate the momenta for all kinematic configs
       do icoll = 1, 4
         jac(icoll) = 1d0
         call generate_kinematics(x, shat, thresh, icoll, 
-     &       y1(icoll), y2(icoll), xi1(icoll), xi2(icoll), ph1(icoll), ph2(icoll), phi(icoll), cth(icoll), jac(icoll))
+     &       y1(icoll), y2(icoll), omy1(icoll), omy2(icoll), xi1(icoll), xi2(icoll), 
+     &       ph1(icoll), ph2(icoll), phi(icoll), cth(icoll), jac(icoll))
         call generate_momenta(shat, mtop, y1(icoll), y2(icoll), xi1(icoll), xi2(icoll), 
      &                      ph1(icoll), ph2(icoll), cth(icoll), phi(icoll),
      &                      p2(0,1,icoll), p1a(0,1,icoll), p1b(0,1,icoll), p0(0,1,icoll))
@@ -115,13 +85,21 @@
       do icoll = 1, 4
         me(icoll) = 0d0
         if (passcuts2(p2(0,1,icoll))) then 
-          call compute_me_doublereal(p2,y1(icoll),y2(icoll),xi1,
+          call compute_me_doublereal(p2,y1(icoll),y2(icoll),omy1(icoll),omy2(icoll),xi1,
      &                             xi2,ph1(icoll),ph2(icoll),me(icoll))
+
+          if (fill_histos) then
+            wgt_an(1) = jac(icoll) * me(icoll) / (1d0-y1(1)) / (1d0-y2(1)) * vegas_wgt
+            if (icoll.eq.2.or.icoll.eq.3) wgt_an(1) = - wgt_an(1) 
+            call analysis_fill(p2(0,1,icoll),status2,pdgs2,wgt_an,icoll)
+          endif
         endif
       enddo
-
+      !write(*,*) y1(1), y2(1), me, jac
       integrand = jac(1) * me(1) - jac(2) * me(2) - jac(3) * me(3) + jac(4) * me(4)
       integrand = integrand / (1d0-y1(1)) / (1d0-y2(1))
+
+      if (fill_histos) call HwU_add_points()
 
       return
       end
@@ -364,7 +342,7 @@ C in their partonic c.o.m fram
       end
 
 
-      subroutine generate_kinematics(x, shat, thresh, icoll, y1, y2, xi1, xi2, ph1, ph2, phi, cth, jac)
+      subroutine generate_kinematics(x, shat, thresh, icoll, y1, y2, omy1, omy2, xi1, xi2, ph1, ph2, phi, cth, jac)
       implicit none
 C generates the kinematic variables (y_i,xi_i,ph_i, i=1,2) for each of
 C the two collinear splittings
@@ -375,39 +353,41 @@ C   2-> single resolved collinear emission (y1=1)
 C   3-> single resolved collinear emission (y2=1)
 C   4-> no resolved collinear emission (y1=y2=1)
 C
-C  jac includes the PS volumes, times flux (1/2shat) and converted to PB
+C  jac includes the PS volumes, times flux (1/2shat) and converted to PB.
+C  omy = 1-y (for better numerical accuracy)
       double precision x(10)
       double precision shat, thresh
       integer icoll
-      double precision y1, y2, xi1, xi2, ph1, ph2, phi, cth, jac
+      double precision y1, y2, omy1, omy2, xi1, xi2, ph1, ph2, phi, cth, jac
       double precision omega, sborn
       double precision pi
       parameter (pi=3.14159265359d0)
       double precision conv
       parameter (conv=389379.66*1000)  !conv to picobarns
-      double precision y1fix
-      common/to_y1_fix/y1fix
-      double precision y2fix
-      common/to_y2_fix/y2fix
       ! born angles
       cth = x(1)*2d0-1d0
       jac = jac*2d0
       phi = x(2)*2d0*pi
       jac = jac*2d0*pi
 
-      ! y, phi, flat (may be better to be adaptive towards y->1)
+      ! y, adaptive towards y->1
       if (icoll.ne.2.and.icoll.ne.4) then
-        y1 = x(3)*2d0-1d0
+        y1 = -2d0*x(3)**2+1d0
+        omy1 = 2d0*x(3)**2
       else
         y1 = 1d0
+        omy1 = 0d0
       endif
-      jac = jac*2d0
+      jac = jac*4d0*x(3)
       if (icoll.ne.3.and.icoll.ne.4) then
-        y2 = x(4)*2d0-1d0
+        y2 = -2d0*x(4)**2+1d0
+        omy2 = 2d0*x(4)**2
       else
         y2 = 1d0
+        omy2 = 0d0
       endif
-      jac = jac*2d0
+      jac = jac*4d0*x(4)
+      ! phi, flat
       ph1 = x(5)*2d0*pi
       jac = jac*2d0*pi
       ph2 = x(6)*2d0*pi
