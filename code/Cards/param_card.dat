@@ -18,7 +18,7 @@ Block loop
 ## INFORMATION FOR MASS
 ###################################
 Block mass 
-    6 1.7430000e+02 # MT 
+    6 1.743000e+02 # MT 
    23 9.118800e+06 # MZ 
    24 8.041900e+06 # MW 
    25 1.200000e+02 # MH 
@@ -62,7 +62,7 @@ Block yukawa
 ###################################
 ## INFORMATION FOR DECAY
 ###################################
-DECAY   6 1.354080e+00 # WT 
+DECAY   6 0.000000e+00 # WT 
 DECAY  23 2.428230e+00 # WZ 
 DECAY  24 2.028440e+00 # WW 
 DECAY  25 3.514960e-03 # WH 
