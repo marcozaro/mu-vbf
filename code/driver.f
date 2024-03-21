@@ -35,7 +35,7 @@
      1        10,nprn,integral,error,prob)
 
       fill_histos = .true.
-      call analysis_begin(1,"central")
+      call analysis_begin(1,"central value")
       call vegas01(10,integrand,1,50000,
      1        4,nprn,integral,error,prob)
       call analysis_end(1d0)
@@ -95,7 +95,6 @@
           endif
         endif
       enddo
-      !write(*,*) y1(1), y2(1), me, jac
       integrand = jac(1) * me(1) - jac(2) * me(2) - jac(3) * me(3) + jac(4) * me(4)
       integrand = integrand / (1d0-y1(1)) / (1d0-y2(1))
 
@@ -120,7 +119,7 @@ C     fill the vegas x.
       end
 
 
-      subroutine check_momenta(pp,n,mass)
+      subroutine check_momenta(pp,n)
 C    check momentum conservation and on-shell relations
       implicit none
       double precision pp(0:3,*), mass
@@ -131,6 +130,8 @@ C    check momentum conservation and on-shell relations
       integer i, j
       double precision dot
       external dot
+      include 'coupl.inc'
+      mass = mdl_mt
 
       etot = pp(0,1) + pp(0,2)
 

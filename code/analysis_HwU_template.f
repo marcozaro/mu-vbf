@@ -39,7 +39,17 @@ c weights and the information on the weights:
       call HwU_inithist(nwgt,weights_info)
 c declare (i.e. book) the histograms
       call HwU_book(1,'total rate      ', 5,0.5d0,5.5d0)
-      call HwU_book(2,'total rate Born ', 5,0.5d0,5.5d0)
+      call HwU_book(2,'total rate real ', 5,0.5d0,5.5d0)
+      call HwU_book(3,'mtt ',   50,0d0,1000d0)
+      call HwU_book(4,'thetatt ', 50,-1.5707963268d0,1.5707963268d0)
+      call HwU_book(5,'pttt ', 50,0d0,1000d0)
+      call HwU_book(6,'ptmup', 50,0d0,1000d0)
+      call HwU_book(7,'ptmum', 50,0d0,1000d0)
+      call HwU_book(8,'pttop', 50,0d0,1000d0)
+      call HwU_book(9,'ptatop', 50,0d0,1000d0)
+      call HwU_book(10,'mmumu ',   50,0d0,1000d0)
+      call HwU_book(11,'thetamup', 50,-1.5707963268d0,1.5707963268d0)
+      call HwU_book(12,'thetamum', 50,-1.5707963268d0,1.5707963268d0)
       return
       end
 
@@ -103,6 +113,10 @@ c fluctuations).
       integer ibody
 c local variable
       double precision var
+      double precision p_tt(0:3), p_mm(0:3)
+      double precision pt_tt, th_tt, m_tt
+      double precision th_mp, th_mm, m_mm
+      double precision pt_mp, pt_mm, pt_t, pt_tx
 c
 c Fill the histograms here using a call to the HwU_fill()
 c subroutine. The first argument is the histogram label, the second is
@@ -110,9 +124,36 @@ c the numerical value of the variable to plot for the current
 c phase-space point and the final argument is the weight of the current
 c phase-space point.
       var=1d0
+      p_tt(:) = p(:,3) + p(:,4)
+      p_mm(:) = p(:,5) + p(:,6)
+      pt_tt = dsqrt(p_tt(1)**2 + p_tt(2)**2)
+      th_tt = datan(pt_tt / p_tt(3))
+      m_tt = p_tt(0)**2 - p_tt(1)**2 - p_tt(2)**2 - p_tt(3)**2
+      m_mm = p_mm(0)**2 - p_mm(1)**2 - p_mm(2)**2 - p_mm(3)**2
+      m_tt = dsqrt(m_tt)
+      m_mm = dsqrt(m_mm)
+
+      pt_t  = dsqrt(p(1,3)**2 + p(2,3)**2)
+      pt_tx = dsqrt(p(1,4)**2 + p(2,4)**2)
+      pt_mp = dsqrt(p(1,5)**2 + p(2,5)**2)
+      pt_mm = dsqrt(p(1,6)**2 + p(2,6)**2)
+      th_mp = datan(pt_mp / p(3,5))
+      th_mm = datan(pt_mm / p(3,6))
 c always fill the total rate
       call HwU_fill(1,var,wgts)
 c only fill the total rate for the Born when ibody=3
       if (ibody.eq.3) call HwU_fill(2,var,wgts)
+
+      call HwU_fill(3,m_tt,wgts)
+      call HwU_fill(4,th_tt,wgts)
+      call HwU_fill(5,pt_tt,wgts)
+
+      call HwU_fill(6,pt_mp,wgts)
+      call HwU_fill(7,pt_mm,wgts)
+      call HwU_fill(8,pt_t ,wgts)
+      call HwU_fill(9,pt_tx,wgts)
+      call HwU_fill(10,m_mm,wgts)
+      call HwU_fill(11,th_mp,wgts)
+      call HwU_fill(12,th_mm,wgts)
       return
       end
