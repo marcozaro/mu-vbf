@@ -1,51 +1,125 @@
       program driver
       implicit none
 
-      double precision p2(0:3,6), p1a(0:3,5), p1b(0:3,5), p0(0:3,4)
-      double precision y1, y2, xi1, xi2, ph1, ph2, phi, cth
       double precision shat, mmin, thresh, jac, mtop
-      double precision x(99)
-      integer i
+      common /to_shat/shat
+      double precision x(10)
+      integer i,j
       logical check
       parameter(check=.true.)
 
+      double precision ans
+      include 'coupl.inc'
+
+      double precision integrand
+      external integrand
+      double precision integral,error,prob
+      integer nprn
+      logical fill_histos
+      common /to_fill_histos/fill_histos
+
       shat = (1000d0)**2
-      mtop = 173d0
+      call setpara('Cards/param_card.dat')
+      call printout()
+      mtop = mdl_mt
       jac = 1d0
       mmin = 2d0*mtop
       thresh = mmin**2/shat
+      !MZ leave this for now, to keep the RN sequence
+      call fill_vegas_x(x)
 
-      call fill_vegas_x(x, i)
+      nprn = 0
+      ! fill histogram only in the refine phase
+      fill_histos = .false.
+      call vegas01(10,integrand,0,10000,
+     1        10,nprn,integral,error,prob)
 
-      call generate_kinematics(x, thresh, y1, y2, xi1, xi2, ph1, ph2, phi, cth, jac)
-     &
-      call generate_momenta(shat, mtop, y1, y2, xi1, xi2, ph1, ph2, cth, phi,
-     &                      p2, p1a, p1b, p0)
-      if (check) then
-          call check_momenta(p2,6,mtop)
-          call check_momenta(p1a,5,mtop)
-          call check_momenta(p1b,5,mtop)
-          call check_momenta(p0,4,mtop)
-      endif
+      fill_histos = .true.
+      call analysis_begin(1,"central value")
+      call vegas01(10,integrand,1,50000,
+     1        4,nprn,integral,error,prob)
+      call analysis_end(1d0)
 
       return
       end
 
 
-      subroutine fill_vegas_x(x,i)
-C     fill the vegas x. In case i is passed, do something with it as an
-C     external variable (e.g. use it to scale one variable towards some
-C     limit
+      double precision function integrand(x, vegas_wgt)
       implicit none
-      double precision x(99)
-      integer i
+      double precision x(10), vegas_wgt
+      include 'coupl.inc'
+      double precision shat
+      common /to_shat/shat
+      double precision thresh
+      double precision mtop, mmin, jac(4), me(4)
+      double precision y1(4), y2(4), omy1(4), omy2(4), xi1(4), xi2(4), ph1(4), ph2(4), phi(4), cth(4)
+      integer icoll
+      logical passcuts2
+      external passcuts2
+      double precision p2(0:3,6,4), p1a(0:3,5,4), p1b(0:3,5,4),p0(0:3,4,4)
+      ! stuff for the analysis
+      integer pdgs2(6), status2(6)
+      double precision wgt_an(1)
+      logical fill_histos
+      common /to_fill_histos/fill_histos
+      
 
-      call random_number(x)
+      mtop = mdl_mt
+      mmin = 2d0*mtop
+      thresh = mmin**2/shat
+
+      status2 = (/-1,-1,1,1,1,1/)
+      pdgs2 = (/-13,13,6,-6,-13,13/)
+
+      ! generate the momenta for all kinematic configs
+      do icoll = 1, 4
+        jac(icoll) = 1d0
+        call generate_kinematics(x, shat, thresh, icoll, 
+     &       y1(icoll), y2(icoll), omy1(icoll), omy2(icoll), xi1(icoll), xi2(icoll), 
+     &       ph1(icoll), ph2(icoll), phi(icoll), cth(icoll), jac(icoll))
+        call generate_momenta(shat, mtop, y1(icoll), y2(icoll), xi1(icoll), xi2(icoll), 
+     &                      ph1(icoll), ph2(icoll), cth(icoll), phi(icoll),
+     &                      p2(0,1,icoll), p1a(0,1,icoll), p1b(0,1,icoll), p0(0,1,icoll))
+      enddo
+
+      do icoll = 1, 4
+        me(icoll) = 0d0
+        if (passcuts2(p2(0,1,icoll))) then 
+          call compute_me_doublereal(p2,y1(icoll),y2(icoll),omy1(icoll),omy2(icoll),xi1,
+     &                             xi2,ph1(icoll),ph2(icoll),me(icoll))
+
+          if (fill_histos) then
+            wgt_an(1) = jac(icoll) * me(icoll) / (1d0-y1(1)) / (1d0-y2(1)) * vegas_wgt
+            if (icoll.eq.2.or.icoll.eq.3) wgt_an(1) = - wgt_an(1) 
+            call analysis_fill(p2(0,1,icoll),status2,pdgs2,wgt_an,icoll)
+          endif
+        endif
+      enddo
+      integrand = jac(1) * me(1) - jac(2) * me(2) - jac(3) * me(3) + jac(4) * me(4)
+      integrand = integrand / (1d0-y1(1)) / (1d0-y2(1))
+
+      if (fill_histos) call HwU_add_points()
+
+      return
+      end
+
+
+      subroutine fill_vegas_x(x)
+C     fill the vegas x.
+      implicit none
+      double precision x(10)
+      integer i
+      double precision ran2
+      external ran2
+      do i = 1,10
+         x(i) = ran2()
+      enddo
+
       return 
       end
 
 
-      subroutine check_momenta(pp,n,mass)
+      subroutine check_momenta(pp,n)
 C    check momentum conservation and on-shell relations
       implicit none
       double precision pp(0:3,*), mass
@@ -56,12 +130,16 @@ C    check momentum conservation and on-shell relations
       integer i, j
       double precision dot
       external dot
+      include 'coupl.inc'
+      mass = mdl_mt
 
       etot = pp(0,1) + pp(0,2)
 
       if (etot.lt.2*mass) then
           write(*,*) 'ERROR1', etot, mass
           call write_momenta(pp,n)
+            call backtrace()
+            stop
       endif
 
       ptot(:) = 0d0
@@ -75,21 +153,27 @@ C    check momentum conservation and on-shell relations
         if (abs(ptot(j))/etot.gt.tiny) then
             write(*,*) 'ERROR2', j, ptot
             call write_momenta(pp,n)
+            call backtrace()
+            stop
         endif
       enddo
 
       ! check massless momenta
       do i = 1,n
         if (i.eq.3.or.i.eq.4) then
-          if ((sqrt(dot(pp(0,i),pp(0,i)))-mass)/etot.gt.tiny) then
+          if ((dot(pp(0,i),pp(0,i))-mass**2)/etot.gt.tiny) then
               write(*,*) 'ERROR3', i, dot(pp(0,i),pp(0,i)), etot
             call write_momenta(pp,n)
+            call backtrace()
+            stop
           endif
 
         else
-          if (sqrt(abs(dot(pp(0,i),pp(0,i))/etot**2)).gt.tiny) then
+          if (abs(dot(pp(0,i),pp(0,i))/etot**2).gt.tiny) then
               write(*,*) 'ERROR4', i, dot(pp(0,i),pp(0,i)), etot
             call write_momenta(pp,n)
+            call backtrace()
+            stop
           endif
         endif
       enddo 
@@ -106,7 +190,8 @@ C    check momentum conservation and on-shell relations
       integer i
 
       do i = 1,n
-        write(*,*) i, pp(:,i)
+        write(*,*) 'p(:,',i,')=(/', pp(0,i),',', pp(1,i),',',
+     #                              pp(2,i),',',pp(3,i),'/)'
       enddo
 
       return
@@ -156,8 +241,7 @@ C  - p0 without emissions
       call generate_fks_momentum(shat,xi2,y2,ph2,2,p1b(0,5))
       call boost_momenta_born(p1b(0,3),p1b(0,5))
       ! p2
-      !omega = sqrt(1d0-y1**2)*sqrt(1d0-y2**2)*dcos(ph1-ph2)+y1*y2
-      omega = sqrt(1d0-y1**2)*sqrt(1d0-y2**2)*dcos(ph1-ph2)-y1*y2
+      omega = dsqrt(1d0-y1**2)*dsqrt(1d0-y2**2)*dcos(ph1-ph2)-y1*y2
       sborn = shat*(1d0-xi1-xi2+xi1*xi2*(1d0-omega)/2d0) 
       call generate_is(shat, p2(0,1))
       call generate_born_fs(sborn,m,cth,phi,p2(0,3))
@@ -197,48 +281,6 @@ C recoil against prec
       end
 
 
-
-      subroutine boostx(p,q , pboost)
-c
-c This subroutine performs the Lorentz boost of a four-momentum.  The
-c momentum p is assumed to be given in the rest frame of q.  pboost is
-c the momentum p boosted to the frame in which q is given.  q must be a
-c timelike momentum.
-c
-c input:
-c       real    p(0:3)         : four-momentum p in the q rest  frame
-c       real    q(0:3)         : four-momentum q in the boosted frame
-c
-c output:
-c       real    pboost(0:3)    : four-momentum p in the boosted frame
-c
-      implicit none
-      double precision p(0:3),q(0:3),pboost(0:3),pq,qq,m,lf
-
-      double precision rZero
-      parameter( rZero = 0.0d0 )
-
-      qq = q(1)**2+q(2)**2+q(3)**2
-
-      if ( qq.ne.rZero ) then
-         pq = p(1)*q(1)+p(2)*q(2)+p(3)*q(3)
-         m = sqrt(max(q(0)**2-qq,1d-99))
-         lf = ((q(0)-m)*pq/qq+p(0))/m
-         pboost(0) = (p(0)*q(0)+pq)/m
-         pboost(1) =  p(1)+q(1)*lf
-         pboost(2) =  p(2)+q(2)*lf
-         pboost(3) =  p(3)+q(3)*lf
-      else
-         pboost(0) = p(0)
-         pboost(1) = p(1)
-         pboost(2) = p(2)
-         pboost(3) = p(3)
-      endif
-c
-      return
-      end
-
-
       subroutine generate_fks_momentum(shat,xi,y,ph,ileg,p)
       implicit none
 C generate the FKS radiated particle, ie a massless particle
@@ -250,9 +292,9 @@ C with energy xi, angles y and phi, w.r.t. the initial leg i
 
       sth = dsqrt(max(1d0-y**2,0d0))
 
-      p(:) = xi*sqrt(shat)/2d0
-      p(1) = p(1)*sth*cos(ph)
-      p(2) = p(2)*sth*sin(ph)
+      p(:) = xi*dsqrt(shat)/2d0
+      p(1) = p(1)*sth*dcos(ph)
+      p(2) = p(2)*sth*dsin(ph)
       if (ileg.eq.1) then
           p(3) = p(3)*y
       else if (ileg.eq.2) then
@@ -301,35 +343,63 @@ C in their partonic c.o.m fram
       end
 
 
-      subroutine generate_kinematics(x, thresh, y1, y2, xi1, xi2, ph1, ph2, phi, cth, jac)
+      subroutine generate_kinematics(x, shat, thresh, icoll, y1, y2, omy1, omy2, xi1, xi2, ph1, ph2, phi, cth, jac)
       implicit none
 C generates the kinematic variables (y_i,xi_i,ph_i, i=1,2) for each of
 C the two collinear splittings
 C Generates phi,cth, the angles in the 2->2 scattering
-      double precision x(99)
-      double precision thresh
-      double precision y1, y2, xi1, xi2, ph1, ph2, phi, cth, jac
-      double precision omega
+C   icoll:
+C   1-> doubly resolved collinear emissions
+C   2-> single resolved collinear emission (y1=1)
+C   3-> single resolved collinear emission (y2=1)
+C   4-> no resolved collinear emission (y1=y2=1)
+C
+C  jac includes the PS volumes, times flux (1/2shat) and converted to PB.
+C  omy = 1-y (for better numerical accuracy)
+      double precision x(10)
+      double precision shat, thresh
+      integer icoll
+      double precision y1, y2, omy1, omy2, xi1, xi2, ph1, ph2, phi, cth, jac
+      double precision omega, sborn
       double precision pi
       parameter (pi=3.14159265359d0)
+      double precision conv
+      parameter (conv=389379.66*1000)  !conv to picobarns
       ! born angles
       cth = x(1)*2d0-1d0
       jac = jac*2d0
       phi = x(2)*2d0*pi
       jac = jac*2d0*pi
 
-      ! y, phi, flat (may be better to be adaptive towards y->1)
-      y1 = x(3)*2d0-1d0
-      jac = jac*2d0
-      y2 = x(4)*2d0-1d0
-      jac = jac*2d0
+      ! y, adaptive towards y->1
+      if (icoll.ne.2.and.icoll.ne.4) then
+        y1 = -2d0*x(3)**2+1d0
+        omy1 = 2d0*x(3)**2
+      else
+        y1 = 1d0
+        omy1 = 0d0
+      endif
+      jac = jac*4d0*x(3)
+      if (icoll.ne.3.and.icoll.ne.4) then
+        y2 = -2d0*x(4)**2+1d0
+        omy2 = 2d0*x(4)**2
+      else
+        y2 = 1d0
+        omy2 = 0d0
+      endif
+      jac = jac*4d0*x(4)
+      ! phi, flat
       ph1 = x(5)*2d0*pi
       jac = jac*2d0*pi
       ph2 = x(6)*2d0*pi
       jac = jac*2d0*pi
+      !write(*,*) 'FORCING y1', y1fix
+      !y1 = y1fix
+      !write(*,*) 'FORCING y2', y2fix
+      !y2 = y2fix
+
       ! xi1/2 following the formulae on the note.
       ! randomize which one is generated first
-      !omega = sqrt(1d0-y1**2)*sqrt(1d0-y2**2)*dcos(ph1-ph2)+y1*y2
       omega = sqrt(1d0-y1**2)*sqrt(1d0-y2**2)*dcos(ph1-ph2)-y1*y2
 
       if (x(7).lt.0.5d0) then
@@ -343,6 +413,18 @@ C Generates phi,cth, the angles in the 2->2 scattering
           xi1 = x(8)*2d0*(1d0-thresh-xi2)/(2d0-(1d0-omega)*xi2)
           jac = jac*2d0*(1d0-thresh-xi2)/(2d0-(1d0-omega)*xi2)
       endif
+
+      ! finally, turn jac into the proper phase-space volume
+      ! this is the contribution from the two radiations
+      jac = jac * (shat / 64d0 / pi**3)**2 * xi1 * xi2
+      ! this is for the underlying born
+      sborn = shat*(1d0-xi1-xi2+xi1*xi2*(1d0-omega)/2d0) 
+      ! 1/32pi^2 p/sqrt[mt^2+p^2]
+      jac = jac / 32d0 / pi**2 * sqrt(1d0-thresh*shat/sborn)
+      ! to pb and flux
+      jac = jac * conv / 2d0 /shat
+
+      if (jac.ne.jac) jac = 0d0
 
       return
       end
