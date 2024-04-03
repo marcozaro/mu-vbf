@@ -26,15 +26,30 @@
         lum = lum*mupdf(x2, omx2, mu2)
       else if (ilum.eq.2) then
         ! gamma mu scattering
-        write(*,*) 'ILUM 2 not implemented!!'
+        call generate_x_gam(rnd(1), smin/scoll, x1, omx1, jac_ee)
+        jac = jac * jac_ee
+        lum = gampdf(x1, omx1, mu2)
+        call generate_x_ee(rnd(2), smin/scoll/x1, x2, omx2, jac_ee)
+        jac = jac * jac_ee
+        lum = lum*mupdf(x2, omx2, mu2)
 
       else if (ilum.eq.3) then
         ! mu gamma scattering
-        write(*,*) 'ILUM 3 not implemented!!'
+        call generate_x_ee(rnd(1), smin/scoll, x1, omx1, jac_ee)
+        jac = jac * jac_ee
+        lum = mupdf(x1, omx1, mu2)
+        call generate_x_gam(rnd(2), smin/scoll/x1, x2, omx2, jac_ee)
+        jac = jac * jac_ee
+        lum = lum*gampdf(x2, omx2, mu2)
 
       else if (ilum.eq.4) then
         ! mu gamma scattering
-        write(*,*) 'ILUM 4 not implemented!!'
+        call generate_x_gam(rnd(1), smin/scoll, x1, omx1, jac_ee)
+        jac = jac * jac_ee
+        lum = gampdf(x1, omx1, mu2)
+        call generate_x_gam(rnd(2), smin/scoll/x1, x2, omx2, jac_ee)
+        jac = jac * jac_ee
+        lum = lum*gampdf(x2, omx2, mu2)
       else
         write(*,*) 'ERROR: wrong ilum', ilum
         stop 1
@@ -99,11 +114,42 @@
       end
 
 
+      subroutine generate_x_gam(rnd, xmin, x, omx, jac)
+      implicit none
+      ! generates the momentum fraction with importance
+      !  sampling suitable for gamma e collisions
+      ! rnd is generated uniformly in [0,1], 
+      ! x is generated according to 1/rnd, starting
+      ! from xmin
+      ! jac is the corresponding jacobian
+      ! omx is 1-x, stored to improve numerical accuracy
+      double precision rnd, x, omx, jac, xmin
+      double precision tolerance
+      parameter (tolerance=1.d-5)
+
+
+      x = exp(rnd*dlog(xmin))
+      omx = 1d0-x 
+      jac = abs(log(xmin))
+      if (x.ge.1d0) then
+        if (x.lt.1d0+tolerance) then
+          x=1d0
+        else
+          write(*,*) 'ERROR in generate_x_ee', rnd, x
+          stop 1
+        endif
+      endif
+
+      return 
+      end
+
+
       double precision function mupdf(x,omx,Q2)
       implicit none
       ! a wrapper to whatever implementation of the  muon PDF
       ! we are employing
-      ! It includes a factor (1-x)^ get_ee_expo
+      ! It includes a factor (1-x)^ get_ee_expo (included in the PS
+      ! jacobian)
       double precision x, omx, q2
       double precision eepdf_tilde, eepdf_tilde_power, get_ee_expo
       external eepdf_tilde, eepdf_tilde_power, get_ee_expo
@@ -126,8 +172,16 @@
       implicit none
       ! a wrapper to whatever implementation of the photon PDF
       ! we are employing
+      ! The function is multiplied by a factor x (included in the PS
+      ! jacobian)
+      ! For the moment, we use the crude WW formula
+      include 'coupl.inc'
+      double precision pi
+      parameter (pi=3.14159265359d0)
+      real*8 me
+      data me /0.105658d0/
       double precision x, omx, q2
-      gampdf = 0d0
+      gampdf = dble(gal(1)**2)/8d0/pi**2 * (1d0+(1d0-x)**2)*dlog(q2/me**2)
       return
       end
 
