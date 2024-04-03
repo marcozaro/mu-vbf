@@ -50,6 +50,9 @@ c declare (i.e. book) the histograms
       call HwU_book(10,'mmumu ',   50,0d0,1000d0)
       call HwU_book(11,'thetamup', 50,-1.5707963268d0,1.5707963268d0)
       call HwU_book(12,'thetamum', 50,-1.5707963268d0,1.5707963268d0)
+      call HwU_book(13,'2mu2top invm', 50, 0d0, 1000d0)
+      call HwU_book(14,'2mu2top rap', 50,-3d0,3d0)
+      call HwU_book(15,'2mu2top pt', 50, 0d0, 1000d0)
       return
       end
 
@@ -113,9 +116,10 @@ c fluctuations).
       integer ibody
 c local variable
       double precision var
-      double precision p_tt(0:3), p_mm(0:3)
+      double precision p_tt(0:3), p_mm(0:3), p_ttmm(0:3)
       double precision pt_tt, th_tt, m_tt
       double precision th_mp, th_mm, m_mm
+      double precision y_ttmm, m_ttmm, pt_ttmm
       double precision pt_mp, pt_mm, pt_t, pt_tx
 c
 c Fill the histograms here using a call to the HwU_fill()
@@ -126,12 +130,17 @@ c phase-space point.
       var=1d0
       p_tt(:) = p(:,3) + p(:,4)
       p_mm(:) = p(:,5) + p(:,6)
+      p_ttmm(:) = p_tt(:) + p_mm(:)
       pt_tt = dsqrt(p_tt(1)**2 + p_tt(2)**2)
       th_tt = datan(pt_tt / p_tt(3))
       m_tt = p_tt(0)**2 - p_tt(1)**2 - p_tt(2)**2 - p_tt(3)**2
       m_mm = p_mm(0)**2 - p_mm(1)**2 - p_mm(2)**2 - p_mm(3)**2
       m_tt = dsqrt(m_tt)
       m_mm = dsqrt(m_mm)
+      m_ttmm = p_ttmm(0)**2 - p_ttmm(1)**2 - p_ttmm(2)**2 - p_ttmm(3)**2
+      m_ttmm = min(dsqrt(m_ttmm), 999.9999d0) ! prevent overflow
+      pt_ttmm = dsqrt(p_ttmm(1)**2 + p_ttmm(2)**2)
+      y_ttmm = 0.5d0 * dlog((p_ttmm(0)+p_ttmm(3))/(p_ttmm(0)-p_ttmm(3)))
 
       pt_t  = dsqrt(p(1,3)**2 + p(2,3)**2)
       pt_tx = dsqrt(p(1,4)**2 + p(2,4)**2)
@@ -155,5 +164,8 @@ c only fill the total rate for the Born when ibody=3
       call HwU_fill(10,m_mm,wgts)
       call HwU_fill(11,th_mp,wgts)
       call HwU_fill(12,th_mm,wgts)
+      call HwU_fill(13,m_ttmm,wgts)
+      call HwU_fill(14,y_ttmm,wgts)
+      call HwU_fill(15,pt_ttmm,wgts)
       return
       end

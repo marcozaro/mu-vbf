@@ -1,8 +1,8 @@
       program driver
       implicit none
 
-      double precision shat, mmin, thresh, jac, mtop
-      common /to_shat/shat
+      double precision scoll
+      common /to_scoll/scoll
       double precision x(10)
       integer i,j
       logical check
@@ -18,13 +18,9 @@
       logical fill_histos
       common /to_fill_histos/fill_histos
 
-      shat = (1000d0)**2
+      scoll = (1000d0)**2
       call setpara('Cards/param_card.dat')
       call printout()
-      mtop = mdl_mt
-      jac = 1d0
-      mmin = 2d0*mtop
-      thresh = mmin**2/shat
       !MZ leave this for now, to keep the RN sequence
       call fill_vegas_x(x)
 
@@ -48,17 +44,22 @@
       implicit none
       double precision x(10), vegas_wgt
       include 'coupl.inc'
+      double precision scoll
+      common /to_scoll/scoll
       double precision shat
       common /to_shat/shat
       double precision thresh
-      double precision mtop, mmin, jac(4), me(4)
+      double precision mtop, mmin, jac(4), me(4), jac_pdf
       double precision y1(4), y2(4), omy1(4), omy2(4), xi1(4), xi2(4), ph1(4), ph2(4), phi(4), cth(4)
       integer icoll
       logical passcuts2
       external passcuts2
       double precision p2(0:3,6,4), p1a(0:3,5,4), p1b(0:3,5,4),p0(0:3,4,4)
+      double precision tau, ycm
+      double precision mumulum
       ! stuff for the analysis
       integer pdgs2(6), status2(6)
+      double precision p_an(0:3,6)
       double precision wgt_an(1)
       logical fill_histos
       common /to_fill_histos/fill_histos
@@ -66,14 +67,22 @@
 
       mtop = mdl_mt
       mmin = 2d0*mtop
+
+      ! generate the mu mu luminosity
+      jac_pdf = 1d0
+      call get_lum(1,x(9:10),scoll,mmin**2,jac_pdf,mumulum,tau,ycm)
+
+      shat = tau * scoll
       thresh = mmin**2/shat
 
       status2 = (/-1,-1,1,1,1,1/)
       pdgs2 = (/-13,13,6,-6,-13,13/)
 
+      ! compute the luminosity for the muon pair
+
       ! generate the momenta for all kinematic configs
       do icoll = 1, 4
-        jac(icoll) = 1d0
+        jac(icoll) = jac_pdf
         call generate_kinematics(x, shat, thresh, icoll, 
      &       y1(icoll), y2(icoll), omy1(icoll), omy2(icoll), xi1(icoll), xi2(icoll), 
      &       ph1(icoll), ph2(icoll), phi(icoll), cth(icoll), jac(icoll))
@@ -84,19 +93,24 @@
 
       do icoll = 1, 4
         me(icoll) = 0d0
-        if (passcuts2(p2(0,1,icoll))) then 
+        ! boost the momenta to the lab frame. This is needed
+        ! both for cuts and for the analysis
+        call boost_to_lab_frame(p2(0,1,icoll),p_an,ycm)
+        if (passcuts2(p_an)) then 
           call compute_me_doublereal(p2,y1(icoll),y2(icoll),omy1(icoll),omy2(icoll),xi1,
      &                             xi2,ph1(icoll),ph2(icoll),me(icoll))
 
           if (fill_histos) then
-            wgt_an(1) = jac(icoll) * me(icoll) / (1d0-y1(1)) / (1d0-y2(1)) * vegas_wgt
+            wgt_an(1) = jac(icoll) * me(icoll) / (1d0-y1(1)) / (1d0-y2(1)) 
+     &           * vegas_wgt * mumulum
             if (icoll.eq.2.or.icoll.eq.3) wgt_an(1) = - wgt_an(1) 
-            call analysis_fill(p2(0,1,icoll),status2,pdgs2,wgt_an,icoll)
+            call analysis_fill(p_an,status2,pdgs2,wgt_an,icoll)
           endif
         endif
       enddo
       integrand = jac(1) * me(1) - jac(2) * me(2) - jac(3) * me(3) + jac(4) * me(4)
       integrand = integrand / (1d0-y1(1)) / (1d0-y2(1))
+      integrand = integrand * mumulum
 
       if (fill_histos) call HwU_add_points()
 
@@ -364,7 +378,7 @@ C  omy = 1-y (for better numerical accuracy)
       double precision pi
       parameter (pi=3.14159265359d0)
       double precision conv
-      parameter (conv=389379.66*1000)  !conv to picobarns
+      parameter (conv=389379.66d0*1000)  !conv to picobarns
       ! born angles
       cth = x(1)*2d0-1d0
       jac = jac*2d0
@@ -393,10 +407,6 @@ C  omy = 1-y (for better numerical accuracy)
       jac = jac*2d0*pi
       ph2 = x(6)*2d0*pi
       jac = jac*2d0*pi
-      !write(*,*) 'FORCING y1', y1fix
-      !y1 = y1fix
-      !write(*,*) 'FORCING y2', y2fix
-      !y2 = y2fix
 
       ! xi1/2 following the formulae on the note.
       ! randomize which one is generated first
@@ -423,6 +433,10 @@ C  omy = 1-y (for better numerical accuracy)
       jac = jac / 32d0 / pi**2 * sqrt(1d0-thresh*shat/sborn)
       ! to pb and flux
       jac = jac * conv / 2d0 /shat
+
+      ! extra factor 2 (needed to get agreement on PS volume with MG, 
+      ! may be hidden somewhere else
+      jac = jac / 2d0
 
       if (jac.ne.jac) jac = 0d0
 
@@ -474,4 +488,30 @@ C****************************************************************************
          dot=0d0
       endif
 
+      end
+
+
+
+      subroutine boost_to_lab_frame(p_cm,p_an,ycm)
+      implicit none
+      double precision p_cm(0:3,6), p_an(0:3,6), ycm
+      double precision chybst, shybst, chybstmo
+      double precision xd(1:3)
+      data (xd(i),i=1,3)/0,0,1/
+
+      integer i
+
+      ! chybst=cosh(ybst_til_tolab)
+      ! shybst=sinh(ybst_til_tolab)
+      ! ybst_til_tolab = -ycm
+      chybst=cosh(ycm)
+      shybst= -sinh(ycm)
+      chybstmo=chybst-1.d0
+
+      do i = 1, 6
+         call boostwdir2(chybst,shybst,chybstmo,xd,
+     &        p_cm(0,i),p_an(0,i))
+      enddo
+
+      return
       end
