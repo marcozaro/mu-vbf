@@ -44,57 +44,72 @@
       implicit none
       double precision x(10), vegas_wgt
       include 'coupl.inc'
+      double precision  mmin
+      common /to_mmin/mmin
+      double precision mfin
+      common /to_mfin/mfin
+      double precision integrand_mumu,integrand_muga,integrand_gamu,integrand_gaga
+      external integrand_mumu, integrand_gaga
+      logical fill_histos
+      common /to_fill_histos/fill_histos
+
+      mfin = mdl_mt
+      mmin = 2d0*mfin
+
+      integrand = 0d0
+
+      ! mu-mu in initial state
+      integrand = integrand + integrand_mumu(x,vegas_wgt) 
+      ! gam-gam in initial state
+      integrand = integrand + integrand_gaga(x,vegas_wgt) 
+
+      if (fill_histos) call HwU_add_points()
+
+      return
+      end
+
+
+
+      double precision function integrand_mumu(x,vegas_wgt)
+      implicit none
+      !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      ! THE MUON-MUON CONTRIBUTION
+      !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      double precision x(10), vegas_wgt
+      double precision jac_pdf, lum, tau, ycm
       double precision scoll
       common /to_scoll/scoll
       double precision shat
       common /to_shat/shat
+      double precision mmin
+      common /to_mmin/mmin
+      double precision mfin
+      common /to_mfin/mfin
       double precision thresh
-      double precision mtop, mmin, me(4), jac_pdf
-      double precision jac2(4), jac1a(4), jac1b(4), jac0(4)
+      double precision jac2(4), jac1a(4), jac1b(4), jac0(4), me(4)
       double precision y1(4), y2(4), omy1(4), omy2(4), xi1(4), xi2(4), ph1(4), ph2(4), phi(4), cth(4)
       integer icoll
       logical passcuts2
       external passcuts2
       double precision p2(0:3,6,4), p1a(0:3,6,4), p1b(0:3,6,4),p0(0:3,6,4)
-      double precision tau, ycm
-      double precision mumulum,mugalum,gamulum,gagalum
-      double precision integrand_mumu,integrand_muga,integrand_gamu,integrand_gaga
       ! stuff for the analysis
-      integer pdgs2(6), status2(6)
-      integer pdgs0(6), status0(6)
+      integer pdgs(6), istatus(6)
       double precision p_an(0:3,6)
       double precision wgt_an(1)
       logical fill_histos
       common /to_fill_histos/fill_histos
 
-      logical mumu_doublereal, gaga_born
-      !!parameter (mumu_doublereal=.true.)
+      logical mumu_doublereal
       parameter (mumu_doublereal=.false.)
-      parameter (gaga_born=.true.)
-      
 
-      mtop = mdl_mt
-      mmin = 2d0*mtop
+      istatus = (/-1,-1,1,1,1,1/)
+      pdgs = (/-13,13,6,-6,-13,13/)
 
       integrand_mumu = 0d0
-      integrand_gamu = 0d0
-      integrand_muga = 0d0
-      integrand_gaga = 0d0
-      integrand = 0d0
-
-      status2 = (/-1,-1,1,1,1,1/)
-      pdgs2 = (/-13,13,6,-6,-13,13/)
-
-      status0 = (/-1,-1,1,1,1,1/)
-      pdgs0 = (/-22,22,6,-6,-13,13/)
-
-      !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-      ! THE MUON-MUON CONTRIBUTION
-      !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       !
       ! generate the mu mu luminosity
       jac_pdf = 1d0
-      call get_lum(1,x(9:10),scoll,mmin**2,jac_pdf,mumulum,tau,ycm)
+      call get_lum(1,x(9:10),scoll,mmin**2,jac_pdf,lum,tau,ycm)
 
       shat = tau * scoll
       thresh = mmin**2/shat
@@ -109,7 +124,7 @@
      &       y1(icoll), y2(icoll), omy1(icoll), omy2(icoll), xi1(icoll), xi2(icoll), 
      &       ph1(icoll), ph2(icoll), phi(icoll), cth(icoll),
      &       jac2(icoll), jac1a(icoll), jac1b(icoll), jac0(icoll))
-        call generate_momenta(shat, mtop, y1(icoll), y2(icoll), xi1(icoll), xi2(icoll), 
+        call generate_momenta(shat, mfin, y1(icoll), y2(icoll), xi1(icoll), xi2(icoll), 
      &                      ph1(icoll), ph2(icoll), cth(icoll), phi(icoll),
      &                      p2(0,1,icoll), p1a(0,1,icoll), p1b(0,1,icoll), p0(0,1,icoll))
       enddo
@@ -125,9 +140,9 @@
 
           if (fill_histos) then
             wgt_an(1) = jac2(icoll) * me(icoll) / (1d0-y1(1)) / (1d0-y2(1)) 
-     &           * vegas_wgt * mumulum
+     &           * vegas_wgt * lum
             if (icoll.eq.2.or.icoll.eq.3) wgt_an(1) = - wgt_an(1) 
-            call analysis_fill(p_an,status2,pdgs2,wgt_an,icoll)
+            call analysis_fill(p_an,istatus,pdgs,wgt_an,icoll)
           endif
         endif
       enddo
@@ -136,22 +151,56 @@
      &                       / (1d0-y1(1)) / (1d0-y2(1))
 
  10   continue
-      integrand = integrand + integrand_mumu * mumulum
+      integrand_mumu = integrand_mumu * lum
+
+      return
+      end
 
 
+      double precision function integrand_gaga(x,vegas_wgt)
+      implicit none
       !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       ! THE GAMMA-GAMMA CONTRIBUTION
       !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      double precision x(10), vegas_wgt
+      double precision jac_pdf, lum, tau, ycm
+      double precision scoll
+      common /to_scoll/scoll
+      double precision shat
+      common /to_shat/shat
+      double precision mmin
+      common /to_mmin/mmin
+      double precision mfin
+      common /to_mfin/mfin
+      double precision thresh
+      double precision jac2(4), jac1a(4), jac1b(4), jac0(4), me(4)
+      double precision y1(4), y2(4), omy1(4), omy2(4), xi1(4), xi2(4), ph1(4), ph2(4), phi(4), cth(4)
+      integer icoll
+      logical passcuts2
+      external passcuts2
+      double precision p2(0:3,6,4), p1a(0:3,6,4), p1b(0:3,6,4),p0(0:3,6,4)
+      ! stuff for the analysis
+      integer pdgs(6), istatus(6)
+      double precision p_an(0:3,6)
+      double precision wgt_an(1)
+      logical fill_histos
+      common /to_fill_histos/fill_histos
+
+      logical gaga_born
+      parameter (gaga_born=.true.)
+
+      istatus = (/-1,-1,1,1,1,1/)
+      pdgs = (/-22,22,6,-6,-13,13/)
       !
       ! generate the gamma-gamma luminosity
       jac_pdf = 1d0
-      call get_lum(4,x(9:10),scoll,mmin**2,jac_pdf,gagalum,tau,ycm)
+      call get_lum(4,x(9:10),scoll,mmin**2,jac_pdf,lum,tau,ycm)
 
       shat = tau * scoll
       thresh = mmin**2/shat
 
       ! THE BORN CONTRIBUTION FOR THE PHOTON PAIR
-      if (.not.gaga_born) goto 40
+      if (.not.gaga_born) goto 10
       icoll = 1
 
       jac0(icoll) = jac_pdf
@@ -159,7 +208,7 @@
      &       y1(icoll), y2(icoll), omy1(icoll), omy2(icoll), xi1(icoll), xi2(icoll), 
      &       ph1(icoll), ph2(icoll), phi(icoll), cth(icoll),
      &       jac2(icoll), jac1a(icoll), jac1b(icoll), jac0(icoll))
-      call generate_momenta(shat, mtop, y1(icoll), y2(icoll), xi1(icoll), xi2(icoll), 
+      call generate_momenta(shat, mfin, y1(icoll), y2(icoll), xi1(icoll), xi2(icoll), 
      &                      ph1(icoll), ph2(icoll), cth(icoll), phi(icoll),
      &                      p2(0,1,icoll), p1a(0,1,icoll), p1b(0,1,icoll), p0(0,1,icoll))
       me(icoll) = 0d0
@@ -172,16 +221,14 @@
 
         if (fill_histos) then
             wgt_an(1) = jac0(icoll) * me(icoll) 
-     &           * vegas_wgt * gagalum
-            call analysis_fill(p_an,status0,pdgs0,wgt_an,icoll)
+     &           * vegas_wgt * lum
+            call analysis_fill(p_an,istatus,pdgs,wgt_an,icoll)
         endif
       !!endif
       integrand_gaga = integrand_gaga + jac0(1) * me(1)
 
- 40   continue
-      integrand = integrand + integrand_gaga * gagalum
-
-      if (fill_histos) call HwU_add_points()
+ 10   continue
+      integrand_gaga = integrand_gaga * lum
 
       return
       end

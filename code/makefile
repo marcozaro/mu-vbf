@@ -9,7 +9,7 @@ LINKLIBS_ME =  -Llib/ -ldhelas -lmodel
 
 
 MEFILES = $(patsubst %.f,%.o,$(wildcard */matrix_mod.f))
-FILES = ranmar.o boostwdir2.o pdf.o vegas.o cuts.o me_wrapper.o HwU.o analysis_HwU_template.o driver.o $(MEFILES) 
+FILES = ranmar.o boostwdir2.o pdf.o vegas.o cuts.o me_wrapper.o qprime.o HwU.o analysis_HwU_template.o driver.o $(MEFILES) 
 
 
 driver: libs $(FILES)
