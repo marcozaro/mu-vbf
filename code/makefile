@@ -2,7 +2,7 @@ include ./Source/make_opts
 SHELL = /bin/bash
 LIBDIR = ./lib/
 PROG   = driver
-LINKLIBS_ME =  -Llib/ -ldhelas -lmodel
+LINKLIBS_ME =  -Llib/ -ldhelas -lmodel 
 #LINKLIBS_ALL =  -L../lib/ -lmatrix -ldhelas -lmodel
 #LIBS = $(LIBDIR)libdhelas.$(libext) $(LIBDIR)libmodel.$(libext)
 

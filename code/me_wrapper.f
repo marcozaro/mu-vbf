@@ -184,8 +184,7 @@ C returns the matrix element for the gamma-gamma born term
       p_pass(:,:) = 0d0
 
       p_pass(:,1:4) = p(:,1:4,1)
-      !call write_momenta(p(0,1,4),6)
-      call check_momenta(p_pass,6)
+      call check_momenta(p_pass,4)
       call ME_ACCESSOR_HOOK_1(p_pass,-1,0.118d0,ANS_splitorders)
       ans = ans_splitorders(0)
 
