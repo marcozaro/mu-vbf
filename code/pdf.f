@@ -1,4 +1,8 @@
       subroutine get_lum(ilum,rnd,scoll,smin,jac,lum,tau,ycm)
+      ! ilum = 1 -> mu+ mu-
+      ! ilum = 2 -> gamma mu-
+      ! ilum = 3 -> mu+ gamma
+      ! ilum = 4 -> gamma gamma
       implicit none
       integer ilum
       double precision rnd(2), scoll, smin, jac, lum, tau, ycm
@@ -43,7 +47,7 @@
         lum = lum*gampdf(x2, omx2, mu2)
 
       else if (ilum.eq.4) then
-        ! mu gamma scattering
+        ! gamma gamma scattering
         call generate_x_gam(rnd(1), smin/scoll, x1, omx1, jac_ee)
         jac = jac * jac_ee
         lum = gampdf(x1, omx1, mu2)

@@ -157,4 +157,37 @@ C (1-y1)*(1-y2), possibly approximated in the collinear limit(s)
 
       endif
 
+      return
+      end
+
+
+
+
+      subroutine compute_me_born_gaga(p,ans)
+C returns the matrix element for the gamma-gamma born term
+      implicit none
+      include 'coupl.inc'
+      double precision p(0:3,6,4)
+      ! the last index of the momenta array:
+      ! 1-> doubly resolved collinear emissions
+      ! 2-> single resolved collinear emission (y1=1)
+      ! 3-> single resolved collinear emission (y2=1)
+      ! 4-> no resolved collinear emission (y1=y2=1)
+      ! in this case we use only 1
+      double precision ans 
+      double precision ans_splitorders(0:99)
+
+      double precision p_pass(0:3,4)
+      double precision shat
+      common /to_shat/shat
+
+      p_pass(:,:) = 0d0
+
+      p_pass(:,1:4) = p(:,1:4,1)
+      !call write_momenta(p(0,1,4),6)
+      call check_momenta(p_pass,6)
+      call ME_ACCESSOR_HOOK_1(p_pass,-1,0.118d0,ANS_splitorders)
+      ans = ans_splitorders(0)
+
+      return
       end

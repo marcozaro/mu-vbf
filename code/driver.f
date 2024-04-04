@@ -49,25 +49,49 @@
       double precision shat
       common /to_shat/shat
       double precision thresh
-      double precision mtop, mmin, jac(4), me(4), jac_pdf
+      double precision mtop, mmin, me(4), jac_pdf
+      double precision jac2(4), jac1a(4), jac1b(4), jac0(4)
       double precision y1(4), y2(4), omy1(4), omy2(4), xi1(4), xi2(4), ph1(4), ph2(4), phi(4), cth(4)
       integer icoll
       logical passcuts2
       external passcuts2
-      double precision p2(0:3,6,4), p1a(0:3,5,4), p1b(0:3,5,4),p0(0:3,4,4)
+      double precision p2(0:3,6,4), p1a(0:3,6,4), p1b(0:3,6,4),p0(0:3,6,4)
       double precision tau, ycm
-      double precision mumulum
+      double precision mumulum,mugalum,gamulum,gagalum
+      double precision integrand_mumu,integrand_muga,integrand_gamu,integrand_gaga
       ! stuff for the analysis
       integer pdgs2(6), status2(6)
+      integer pdgs0(6), status0(6)
       double precision p_an(0:3,6)
       double precision wgt_an(1)
       logical fill_histos
       common /to_fill_histos/fill_histos
+
+      logical mumu_doublereal, gaga_born
+      !!parameter (mumu_doublereal=.true.)
+      parameter (mumu_doublereal=.false.)
+      parameter (gaga_born=.true.)
       
 
       mtop = mdl_mt
       mmin = 2d0*mtop
 
+      integrand_mumu = 0d0
+      integrand_gamu = 0d0
+      integrand_muga = 0d0
+      integrand_gaga = 0d0
+      integrand = 0d0
+
+      status2 = (/-1,-1,1,1,1,1/)
+      pdgs2 = (/-13,13,6,-6,-13,13/)
+
+      status0 = (/-1,-1,1,1,1,1/)
+      pdgs0 = (/-22,22,6,-6,-13,13/)
+
+      !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      ! THE MUON-MUON CONTRIBUTION
+      !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      !
       ! generate the mu mu luminosity
       jac_pdf = 1d0
       call get_lum(1,x(9:10),scoll,mmin**2,jac_pdf,mumulum,tau,ycm)
@@ -75,17 +99,16 @@
       shat = tau * scoll
       thresh = mmin**2/shat
 
-      status2 = (/-1,-1,1,1,1,1/)
-      pdgs2 = (/-13,13,6,-6,-13,13/)
-
-      ! compute the luminosity for the muon pair
+      ! THE DOUBLE-REAL CONTRIBUTION FOR THE MUON PAIR
+      if (.not.mumu_doublereal) goto 10
 
       ! generate the momenta for all kinematic configs
       do icoll = 1, 4
-        jac(icoll) = jac_pdf
+        jac2(icoll) = jac_pdf
         call generate_kinematics(x, shat, thresh, icoll, 
      &       y1(icoll), y2(icoll), omy1(icoll), omy2(icoll), xi1(icoll), xi2(icoll), 
-     &       ph1(icoll), ph2(icoll), phi(icoll), cth(icoll), jac(icoll))
+     &       ph1(icoll), ph2(icoll), phi(icoll), cth(icoll),
+     &       jac2(icoll), jac1a(icoll), jac1b(icoll), jac0(icoll))
         call generate_momenta(shat, mtop, y1(icoll), y2(icoll), xi1(icoll), xi2(icoll), 
      &                      ph1(icoll), ph2(icoll), cth(icoll), phi(icoll),
      &                      p2(0,1,icoll), p1a(0,1,icoll), p1b(0,1,icoll), p0(0,1,icoll))
@@ -101,16 +124,62 @@
      &                             xi2,ph1(icoll),ph2(icoll),me(icoll))
 
           if (fill_histos) then
-            wgt_an(1) = jac(icoll) * me(icoll) / (1d0-y1(1)) / (1d0-y2(1)) 
+            wgt_an(1) = jac2(icoll) * me(icoll) / (1d0-y1(1)) / (1d0-y2(1)) 
      &           * vegas_wgt * mumulum
             if (icoll.eq.2.or.icoll.eq.3) wgt_an(1) = - wgt_an(1) 
             call analysis_fill(p_an,status2,pdgs2,wgt_an,icoll)
           endif
         endif
       enddo
-      integrand = jac(1) * me(1) - jac(2) * me(2) - jac(3) * me(3) + jac(4) * me(4)
-      integrand = integrand / (1d0-y1(1)) / (1d0-y2(1))
-      integrand = integrand * mumulum
+      integrand_mumu = integrand_mumu + 
+     &  (jac2(1) * me(1) - jac2(2) * me(2) - jac2(3) * me(3) + jac2(4) * me(4))
+     &                       / (1d0-y1(1)) / (1d0-y2(1))
+
+ 10   continue
+      integrand = integrand + integrand_mumu * mumulum
+
+
+      !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      ! THE GAMMA-GAMMA CONTRIBUTION
+      !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      !
+      ! generate the gamma-gamma luminosity
+      jac_pdf = 1d0
+      call get_lum(4,x(9:10),scoll,mmin**2,jac_pdf,gagalum,tau,ycm)
+
+      shat = tau * scoll
+      thresh = mmin**2/shat
+
+      ! THE BORN CONTRIBUTION FOR THE PHOTON PAIR
+      if (.not.gaga_born) goto 40
+      icoll = 1
+
+      jac0(icoll) = jac_pdf
+      call generate_kinematics(x, shat, thresh, icoll, 
+     &       y1(icoll), y2(icoll), omy1(icoll), omy2(icoll), xi1(icoll), xi2(icoll), 
+     &       ph1(icoll), ph2(icoll), phi(icoll), cth(icoll),
+     &       jac2(icoll), jac1a(icoll), jac1b(icoll), jac0(icoll))
+      call generate_momenta(shat, mtop, y1(icoll), y2(icoll), xi1(icoll), xi2(icoll), 
+     &                      ph1(icoll), ph2(icoll), cth(icoll), phi(icoll),
+     &                      p2(0,1,icoll), p1a(0,1,icoll), p1b(0,1,icoll), p0(0,1,icoll))
+      me(icoll) = 0d0
+      ! boost the momenta to the lab frame. This is needed
+      ! both for cuts and for the analysis
+      call boost_to_lab_frame(p0(0,1,icoll),p_an,ycm)
+      !! MZ need to understand how to deal with cuts
+      !!if (passcuts0(p_an)) then 
+        call compute_me_born_gaga(p0, me(icoll))
+
+        if (fill_histos) then
+            wgt_an(1) = jac0(icoll) * me(icoll) 
+     &           * vegas_wgt * gagalum
+            call analysis_fill(p_an,status0,pdgs0,wgt_an,icoll)
+        endif
+      !!endif
+      integrand_gaga = integrand_gaga + jac0(1) * me(1)
+
+ 40   continue
+      integrand = integrand + integrand_gaga * gagalum
 
       if (fill_histos) call HwU_add_points()
 
@@ -152,8 +221,8 @@ C    check momentum conservation and on-shell relations
       if (etot.lt.2*mass) then
           write(*,*) 'ERROR1', etot, mass
           call write_momenta(pp,n)
-            call backtrace()
-            stop
+          call backtrace()
+          stop
       endif
 
       ptot(:) = 0d0
@@ -219,9 +288,10 @@ C starting from the kinematic variables, generates 4 sets of momenta:
 C  - p2 with the double real emission
 C  - p1a/b with a single real emission, from the first/second leg
 C  - p0 without emissions
+C  All momenta array have the same size (6). Unused momenta are set to 0
       double precision shat, m
       double precision y1, y2, xi1, xi2, ph1, ph2, phi, cth
-      double precision p0(0:3,4), p1a(0:3,5), p1b(0:3,5), p2(0:3,6)
+      double precision p0(0:3,6), p1a(0:3,6), p1b(0:3,6), p2(0:3,6)
       double precision omega, sborn
       double precision prec(0:3)
 
@@ -357,7 +427,8 @@ C in their partonic c.o.m fram
       end
 
 
-      subroutine generate_kinematics(x, shat, thresh, icoll, y1, y2, omy1, omy2, xi1, xi2, ph1, ph2, phi, cth, jac)
+      subroutine generate_kinematics(x, shat, thresh, icoll, y1, y2, 
+     $       omy1, omy2, xi1, xi2, ph1, ph2, phi, cth, jac2, jac1a, jac1b, jac0)
       implicit none
 C generates the kinematic variables (y_i,xi_i,ph_i, i=1,2) for each of
 C the two collinear splittings
@@ -368,12 +439,16 @@ C   2-> single resolved collinear emission (y1=1)
 C   3-> single resolved collinear emission (y2=1)
 C   4-> no resolved collinear emission (y1=y2=1)
 C
-C  jac includes the PS volumes, times flux (1/2shat) and converted to PB.
+C  jacX includes the PS volumes, times flux (1/2shat) and converted to PB.
+C  2 -> double emission. 
+C  1a/1b -> single emission from first/second leg.
+C  0 -> no emission (2->2)
 C  omy = 1-y (for better numerical accuracy)
       double precision x(10)
       double precision shat, thresh
       integer icoll
-      double precision y1, y2, omy1, omy2, xi1, xi2, ph1, ph2, phi, cth, jac
+      double precision y1, y2, omy1, omy2, xi1, xi2, ph1, ph2, phi, cth
+      double precision jac2, jac1a, jac1b, jac0
       double precision omega, sborn
       double precision pi
       parameter (pi=3.14159265359d0)
@@ -381,9 +456,15 @@ C  omy = 1-y (for better numerical accuracy)
       parameter (conv=389379.66d0*1000)  !conv to picobarns
       ! born angles
       cth = x(1)*2d0-1d0
-      jac = jac*2d0
+      jac0 = jac0*2d0
+      jac1a = jac1a*2d0
+      jac1b = jac1b*2d0
+      jac2 = jac2*2d0
       phi = x(2)*2d0*pi
-      jac = jac*2d0*pi
+      jac0 = jac0*2d0*pi
+      jac1a = jac1a*2d0*pi
+      jac1b = jac1b*2d0*pi
+      jac2 = jac2*2d0*pi
 
       ! y, adaptive towards y->1
       if (icoll.ne.2.and.icoll.ne.4) then
@@ -393,7 +474,8 @@ C  omy = 1-y (for better numerical accuracy)
         y1 = 1d0
         omy1 = 0d0
       endif
-      jac = jac*4d0*x(3)
+      jac1a = jac1a*4d0*x(3)
+      jac2 = jac2*4d0*x(3)
       if (icoll.ne.3.and.icoll.ne.4) then
         y2 = -2d0*x(4)**2+1d0
         omy2 = 2d0*x(4)**2
@@ -401,12 +483,15 @@ C  omy = 1-y (for better numerical accuracy)
         y2 = 1d0
         omy2 = 0d0
       endif
-      jac = jac*4d0*x(4)
+      jac1b = jac1b*4d0*x(4)
+      jac2 = jac2*4d0*x(4)
       ! phi, flat
       ph1 = x(5)*2d0*pi
-      jac = jac*2d0*pi
+      jac1a = jac1a*2d0*pi
+      jac2 = jac2*2d0*pi
       ph2 = x(6)*2d0*pi
-      jac = jac*2d0*pi
+      jac1b = jac1b*2d0*pi
+      jac2 = jac2*2d0*pi
 
       ! xi1/2 following the formulae on the note.
       ! randomize which one is generated first
@@ -414,31 +499,37 @@ C  omy = 1-y (for better numerical accuracy)
 
       if (x(7).lt.0.5d0) then
           xi1 = x(7)*2d0*(1d0-thresh)
-          jac = jac*2d0*(1d0-thresh)
+          jac2 = jac2*2d0*(1d0-thresh)
           xi2 = x(8)*2d0*(1d0-thresh-xi1)/(2d0-(1d0-omega)*xi1)
-          jac = jac*2d0*(1d0-thresh-xi1)/(2d0-(1d0-omega)*xi1)
+          jac2 = jac2*2d0*(1d0-thresh-xi1)/(2d0-(1d0-omega)*xi1)
       else
           xi2 = (x(7)-0.5d0)*2d0*(1d0-thresh)
-          jac = jac*2d0*(1d0-thresh)
+          jac2 = jac2*2d0*(1d0-thresh)
           xi1 = x(8)*2d0*(1d0-thresh-xi2)/(2d0-(1d0-omega)*xi2)
-          jac = jac*2d0*(1d0-thresh-xi2)/(2d0-(1d0-omega)*xi2)
+          jac2 = jac2*2d0*(1d0-thresh-xi2)/(2d0-(1d0-omega)*xi2)
       endif
 
       ! finally, turn jac into the proper phase-space volume
       ! this is the contribution from the two radiations
-      jac = jac * (shat / 64d0 / pi**3)**2 * xi1 * xi2
+      jac2 = jac2 * (shat / 64d0 / pi**3)**2 * xi1 * xi2
       ! this is for the underlying born
       sborn = shat*(1d0-xi1-xi2+xi1*xi2*(1d0-omega)/2d0) 
       ! 1/32pi^2 p/sqrt[mt^2+p^2]
-      jac = jac / 32d0 / pi**2 * sqrt(1d0-thresh*shat/sborn)
+      jac2 = jac2 / 32d0 / pi**2 * sqrt(1d0-thresh*shat/sborn)
+      jac0 = jac0 / 32d0 / pi**2 * sqrt(1d0-thresh)
       ! to pb and flux
-      jac = jac * conv / 2d0 /shat
+      jac2 = jac2 * conv / 2d0 /shat
+      jac0 = jac0 * conv / 2d0 /shat
 
       ! extra factor 2 (needed to get agreement on PS volume with MG, 
       ! may be hidden somewhere else
-      jac = jac / 2d0
+      jac2 = jac2 / 2d0
 
-      if (jac.ne.jac) jac = 0d0
+      ! check for NaN's
+      if (jac2.ne.jac2) jac2 = 0d0
+      if (jac1a.ne.jac1a) jac1a = 0d0
+      if (jac1b.ne.jac1b) jac1b = 0d0
+      if (jac0.ne.jac0) jac0 = 0d0
 
       return
       end
