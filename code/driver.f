@@ -49,7 +49,7 @@
       double precision mfin
       common /to_mfin/mfin
       double precision integrand_mumu,integrand_muga,integrand_gamu,integrand_gaga
-      external integrand_mumu, integrand_gaga
+      external integrand_mumu,integrand_muga,integrand_gamu,integrand_gaga
       logical fill_histos
       common /to_fill_histos/fill_histos
 
@@ -59,9 +59,11 @@
       integrand = 0d0
 
       ! mu-mu in initial state
-      integrand = integrand + integrand_mumu(x,vegas_wgt) 
+      !integrand = integrand + integrand_mumu(x,vegas_wgt) 
       ! gam-gam in initial state
-      integrand = integrand + integrand_gaga(x,vegas_wgt) 
+      !integrand = integrand + integrand_gaga(x,vegas_wgt) 
+      ! mu-gam in initial state
+      integrand = integrand + integrand_muga(x,vegas_wgt) 
 
       if (fill_histos) call HwU_add_points()
 
@@ -89,8 +91,8 @@
       double precision jac2(4), jac1a(4), jac1b(4), jac0(4), me(4)
       double precision y1(4), y2(4), omy1(4), omy2(4), xi1(4), xi2(4), ph1(4), ph2(4), phi(4), cth(4)
       integer icoll
-      logical passcuts2
-      external passcuts2
+      logical passcuts
+      external passcuts
       double precision p2(0:3,6,4), p1a(0:3,6,4), p1b(0:3,6,4),p0(0:3,6,4)
       ! stuff for the analysis
       integer pdgs(6), istatus(6)
@@ -100,7 +102,7 @@
       common /to_fill_histos/fill_histos
 
       logical mumu_doublereal
-      parameter (mumu_doublereal=.false.)
+      parameter (mumu_doublereal=.true.)
 
       istatus = (/-1,-1,1,1,1,1/)
       pdgs = (/-13,13,6,-6,-13,13/)
@@ -120,7 +122,7 @@
       ! generate the momenta for all kinematic configs
       do icoll = 1, 4
         jac2(icoll) = jac_pdf
-        call generate_kinematics(x, shat, thresh, icoll, 
+        call generate_kinematics(x, shat, thresh, icoll, 0,  
      &       y1(icoll), y2(icoll), omy1(icoll), omy2(icoll), xi1(icoll), xi2(icoll), 
      &       ph1(icoll), ph2(icoll), phi(icoll), cth(icoll),
      &       jac2(icoll), jac1a(icoll), jac1b(icoll), jac0(icoll))
@@ -134,7 +136,7 @@
         ! boost the momenta to the lab frame. This is needed
         ! both for cuts and for the analysis
         call boost_to_lab_frame(p2(0,1,icoll),p_an,ycm)
-        if (passcuts2(p_an)) then 
+        if (passcuts(p_an,pdgs,istatus)) then 
           call compute_me_doublereal(p2,y1(icoll),y2(icoll),omy1(icoll),omy2(icoll),xi1,
      &                             xi2,ph1(icoll),ph2(icoll),me(icoll))
 
@@ -176,8 +178,8 @@
       double precision jac2(4), jac1a(4), jac1b(4), jac0(4), me(4)
       double precision y1(4), y2(4), omy1(4), omy2(4), xi1(4), xi2(4), ph1(4), ph2(4), phi(4), cth(4)
       integer icoll
-      logical passcuts2
-      external passcuts2
+      logical passcuts
+      external passcuts
       double precision p2(0:3,6,4), p1a(0:3,6,4), p1b(0:3,6,4),p0(0:3,6,4)
       ! stuff for the analysis
       integer pdgs(6), istatus(6)
@@ -190,7 +192,7 @@
       parameter (gaga_born=.true.)
 
       istatus = (/-1,-1,1,1,1,1/)
-      pdgs = (/-22,22,6,-6,-13,13/)
+      pdgs = (/-22,22,6,-6,0,0/)
       !
       ! generate the gamma-gamma luminosity
       jac_pdf = 1d0
@@ -204,7 +206,7 @@
       icoll = 1
 
       jac0(icoll) = jac_pdf
-      call generate_kinematics(x, shat, thresh, icoll, 
+      call generate_kinematics(x, shat, thresh, icoll, 0, 
      &       y1(icoll), y2(icoll), omy1(icoll), omy2(icoll), xi1(icoll), xi2(icoll), 
      &       ph1(icoll), ph2(icoll), phi(icoll), cth(icoll),
      &       jac2(icoll), jac1a(icoll), jac1b(icoll), jac0(icoll))
@@ -216,7 +218,7 @@
       ! both for cuts and for the analysis
       call boost_to_lab_frame(p0(0,1,icoll),p_an,ycm)
       !! MZ need to understand how to deal with cuts
-      !!if (passcuts0(p_an)) then 
+      if (passcuts(p_an,pdgs,istatus)) then 
         call compute_me_born_gaga(p0, me(icoll))
 
         if (fill_histos) then
@@ -224,11 +226,101 @@
      &           * vegas_wgt * lum
             call analysis_fill(p_an,istatus,pdgs,wgt_an,icoll)
         endif
-      !!endif
+      endif
       integrand_gaga = integrand_gaga + jac0(1) * me(1)
 
  10   continue
       integrand_gaga = integrand_gaga * lum
+
+      return
+      end
+
+
+
+      double precision function integrand_muga(x,vegas_wgt)
+      implicit none
+      !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      ! THE MUON-GAMMA CONTRIBUTION
+      !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      double precision x(10), vegas_wgt
+      double precision jac_pdf, lum, tau, ycm
+      double precision scoll
+      common /to_scoll/scoll
+      double precision shat
+      common /to_shat/shat
+      double precision mmin
+      common /to_mmin/mmin
+      double precision mfin
+      common /to_mfin/mfin
+      double precision thresh
+      double precision jac2(4), jac1a(4), jac1b(4), jac0(4), me(4)
+      double precision y1(4), y2(4), omy1(4), omy2(4), xi1(4), xi2(4), ph1(4), ph2(4), phi(4), cth(4)
+      integer icoll
+      logical passcuts
+      external passcuts
+      double precision p2(0:3,6,4), p1a(0:3,6,4), p1b(0:3,6,4),p0(0:3,6,4)
+      ! stuff for the analysis
+      integer pdgs(6), istatus(6)
+      double precision p_an(0:3,6)
+      double precision wgt_an(1)
+      logical fill_histos
+      common /to_fill_histos/fill_histos
+
+      logical muga_singlereal
+      parameter (muga_singlereal=.true.)
+
+      istatus = (/-1,-1,1,1,1,1/)
+      pdgs = (/-13,22,6,-6,-13,0/)
+
+      integrand_muga = 0d0
+      !
+      ! generate the mu gam luminosity
+      jac_pdf = 1d0
+      call get_lum(3,x(9:10),scoll,mmin**2,jac_pdf,lum,tau,ycm)
+
+      shat = tau * scoll
+      thresh = mmin**2/shat
+
+      ! THE SINGLE-REAL CONTRIBUTION 
+      if (.not.muga_singlereal) goto 10
+
+      ! generate the momenta for all kinematic configs
+      do icoll = 3, 4
+        jac1a(icoll) = jac_pdf
+
+        call generate_kinematics(x, shat, thresh, icoll, 2, 
+     &       y1(icoll), y2(icoll), omy1(icoll), omy2(icoll), xi1(icoll), xi2(icoll), 
+     &       ph1(icoll), ph2(icoll), phi(icoll), cth(icoll),
+     &       jac2(icoll), jac1a(icoll), jac1b(icoll), jac0(icoll))
+        call generate_momenta(shat, mfin, y1(icoll), y2(icoll), xi1(icoll), xi2(icoll), 
+     &                      ph1(icoll), ph2(icoll), cth(icoll), phi(icoll),
+     &                      p2(0,1,icoll), p1a(0,1,icoll), p1b(0,1,icoll), p0(0,1,icoll))
+      enddo
+
+      do icoll = 3, 4
+        me(icoll) = 0d0
+        ! boost the momenta to the lab frame. This is needed
+        ! both for cuts and for the analysis
+        call boost_to_lab_frame(p1a(0,1,icoll),p_an,ycm)
+        if (passcuts(p_an,pdgs,istatus)) then 
+          call compute_me_singlereal1a(p1a,y1(icoll),y2(icoll),omy1(icoll),omy2(icoll),xi1,
+     &                             xi2,ph1(icoll),ph2(icoll),me(icoll))
+
+          if (fill_histos) then
+            wgt_an(1) = jac1a(icoll) * me(icoll) / (1d0-y1(3)) 
+     &           * vegas_wgt * lum
+            if (icoll.eq.4) wgt_an(1) = - wgt_an(1) 
+            call analysis_fill(p_an,istatus,pdgs,wgt_an,icoll)
+          endif
+        endif
+      enddo
+
+      integrand_muga = integrand_muga + 
+     &  (jac1a(3) * me(3) - jac1a(4) * me(4))
+     &                       / (1d0-y1(3)) 
+
+ 10   continue
+      integrand_muga = integrand_muga * lum
 
       return
       end
@@ -474,7 +566,7 @@ C in their partonic c.o.m fram
       end
 
 
-      subroutine generate_kinematics(x, shat, thresh, icoll, y1, y2, 
+      subroutine generate_kinematics(x, shat, thresh, icoll, isoft, y1, y2, 
      $       omy1, omy2, xi1, xi2, ph1, ph2, phi, cth, jac2, jac1a, jac1b, jac0)
       implicit none
 C generates the kinematic variables (y_i,xi_i,ph_i, i=1,2) for each of
@@ -485,6 +577,7 @@ C   1-> doubly resolved collinear emissions
 C   2-> single resolved collinear emission (y1=1)
 C   3-> single resolved collinear emission (y2=1)
 C   4-> no resolved collinear emission (y1=y2=1)
+C    isoft: whether the first (1) or second (2) leg or none(0) must go soft
 C
 C  jacX includes the PS volumes, times flux (1/2shat) and converted to PB.
 C  2 -> double emission. 
@@ -493,10 +586,10 @@ C  0 -> no emission (2->2)
 C  omy = 1-y (for better numerical accuracy)
       double precision x(10)
       double precision shat, thresh
-      integer icoll
+      integer icoll, isoft
       double precision y1, y2, omy1, omy2, xi1, xi2, ph1, ph2, phi, cth
       double precision jac2, jac1a, jac1b, jac0
-      double precision omega, sborn
+      double precision omega, sborn1a, sborn1b, sborn2
       double precision pi
       parameter (pi=3.14159265359d0)
       double precision conv
@@ -544,28 +637,47 @@ C  omy = 1-y (for better numerical accuracy)
       ! randomize which one is generated first
       omega = sqrt(1d0-y1**2)*sqrt(1d0-y2**2)*dcos(ph1-ph2)-y1*y2
 
-      if (x(7).lt.0.5d0) then
-          xi1 = x(7)*2d0*(1d0-thresh)
-          jac2 = jac2*2d0*(1d0-thresh)
-          xi2 = x(8)*2d0*(1d0-thresh-xi1)/(2d0-(1d0-omega)*xi1)
-          jac2 = jac2*2d0*(1d0-thresh-xi1)/(2d0-(1d0-omega)*xi1)
-      else
-          xi2 = (x(7)-0.5d0)*2d0*(1d0-thresh)
-          jac2 = jac2*2d0*(1d0-thresh)
-          xi1 = x(8)*2d0*(1d0-thresh-xi2)/(2d0-(1d0-omega)*xi2)
-          jac2 = jac2*2d0*(1d0-thresh-xi2)/(2d0-(1d0-omega)*xi2)
+      if (isoft.eq.0) then
+          if (x(7).lt.0.5d0) then
+              xi1 = x(7)*2d0*(1d0-thresh)
+              jac2 = jac2*2d0*(1d0-thresh)
+              xi2 = x(8)*2d0*(1d0-thresh-xi1)/(2d0-(1d0-omega)*xi1)
+              jac2 = jac2*2d0*(1d0-thresh-xi1)/(2d0-(1d0-omega)*xi1)
+          else
+              xi2 = (x(7)-0.5d0)*2d0*(1d0-thresh)
+              jac2 = jac2*2d0*(1d0-thresh)
+              xi1 = x(8)*2d0*(1d0-thresh-xi2)/(2d0-(1d0-omega)*xi2)
+              jac2 = jac2*2d0*(1d0-thresh-xi2)/(2d0-(1d0-omega)*xi2)
+          endif
+      else if (isoft.eq.1) then
+          xi2 = x(7)*(1d0-thresh)
+          xi1 = 0d0 
+          jac1b =jac1b*(1d0-thresh)
+
+      else if (isoft.eq.2) then
+          xi1 = x(7)*(1d0-thresh)
+          xi2 = 0d0 
+          jac1a =jac1a*(1d0-thresh)
       endif
 
       ! finally, turn jac into the proper phase-space volume
       ! this is the contribution from the two radiations
+      jac1a = jac1a * (shat / 64d0 / pi**3) * xi1
+      jac1b = jac1b * (shat / 64d0 / pi**3) * xi2
       jac2 = jac2 * (shat / 64d0 / pi**3)**2 * xi1 * xi2
       ! this is for the underlying born
-      sborn = shat*(1d0-xi1-xi2+xi1*xi2*(1d0-omega)/2d0) 
+      sborn2 = shat*(1d0-xi1-xi2+xi1*xi2*(1d0-omega)/2d0) 
+      sborn1a = shat*(1d0-xi1)
+      sborn1b = shat*(1d0-xi2)
       ! 1/32pi^2 p/sqrt[mt^2+p^2]
-      jac2 = jac2 / 32d0 / pi**2 * sqrt(1d0-thresh*shat/sborn)
+      jac1a = jac1a / 32d0 / pi**2 * sqrt(1d0-thresh*shat/sborn1a)
+      jac1b = jac1b / 32d0 / pi**2 * sqrt(1d0-thresh*shat/sborn1b)
+      jac2 = jac2 / 32d0 / pi**2 * sqrt(1d0-thresh*shat/sborn2)
       jac0 = jac0 / 32d0 / pi**2 * sqrt(1d0-thresh)
       ! to pb and flux
       jac2 = jac2 * conv / 2d0 /shat
+      jac1a = jac1a * conv / 2d0 /shat
+      jac1b = jac1b * conv / 2d0 /shat
       jac0 = jac0 * conv / 2d0 /shat
 
       ! extra factor 2 (needed to get agreement on PS volume with MG, 
