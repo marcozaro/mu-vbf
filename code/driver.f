@@ -64,7 +64,8 @@
       !integrand = integrand + integrand_gaga(x,vegas_wgt) 
       ! mu-gam in initial state
       integrand = integrand + integrand_muga(x,vegas_wgt) 
-      !integrand = integrand + integrand_gamu(x,vegas_wgt) 
+      ! gam-mu in initial state
+      integrand = integrand + integrand_gamu(x,vegas_wgt) 
 
       if (fill_histos) call HwU_add_points()
 
@@ -290,13 +291,12 @@
 
  10   continue
 
-      ! the convolution of M_gam gam with Q'(z1)
+      ! THE CONVOLUTION OF M_GAM GAM WITH Q'(Z1)
       !We use jac0, since we convolve with the born-like matrix element
       call generate_qp_z(x(11),tau_min/tau,z1,jac_pdf)
-      !write(*,*) 'Z1', z1, qprime(z1,scoll*tau,scoll)
+
       if (z1.ne.z1) stop 1
       if ( qprime(z1,scoll*tau,scoll).ne. qprime(z1,scoll*tau,scoll)) stop 1 
-
 
       integrand_muga = integrand_muga +
      $ compute_subtracted_me_0(x,vegas_wgt,lum*qprime(z1,scoll*tau,scoll),
@@ -324,10 +324,12 @@
       double precision thresh
       double precision jac2(4), jac1a(4), jac1b(4), jac0(4), me(4)
       double precision y1(4), y2(4), omy1(4), omy2(4), xi1(4), xi2(4), ph1(4), ph2(4), phi(4), cth(4)
+      double precision z1, z2
       integer icoll
       logical passcuts
       external passcuts
       double precision p2(0:3,6,4), p1a(0:3,6,4), p1b(0:3,6,4),p0(0:3,6,4)
+      double precision tau_min
       ! stuff for the analysis
       integer pdgs(6), istatus(6)
       double precision p_an(0:3,6)
@@ -338,13 +340,17 @@
       logical gamu_singlereal
       parameter (gamu_singlereal=.true.)
 
+      double precision compute_subtracted_me_0, qprime
+      external compute_subtracted_me_0, qprime
+
       istatus = (/-1,-1,1,1,1,1/)
       pdgs = (/22,13,6,-6,13,0/)
 
       integrand_gamu = 0d0
       !
-      ! generate the mu gam luminosity
+      ! generate the gam mu luminosity
       jac_pdf = 1d0
+      tau_min = mmin**2/scoll
       call get_lum(2,x(9:10),scoll,mmin**2,jac_pdf,lum,tau,ycm,x1bk,x2bk)
 
       shat = tau * scoll
@@ -386,10 +392,20 @@
 
       integrand_gamu = integrand_gamu + 
      &  (jac1b(2) * me(2) - jac1b(4) * me(4))
-     &                       / (1d0-y2(2)) 
+     &                       / (1d0-y2(2)) * lum 
 
  10   continue
-      integrand_gamu = integrand_gamu * lum
+
+      ! THE CONVOLUTION OF M_GAM GAM WITH Q'(Z2)
+      !We use jac0, since we convolve with the born-like matrix element
+      call generate_qp_z(x(11),tau_min/tau,z2,jac_pdf)
+
+      if (z2.ne.z2) stop 1
+      if ( qprime(z2,scoll*tau,scoll).ne. qprime(z2,scoll*tau,scoll)) stop 1 
+
+      integrand_gamu = integrand_gamu +
+     $ compute_subtracted_me_0(x,vegas_wgt,lum*qprime(z2,scoll*tau,scoll),
+     $               tau*z2,ycm-0.5*dlog(z2),jac_pdf,istatus,pdgs)
 
       return
       end
