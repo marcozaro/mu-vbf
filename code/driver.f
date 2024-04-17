@@ -64,6 +64,7 @@
       !integrand = integrand + integrand_gaga(x,vegas_wgt) 
       ! mu-gam in initial state
       integrand = integrand + integrand_muga(x,vegas_wgt) 
+      integrand = integrand + integrand_gamu(x,vegas_wgt) 
 
       if (fill_histos) call HwU_add_points()
 
@@ -321,6 +322,95 @@
 
  10   continue
       integrand_muga = integrand_muga * lum
+
+      return
+      end
+
+
+      double precision function integrand_gamu(x,vegas_wgt)
+      implicit none
+      !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      ! THE GAMMA-MUON CONTRIBUTION
+      !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      double precision x(10), vegas_wgt
+      double precision jac_pdf, lum, tau, ycm
+      double precision scoll
+      common /to_scoll/scoll
+      double precision shat
+      common /to_shat/shat
+      double precision mmin
+      common /to_mmin/mmin
+      double precision mfin
+      common /to_mfin/mfin
+      double precision thresh
+      double precision jac2(4), jac1a(4), jac1b(4), jac0(4), me(4)
+      double precision y1(4), y2(4), omy1(4), omy2(4), xi1(4), xi2(4), ph1(4), ph2(4), phi(4), cth(4)
+      integer icoll
+      logical passcuts
+      external passcuts
+      double precision p2(0:3,6,4), p1a(0:3,6,4), p1b(0:3,6,4),p0(0:3,6,4)
+      ! stuff for the analysis
+      integer pdgs(6), istatus(6)
+      double precision p_an(0:3,6)
+      double precision wgt_an(1)
+      logical fill_histos
+      common /to_fill_histos/fill_histos
+
+      logical gamu_singlereal
+      parameter (gamu_singlereal=.true.)
+
+      istatus = (/-1,-1,1,1,1,1/)
+      pdgs = (/22,13,6,-6,13,0/)
+
+      integrand_gamu = 0d0
+      !
+      ! generate the mu gam luminosity
+      jac_pdf = 1d0
+      call get_lum(2,x(9:10),scoll,mmin**2,jac_pdf,lum,tau,ycm)
+
+      shat = tau * scoll
+      thresh = mmin**2/shat
+
+      ! THE SINGLE-REAL CONTRIBUTION 
+      if (.not.gamu_singlereal) goto 10
+
+      ! generate the momenta for all kinematic configs
+      do icoll = 2, 4, 2
+        jac1b(icoll) = jac_pdf
+
+        call generate_kinematics(x, shat, thresh, icoll, 1, 
+     &       y1(icoll), y2(icoll), omy1(icoll), omy2(icoll), xi1(icoll), xi2(icoll), 
+     &       ph1(icoll), ph2(icoll), phi(icoll), cth(icoll),
+     &       jac2(icoll), jac1a(icoll), jac1b(icoll), jac0(icoll))
+        call generate_momenta(shat, mfin, y1(icoll), y2(icoll), xi1(icoll), xi2(icoll), 
+     &                      ph1(icoll), ph2(icoll), cth(icoll), phi(icoll),
+     &                      p2(0,1,icoll), p1a(0,1,icoll), p1b(0,1,icoll), p0(0,1,icoll))
+      enddo
+
+      do icoll = 2, 4, 2
+        me(icoll) = 0d0
+        ! boost the momenta to the lab frame. This is needed
+        ! both for cuts and for the analysis
+        call boost_to_lab_frame(p1b(0,1,icoll),p_an,ycm)
+        if (passcuts(p_an,pdgs,istatus)) then 
+          call compute_me_singlereal1b(p1b,y1(icoll),y2(icoll),omy1(icoll),omy2(icoll),xi1,
+     &                             xi2,ph1(icoll),ph2(icoll),me(icoll))
+
+          if (fill_histos) then
+            wgt_an(1) = jac1b(icoll) * me(icoll) / (1d0-y2(2)) 
+     &           * vegas_wgt * lum
+            if (icoll.eq.4) wgt_an(1) = - wgt_an(1) 
+            call analysis_fill(p_an,istatus,pdgs,wgt_an,icoll)
+          endif
+        endif
+      enddo
+
+      integrand_gamu = integrand_gamu + 
+     &  (jac1b(2) * me(2) - jac1b(4) * me(4))
+     &                       / (1d0-y2(2)) 
+
+ 10   continue
+      integrand_gamu = integrand_gamu * lum
 
       return
       end

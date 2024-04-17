@@ -115,7 +115,9 @@ c them separately might lead to larger than expected statistical
 c fluctuations).
       integer ibody
 c local variable
+      integer i
       double precision var
+      double precision p_t(0:3), p_tx(0:3),p_mup(0:3),p_mum(0:3)
       double precision p_tt(0:3), p_mm(0:3), p_ttmm(0:3)
       double precision pt_tt, th_tt, m_tt
       double precision th_mp, th_mm, m_mm
@@ -128,8 +130,18 @@ c the numerical value of the variable to plot for the current
 c phase-space point and the final argument is the weight of the current
 c phase-space point.
       var=1d0
-      p_tt(:) = p(:,3) + p(:,4)
-      p_mm(:) = p(:,5) + p(:,6)
+      p_t(:) = 0d0
+      p_tx(:) = 0d0
+      p_mup(:) = 0d0
+      p_mum(:) = 0d0
+      do i = 3,6
+        if (ipdg(i).eq.6) p_t(:) = p(:,i)
+        if (ipdg(i).eq.-6) p_tx(:) = p(:,i)
+        if (ipdg(i).eq.13) p_mum(:) = p(:,i)
+        if (ipdg(i).eq.-13) p_mup(:) = p(:,i)
+      enddo
+      p_tt(:) = p_t(:) + p_tx(:)
+      p_mm(:) = p_mup(:) + p_mum(:)
       p_ttmm(:) = p_tt(:) + p_mm(:)
       pt_tt = max(dsqrt(p_tt(1)**2 + p_tt(2)**2),1d-6)
       th_tt = datan(pt_tt / p_tt(3))
@@ -142,12 +154,14 @@ c phase-space point.
       pt_ttmm = dsqrt(p_ttmm(1)**2 + p_ttmm(2)**2)
       y_ttmm = 0.5d0 * dlog((p_ttmm(0)+p_ttmm(3))/(p_ttmm(0)-p_ttmm(3)))
 
-      pt_t  = dsqrt(p(1,3)**2 + p(2,3)**2)
-      pt_tx = dsqrt(p(1,4)**2 + p(2,4)**2)
-      pt_mp = dsqrt(p(1,5)**2 + p(2,5)**2)
-      pt_mm = dsqrt(p(1,6)**2 + p(2,6)**2)
-      th_mp = datan(pt_mp / p(3,5))
-      th_mm = datan(pt_mm / p(3,6))
+      pt_t  = dsqrt(p_t(1)**2 + p_t(2)**2)
+      pt_tx = dsqrt(p_tx(1)**2 + p_tx(2)**2)
+      pt_mp = dsqrt(p_mup(1)**2 + p_mup(2)**2)
+      pt_mm = dsqrt(p_mum(1)**2 + p_mum(2)**2)
+      th_mp= -99d0
+      th_mm= -99d0
+      if (p_mup(0).gt.0d0) th_mp = datan(pt_mp / p_mup(3))
+      if (p_mum(0).gt.0d0) th_mm = datan(pt_mm / p_mum(3))
 c always fill the total rate
       call HwU_fill(1,var,wgts)
 c only fill the total rate for the Born when ibody=3
