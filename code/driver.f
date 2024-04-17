@@ -59,13 +59,13 @@
       integrand = 0d0
 
       ! mu-mu in initial state
-      integrand = integrand + integrand_mumu(x,vegas_wgt) 
+      !integrand = integrand + integrand_mumu(x,vegas_wgt) 
       ! gam-gam in initial state
       !integrand = integrand + integrand_gaga(x,vegas_wgt) 
       ! mu-gam in initial state
-      !integrand = integrand + integrand_muga(x,vegas_wgt) 
+      integrand = integrand + integrand_muga(x,vegas_wgt) 
       ! gam-mu in initial state
-      !integrand = integrand + integrand_gamu(x,vegas_wgt) 
+      integrand = integrand + integrand_gamu(x,vegas_wgt) 
 
       if (fill_histos) call HwU_add_points()
 
@@ -83,25 +83,9 @@
       double precision jac_pdf, lum, tau, ycm, x1bk, x2bk
       double precision scoll
       common /to_scoll/scoll
-      double precision shat
-      common /to_shat/shat
       double precision mmin
       common /to_mmin/mmin
-      double precision mfin
-      common /to_mfin/mfin
-      double precision thresh
-      double precision jac2(4), jac1a(4), jac1b(4), jac0(4), me(4)
-      double precision y1(4), y2(4), omy1(4), omy2(4), xi1(4), xi2(4), ph1(4), ph2(4), phi(4), cth(4)
-      integer icoll
-      logical passcuts
-      external passcuts
-      double precision p2(0:3,6,4), p1a(0:3,6,4), p1b(0:3,6,4),p0(0:3,6,4)
-      ! stuff for the analysis
       integer pdgs(6), istatus(6)
-      double precision p_an(0:3,6)
-      double precision wgt_an(1)
-      logical fill_histos
-      common /to_fill_histos/fill_histos
 
       double precision compute_subtracted_me_2
       external compute_subtracted_me_2
@@ -117,9 +101,6 @@
       ! generate the mu mu luminosity
       jac_pdf = 1d0
       call get_lum(1,x(9:10),scoll,mmin**2,jac_pdf,lum,tau,ycm,x1bk,x2bk)
-
-      shat = tau * scoll
-      thresh = mmin**2/shat
 
       ! THE DOUBLE-REAL CONTRIBUTION FOR THE MUON PAIR
       if (.not.mumu_doublereal) goto 10
@@ -143,13 +124,13 @@
       common /to_scoll/scoll
       double precision mmin
       common /to_mmin/mmin
-      double precision mfin
-      common /to_mfin/mfin
-      logical gaga_born
-      parameter (gaga_born=.true.)
       integer pdgs(6), istatus(6)
+
       double precision compute_subtracted_me_0
       external compute_subtracted_me_0
+
+      logical gaga_born
+      parameter (gaga_born=.true.)
 
       istatus = (/-1,-1,1,1,1,1/)
       pdgs = (/-22,22,6,-6,0,0/)
@@ -178,27 +159,10 @@
       double precision jac_pdf, lum, tau, ycm, x1bk,x2bk
       double precision scoll
       common /to_scoll/scoll
-      double precision shat, shat_save
-      common /to_shat/shat
       double precision mmin
       common /to_mmin/mmin
-      double precision mfin
-      common /to_mfin/mfin
-      double precision thresh
-      double precision jac2(4), jac1a(4), jac1b(4), jac0(4), me(4)
-      double precision y1(4), y2(4), omy1(4), omy2(4), xi1(4), xi2(4), ph1(4), ph2(4), phi(4), cth(4)
-      double precision z1, z2
-      integer icoll
-      logical passcuts
-      external passcuts
-      double precision p2(0:3,6,4), p1a(0:3,6,4), p1b(0:3,6,4),p0(0:3,6,4)
-      double precision tau_min
-      ! stuff for the analysis
       integer pdgs(6), istatus(6)
-      double precision p_an(0:3,6)
-      double precision wgt_an(1)
-      logical fill_histos
-      common /to_fill_histos/fill_histos
+      double precision tau_min, z1, z2
 
       logical muga_singlereal
       parameter (muga_singlereal=.true.)
@@ -248,27 +212,10 @@
       double precision jac_pdf, lum, tau, ycm, x1bk, x2bk
       double precision scoll
       common /to_scoll/scoll
-      double precision shat
-      common /to_shat/shat
       double precision mmin
       common /to_mmin/mmin
-      double precision mfin
-      common /to_mfin/mfin
-      double precision thresh
-      double precision jac2(4), jac1a(4), jac1b(4), jac0(4), me(4)
-      double precision y1(4), y2(4), omy1(4), omy2(4), xi1(4), xi2(4), ph1(4), ph2(4), phi(4), cth(4)
-      double precision z1, z2
-      integer icoll
-      logical passcuts
-      external passcuts
-      double precision p2(0:3,6,4), p1a(0:3,6,4), p1b(0:3,6,4),p0(0:3,6,4)
-      double precision tau_min
-      ! stuff for the analysis
       integer pdgs(6), istatus(6)
-      double precision p_an(0:3,6)
-      double precision wgt_an(1)
-      logical fill_histos
-      common /to_fill_histos/fill_histos
+      double precision tau_min, z1, z2
 
       logical gamu_singlereal
       parameter (gamu_singlereal=.true.)
@@ -285,9 +232,6 @@
       jac_pdf = 1d0
       tau_min = mmin**2/scoll
       call get_lum(2,x(9:10),scoll,mmin**2,jac_pdf,lum,tau,ycm,x1bk,x2bk)
-
-      shat = tau * scoll
-      thresh = mmin**2/shat
 
       ! THE SINGLE-REAL CONTRIBUTION 
       if (.not.gamu_singlereal) goto 10
