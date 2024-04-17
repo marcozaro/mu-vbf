@@ -39,7 +39,8 @@
         if (p(1,5)**2+p(2,5)**2.lt.2500d0) passcuts = .false.
         if (p(1,6)**2+p(2,6)**2.lt.2500d0) passcuts = .false.
       else if (foundmup.or.foundmum) then
-        if (p(1,5)**2+p(2,5)**2.lt.2500d0) passcuts = .false.
+        !if (p(1,5)**2+p(2,5)**2.lt.2500d0) passcuts = .false.
+        continue
       endif
 
       return

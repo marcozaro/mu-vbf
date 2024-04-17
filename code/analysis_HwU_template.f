@@ -131,7 +131,7 @@ c phase-space point.
       p_tt(:) = p(:,3) + p(:,4)
       p_mm(:) = p(:,5) + p(:,6)
       p_ttmm(:) = p_tt(:) + p_mm(:)
-      pt_tt = dsqrt(p_tt(1)**2 + p_tt(2)**2)
+      pt_tt = max(dsqrt(p_tt(1)**2 + p_tt(2)**2),1d-6)
       th_tt = datan(pt_tt / p_tt(3))
       m_tt = p_tt(0)**2 - p_tt(1)**2 - p_tt(2)**2 - p_tt(3)**2
       m_mm = p_mm(0)**2 - p_mm(1)**2 - p_mm(2)**2 - p_mm(3)**2
