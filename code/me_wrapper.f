@@ -425,3 +425,142 @@ C returns the matrix element for the gamma-gamma born term
 
       return
       end
+
+
+      double precision function compute_subtracted_me_1a(x,vegas_wgt,lum,tau,ycm,jac,istatus,pdgs) 
+      ! the photon-photon (born-like) contribution
+      implicit none
+      double precision x(8),vegas_wgt,lum,tau,ycm,jac
+
+      double precision scoll
+      common /to_scoll/scoll
+      double precision shat
+      common /to_shat/shat
+      double precision mfin
+      common /to_mfin/mfin
+      double precision  mmin
+      common /to_mmin/mmin
+      double precision thresh
+
+      double precision jac2(4), jac1a(4), jac1b(4), jac0(4), me(4)
+      double precision y1(4), y2(4), omy1(4), omy2(4), xi1(4), xi2(4), ph1(4), ph2(4), phi(4), cth(4)
+      integer icoll
+      logical passcuts
+      external passcuts
+      double precision p2(0:3,6,4), p1a(0:3,6,4), p1b(0:3,6,4),p0(0:3,6,4)
+      ! stuff for the analysis
+      integer pdgs(6), istatus(6)
+      double precision p_an(0:3,6)
+      double precision wgt_an(1)
+      logical fill_histos
+      common /to_fill_histos/fill_histos
+
+      shat = tau * scoll
+      thresh = mmin**2/shat
+
+      ! generate the momenta for all kinematic configs
+      do icoll = 3, 4
+        jac1a(icoll) = jac
+
+        call generate_kinematics(x, shat, thresh, icoll, 2, 
+     &       y1(icoll), y2(icoll), omy1(icoll), omy2(icoll), xi1(icoll), xi2(icoll), 
+     &       ph1(icoll), ph2(icoll), phi(icoll), cth(icoll),
+     &       jac2(icoll), jac1a(icoll), jac1b(icoll), jac0(icoll))
+        call generate_momenta(shat, mfin, y1(icoll), y2(icoll), xi1(icoll), xi2(icoll), 
+     &                      ph1(icoll), ph2(icoll), cth(icoll), phi(icoll),
+     &                      p2(0,1,icoll), p1a(0,1,icoll), p1b(0,1,icoll), p0(0,1,icoll))
+      enddo
+
+      do icoll = 3, 4
+        me(icoll) = 0d0
+        ! boost the momenta to the lab frame. This is needed
+        ! both for cuts and for the analysis
+        call boost_to_lab_frame(p1a(0,1,icoll),p_an,ycm)
+        if (passcuts(p_an,pdgs,istatus)) then 
+          call compute_me_singlereal1a(p1a,y1(icoll),y2(icoll),omy1(icoll),omy2(icoll),xi1,
+     &                             xi2,ph1(icoll),ph2(icoll),me(icoll))
+
+          if (fill_histos) then
+            wgt_an(1) = jac1a(icoll) * me(icoll) / (1d0-y1(3)) 
+     &           * vegas_wgt * lum
+            if (icoll.eq.4) wgt_an(1) = - wgt_an(1) 
+            call analysis_fill(p_an,istatus,pdgs,wgt_an,icoll)
+          endif
+        endif
+      enddo
+
+      compute_subtracted_me_1a =  
+     &  (jac1a(3) * me(3) - jac1a(4) * me(4))
+     &                       / (1d0-y1(3)) * lum 
+      return
+      end
+
+
+      double precision function compute_subtracted_me_1b(x,vegas_wgt,lum,tau,ycm,jac,istatus,pdgs) 
+      ! the photon-photon (born-like) contribution
+      implicit none
+      double precision x(8),vegas_wgt,lum,tau,ycm,jac
+      integer pdgs(6), istatus(6)
+
+      double precision scoll
+      common /to_scoll/scoll
+      double precision shat
+      common /to_shat/shat
+      double precision mfin
+      common /to_mfin/mfin
+      double precision  mmin
+      common /to_mmin/mmin
+      double precision thresh
+
+      double precision jac2(4), jac1a(4), jac1b(4), jac0(4), me(4)
+      double precision y1(4), y2(4), omy1(4), omy2(4), xi1(4), xi2(4), ph1(4), ph2(4), phi(4), cth(4)
+      integer icoll
+      logical passcuts
+      external passcuts
+      double precision p2(0:3,6,4), p1a(0:3,6,4), p1b(0:3,6,4),p0(0:3,6,4)
+      ! stuff for the analysis
+      double precision p_an(0:3,6)
+      double precision wgt_an(1)
+      logical fill_histos
+      common /to_fill_histos/fill_histos
+
+      shat = tau * scoll
+      thresh = mmin**2/shat
+
+      ! generate the momenta for all kinematic configs
+      do icoll = 2, 4, 2
+        jac1b(icoll) = jac
+
+        call generate_kinematics(x, shat, thresh, icoll, 1, 
+     &       y1(icoll), y2(icoll), omy1(icoll), omy2(icoll), xi1(icoll), xi2(icoll), 
+     &       ph1(icoll), ph2(icoll), phi(icoll), cth(icoll),
+     &       jac2(icoll), jac1a(icoll), jac1b(icoll), jac0(icoll))
+        call generate_momenta(shat, mfin, y1(icoll), y2(icoll), xi1(icoll), xi2(icoll), 
+     &                      ph1(icoll), ph2(icoll), cth(icoll), phi(icoll),
+     &                      p2(0,1,icoll), p1a(0,1,icoll), p1b(0,1,icoll), p0(0,1,icoll))
+      enddo
+
+      do icoll = 2, 4, 2
+        me(icoll) = 0d0
+        ! boost the momenta to the lab frame. This is needed
+        ! both for cuts and for the analysis
+        call boost_to_lab_frame(p1b(0,1,icoll),p_an,ycm)
+        if (passcuts(p_an,pdgs,istatus)) then 
+          call compute_me_singlereal1b(p1b,y1(icoll),y2(icoll),omy1(icoll),omy2(icoll),xi1,
+     &                             xi2,ph1(icoll),ph2(icoll),me(icoll))
+
+          if (fill_histos) then
+            wgt_an(1) = jac1b(icoll) * me(icoll) / (1d0-y2(2)) 
+     &           * vegas_wgt * lum
+            if (icoll.eq.4) wgt_an(1) = - wgt_an(1) 
+            call analysis_fill(p_an,istatus,pdgs,wgt_an,icoll)
+          endif
+        endif
+      enddo
+
+      compute_subtracted_me_1b =  
+     &  (jac1b(2) * me(2) - jac1b(4) * me(4))
+     &                       / (1d0-y2(2)) * lum 
+      return
+      end
+

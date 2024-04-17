@@ -232,8 +232,8 @@
       logical muga_singlereal
       parameter (muga_singlereal=.true.)
 
-      double precision compute_subtracted_me_0, qprime
-      external compute_subtracted_me_0, qprime
+      double precision compute_subtracted_me_1a, compute_subtracted_me_0, qprime
+      external compute_subtracted_me_1a, compute_subtracted_me_0, qprime
 
       istatus = (/-1,-1,1,1,1,1/)
       pdgs = (/-13,22,6,-6,-13,0/)
@@ -245,54 +245,16 @@
       tau_min = mmin**2/scoll
       call get_lum(3,x(9:10),scoll,mmin**2,jac_pdf,lum,tau,ycm,x1bk,x2bk)
 
-      shat = tau * scoll
-      shat_save = shat ! store it for later
-      !ycm_save = ycm
-      !jac_pdf_save = jac_pdf
-      thresh = mmin**2/shat
-
       ! THE SINGLE-REAL CONTRIBUTION 
       if (.not.muga_singlereal) goto 10
 
-      ! generate the momenta for all kinematic configs
-      do icoll = 3, 4
-        jac1a(icoll) = jac_pdf
-
-        call generate_kinematics(x, shat, thresh, icoll, 2, 
-     &       y1(icoll), y2(icoll), omy1(icoll), omy2(icoll), xi1(icoll), xi2(icoll), 
-     &       ph1(icoll), ph2(icoll), phi(icoll), cth(icoll),
-     &       jac2(icoll), jac1a(icoll), jac1b(icoll), jac0(icoll))
-        call generate_momenta(shat, mfin, y1(icoll), y2(icoll), xi1(icoll), xi2(icoll), 
-     &                      ph1(icoll), ph2(icoll), cth(icoll), phi(icoll),
-     &                      p2(0,1,icoll), p1a(0,1,icoll), p1b(0,1,icoll), p0(0,1,icoll))
-      enddo
-
-      do icoll = 3, 4
-        me(icoll) = 0d0
-        ! boost the momenta to the lab frame. This is needed
-        ! both for cuts and for the analysis
-        call boost_to_lab_frame(p1a(0,1,icoll),p_an,ycm)
-        if (passcuts(p_an,pdgs,istatus)) then 
-          call compute_me_singlereal1a(p1a,y1(icoll),y2(icoll),omy1(icoll),omy2(icoll),xi1,
-     &                             xi2,ph1(icoll),ph2(icoll),me(icoll))
-
-          if (fill_histos) then
-            wgt_an(1) = jac1a(icoll) * me(icoll) / (1d0-y1(3)) 
-     &           * vegas_wgt * lum
-            if (icoll.eq.4) wgt_an(1) = - wgt_an(1) 
-            call analysis_fill(p_an,istatus,pdgs,wgt_an,icoll)
-          endif
-        endif
-      enddo
-
-      integrand_muga = integrand_muga + 
-     &  (jac1a(3) * me(3) - jac1a(4) * me(4))
-     &                       / (1d0-y1(3)) * lum 
+      integrand_muga = integrand_muga +
+     $ compute_subtracted_me_1a(x,vegas_wgt,lum,
+     $               tau,ycm,jac_pdf,istatus,pdgs)
 
  10   continue
 
       ! THE CONVOLUTION OF M_GAM GAM WITH Q'(Z1)
-      !We use jac0, since we convolve with the born-like matrix element
       call generate_qp_z(x(11),tau_min/tau,z1,jac_pdf)
 
       if (z1.ne.z1) stop 1
@@ -340,8 +302,8 @@
       logical gamu_singlereal
       parameter (gamu_singlereal=.true.)
 
-      double precision compute_subtracted_me_0, qprime
-      external compute_subtracted_me_0, qprime
+      double precision compute_subtracted_me_1b, compute_subtracted_me_0, qprime
+      external compute_subtracted_me_1b, compute_subtracted_me_0, qprime
 
       istatus = (/-1,-1,1,1,1,1/)
       pdgs = (/22,13,6,-6,13,0/)
@@ -359,40 +321,9 @@
       ! THE SINGLE-REAL CONTRIBUTION 
       if (.not.gamu_singlereal) goto 10
 
-      ! generate the momenta for all kinematic configs
-      do icoll = 2, 4, 2
-        jac1b(icoll) = jac_pdf
-
-        call generate_kinematics(x, shat, thresh, icoll, 1, 
-     &       y1(icoll), y2(icoll), omy1(icoll), omy2(icoll), xi1(icoll), xi2(icoll), 
-     &       ph1(icoll), ph2(icoll), phi(icoll), cth(icoll),
-     &       jac2(icoll), jac1a(icoll), jac1b(icoll), jac0(icoll))
-        call generate_momenta(shat, mfin, y1(icoll), y2(icoll), xi1(icoll), xi2(icoll), 
-     &                      ph1(icoll), ph2(icoll), cth(icoll), phi(icoll),
-     &                      p2(0,1,icoll), p1a(0,1,icoll), p1b(0,1,icoll), p0(0,1,icoll))
-      enddo
-
-      do icoll = 2, 4, 2
-        me(icoll) = 0d0
-        ! boost the momenta to the lab frame. This is needed
-        ! both for cuts and for the analysis
-        call boost_to_lab_frame(p1b(0,1,icoll),p_an,ycm)
-        if (passcuts(p_an,pdgs,istatus)) then 
-          call compute_me_singlereal1b(p1b,y1(icoll),y2(icoll),omy1(icoll),omy2(icoll),xi1,
-     &                             xi2,ph1(icoll),ph2(icoll),me(icoll))
-
-          if (fill_histos) then
-            wgt_an(1) = jac1b(icoll) * me(icoll) / (1d0-y2(2)) 
-     &           * vegas_wgt * lum
-            if (icoll.eq.4) wgt_an(1) = - wgt_an(1) 
-            call analysis_fill(p_an,istatus,pdgs,wgt_an,icoll)
-          endif
-        endif
-      enddo
-
-      integrand_gamu = integrand_gamu + 
-     &  (jac1b(2) * me(2) - jac1b(4) * me(4))
-     &                       / (1d0-y2(2)) * lum 
+      integrand_gamu = integrand_gamu +
+     $ compute_subtracted_me_1b(x,vegas_wgt,lum,
+     $               tau,ycm,jac_pdf,istatus,pdgs)
 
  10   continue
 
