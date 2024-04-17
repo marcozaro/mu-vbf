@@ -361,3 +361,67 @@ C returns the matrix element for the gamma-gamma born term
 
       return
       end
+
+
+! now we have functions for the subtracted contributions. 
+! they also fill the analysis etc
+
+      double precision function compute_subtracted_me_0(x,vegas_wgt,lum,tau,ycm,jac,istatus,pdgs) 
+      ! the photon-photon (born-like) contribution
+      implicit none
+      double precision x(8),vegas_wgt,lum,tau,ycm,jac
+
+      double precision scoll
+      common /to_scoll/scoll
+      double precision shat
+      common /to_shat/shat
+      double precision mfin
+      common /to_mfin/mfin
+      double precision  mmin
+      common /to_mmin/mmin
+      double precision thresh
+
+      double precision jac2(4), jac1a(4), jac1b(4), jac0(4), me(4)
+      double precision y1(4), y2(4), omy1(4), omy2(4), xi1(4), xi2(4), ph1(4), ph2(4), phi(4), cth(4)
+      integer icoll
+      logical passcuts
+      external passcuts
+      double precision p2(0:3,6,4), p1a(0:3,6,4), p1b(0:3,6,4),p0(0:3,6,4)
+      ! stuff for the analysis
+      integer pdgs(6), istatus(6)
+      double precision p_an(0:3,6)
+      double precision wgt_an(1)
+      logical fill_histos
+      common /to_fill_histos/fill_histos
+
+      shat = tau * scoll
+      thresh = mmin**2/shat
+
+      icoll = 1
+
+      jac0(icoll) = jac
+      call generate_kinematics(x, shat, thresh, icoll, 0, 
+     &       y1(icoll), y2(icoll), omy1(icoll), omy2(icoll), xi1(icoll), xi2(icoll), 
+     &       ph1(icoll), ph2(icoll), phi(icoll), cth(icoll),
+     &       jac2(icoll), jac1a(icoll), jac1b(icoll), jac0(icoll))
+      call generate_momenta(shat, mfin, y1(icoll), y2(icoll), xi1(icoll), xi2(icoll), 
+     &                      ph1(icoll), ph2(icoll), cth(icoll), phi(icoll),
+     &                      p2(0,1,icoll), p1a(0,1,icoll), p1b(0,1,icoll), p0(0,1,icoll))
+      me(icoll) = 0d0
+      ! boost the momenta to the lab frame. This is needed
+      ! both for cuts and for the analysis
+      call boost_to_lab_frame(p0(0,1,icoll),p_an,ycm)
+      !! MZ need to understand how to deal with cuts
+      if (passcuts(p_an,pdgs,istatus)) then 
+        call compute_me_born_gaga(p0, me(icoll))
+
+        if (fill_histos) then
+            wgt_an(1) = jac0(icoll) * me(icoll) 
+     &           * vegas_wgt * lum
+            call analysis_fill(p_an,istatus,pdgs,wgt_an,icoll)
+        endif
+      endif
+      compute_subtracted_me_0 = jac0(1) * me(1) * lum
+
+      return
+      end

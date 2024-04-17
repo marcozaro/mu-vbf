@@ -3,7 +3,7 @@
 
       double precision scoll
       common /to_scoll/scoll
-      double precision x(10)
+      double precision x(12)
       integer i,j
       logical check
       parameter(check=.true.)
@@ -27,12 +27,12 @@
       nprn = 0
       ! fill histogram only in the refine phase
       fill_histos = .false.
-      call vegas01(10,integrand,0,10000,
+      call vegas01(12,integrand,0,10000,
      1        10,nprn,integral,error,prob)
 
       fill_histos = .true.
       call analysis_begin(1,"central value")
-      call vegas01(10,integrand,1,50000,
+      call vegas01(12,integrand,1,50000,
      1        4,nprn,integral,error,prob)
       call analysis_end(1d0)
 
@@ -42,7 +42,7 @@
 
       double precision function integrand(x, vegas_wgt)
       implicit none
-      double precision x(10), vegas_wgt
+      double precision x(12), vegas_wgt
       include 'coupl.inc'
       double precision  mmin
       common /to_mmin/mmin
@@ -64,7 +64,7 @@
       !integrand = integrand + integrand_gaga(x,vegas_wgt) 
       ! mu-gam in initial state
       integrand = integrand + integrand_muga(x,vegas_wgt) 
-      integrand = integrand + integrand_gamu(x,vegas_wgt) 
+      !integrand = integrand + integrand_gamu(x,vegas_wgt) 
 
       if (fill_histos) call HwU_add_points()
 
@@ -78,8 +78,8 @@
       !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       ! THE MUON-MUON CONTRIBUTION
       !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-      double precision x(10), vegas_wgt
-      double precision jac_pdf, lum, tau, ycm
+      double precision x(12), vegas_wgt
+      double precision jac_pdf, lum, tau, ycm, x1bk, x2bk
       double precision scoll
       common /to_scoll/scoll
       double precision shat
@@ -112,7 +112,7 @@
       !
       ! generate the mu mu luminosity
       jac_pdf = 1d0
-      call get_lum(1,x(9:10),scoll,mmin**2,jac_pdf,lum,tau,ycm)
+      call get_lum(1,x(9:10),scoll,mmin**2,jac_pdf,lum,tau,ycm,x1bk,x2bk)
 
       shat = tau * scoll
       thresh = mmin**2/shat
@@ -165,73 +165,32 @@
       !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       ! THE GAMMA-GAMMA CONTRIBUTION
       !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-      double precision x(10), vegas_wgt
-      double precision jac_pdf, lum, tau, ycm
+      double precision x(12), vegas_wgt
+      double precision jac_pdf, lum, tau, ycm, x1bk, x2bk
       double precision scoll
       common /to_scoll/scoll
-      double precision shat
-      common /to_shat/shat
       double precision mmin
       common /to_mmin/mmin
       double precision mfin
       common /to_mfin/mfin
-      double precision thresh
-      double precision jac2(4), jac1a(4), jac1b(4), jac0(4), me(4)
-      double precision y1(4), y2(4), omy1(4), omy2(4), xi1(4), xi2(4), ph1(4), ph2(4), phi(4), cth(4)
-      integer icoll
-      logical passcuts
-      external passcuts
-      double precision p2(0:3,6,4), p1a(0:3,6,4), p1b(0:3,6,4),p0(0:3,6,4)
-      ! stuff for the analysis
-      integer pdgs(6), istatus(6)
-      double precision p_an(0:3,6)
-      double precision wgt_an(1)
-      logical fill_histos
-      common /to_fill_histos/fill_histos
-
       logical gaga_born
       parameter (gaga_born=.true.)
+      integer pdgs(6), istatus(6)
+      double precision compute_subtracted_me_0
+      external compute_subtracted_me_0
 
       istatus = (/-1,-1,1,1,1,1/)
       pdgs = (/-22,22,6,-6,0,0/)
       !
       ! generate the gamma-gamma luminosity
       jac_pdf = 1d0
-      call get_lum(4,x(9:10),scoll,mmin**2,jac_pdf,lum,tau,ycm)
-
-      shat = tau * scoll
-      thresh = mmin**2/shat
+      call get_lum(4,x(9:10),scoll,mmin**2,jac_pdf,lum,tau,ycm,x1bk,x2bk)
 
       ! THE BORN CONTRIBUTION FOR THE PHOTON PAIR
       if (.not.gaga_born) goto 10
-      icoll = 1
-
-      jac0(icoll) = jac_pdf
-      call generate_kinematics(x, shat, thresh, icoll, 0, 
-     &       y1(icoll), y2(icoll), omy1(icoll), omy2(icoll), xi1(icoll), xi2(icoll), 
-     &       ph1(icoll), ph2(icoll), phi(icoll), cth(icoll),
-     &       jac2(icoll), jac1a(icoll), jac1b(icoll), jac0(icoll))
-      call generate_momenta(shat, mfin, y1(icoll), y2(icoll), xi1(icoll), xi2(icoll), 
-     &                      ph1(icoll), ph2(icoll), cth(icoll), phi(icoll),
-     &                      p2(0,1,icoll), p1a(0,1,icoll), p1b(0,1,icoll), p0(0,1,icoll))
-      me(icoll) = 0d0
-      ! boost the momenta to the lab frame. This is needed
-      ! both for cuts and for the analysis
-      call boost_to_lab_frame(p0(0,1,icoll),p_an,ycm)
-      !! MZ need to understand how to deal with cuts
-      if (passcuts(p_an,pdgs,istatus)) then 
-        call compute_me_born_gaga(p0, me(icoll))
-
-        if (fill_histos) then
-            wgt_an(1) = jac0(icoll) * me(icoll) 
-     &           * vegas_wgt * lum
-            call analysis_fill(p_an,istatus,pdgs,wgt_an,icoll)
-        endif
-      endif
-      integrand_gaga = integrand_gaga + jac0(1) * me(1)
+      integrand_gaga = integrand_gaga + compute_subtracted_me_0(x,vegas_wgt,lum,tau,ycm,jac_pdf,istatus,pdgs)
 
  10   continue
-      integrand_gaga = integrand_gaga * lum
 
       return
       end
@@ -243,11 +202,11 @@
       !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       ! THE MUON-GAMMA CONTRIBUTION
       !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-      double precision x(10), vegas_wgt
-      double precision jac_pdf, lum, tau, ycm
+      double precision x(12), vegas_wgt
+      double precision jac_pdf, lum, tau, ycm, x1bk,x2bk
       double precision scoll
       common /to_scoll/scoll
-      double precision shat
+      double precision shat, shat_save
       common /to_shat/shat
       double precision mmin
       common /to_mmin/mmin
@@ -256,10 +215,12 @@
       double precision thresh
       double precision jac2(4), jac1a(4), jac1b(4), jac0(4), me(4)
       double precision y1(4), y2(4), omy1(4), omy2(4), xi1(4), xi2(4), ph1(4), ph2(4), phi(4), cth(4)
+      double precision z1, z2
       integer icoll
       logical passcuts
       external passcuts
       double precision p2(0:3,6,4), p1a(0:3,6,4), p1b(0:3,6,4),p0(0:3,6,4)
+      double precision tau_min
       ! stuff for the analysis
       integer pdgs(6), istatus(6)
       double precision p_an(0:3,6)
@@ -270,6 +231,9 @@
       logical muga_singlereal
       parameter (muga_singlereal=.true.)
 
+      double precision compute_subtracted_me_0, qprime
+      external compute_subtracted_me_0, qprime
+
       istatus = (/-1,-1,1,1,1,1/)
       pdgs = (/-13,22,6,-6,-13,0/)
 
@@ -277,9 +241,13 @@
       !
       ! generate the mu gam luminosity
       jac_pdf = 1d0
-      call get_lum(3,x(9:10),scoll,mmin**2,jac_pdf,lum,tau,ycm)
+      tau_min = mmin**2/scoll
+      call get_lum(3,x(9:10),scoll,mmin**2,jac_pdf,lum,tau,ycm,x1bk,x2bk)
 
       shat = tau * scoll
+      shat_save = shat ! store it for later
+      !ycm_save = ycm
+      !jac_pdf_save = jac_pdf
       thresh = mmin**2/shat
 
       ! THE SINGLE-REAL CONTRIBUTION 
@@ -318,10 +286,21 @@
 
       integrand_muga = integrand_muga + 
      &  (jac1a(3) * me(3) - jac1a(4) * me(4))
-     &                       / (1d0-y1(3)) 
+     &                       / (1d0-y1(3)) * lum 
 
  10   continue
-      integrand_muga = integrand_muga * lum
+
+      ! the convolution of M_gam gam with Q'(z1)
+      !We use jac0, since we convolve with the born-like matrix element
+      call generate_qp_z(x(11),tau_min/tau,z1,jac_pdf)
+      !write(*,*) 'Z1', z1, qprime(z1,scoll*tau,scoll)
+      if (z1.ne.z1) stop 1
+      if ( qprime(z1,scoll*tau,scoll).ne. qprime(z1,scoll*tau,scoll)) stop 1 
+
+
+      integrand_muga = integrand_muga +
+     $ compute_subtracted_me_0(x,vegas_wgt,lum*qprime(z1,scoll*tau,scoll),
+     $               tau*z1,ycm+0.5*dlog(z1),jac_pdf,istatus,pdgs)
 
       return
       end
@@ -332,8 +311,8 @@
       !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       ! THE GAMMA-MUON CONTRIBUTION
       !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-      double precision x(10), vegas_wgt
-      double precision jac_pdf, lum, tau, ycm
+      double precision x(12), vegas_wgt
+      double precision jac_pdf, lum, tau, ycm, x1bk, x2bk
       double precision scoll
       common /to_scoll/scoll
       double precision shat
@@ -366,7 +345,7 @@
       !
       ! generate the mu gam luminosity
       jac_pdf = 1d0
-      call get_lum(2,x(9:10),scoll,mmin**2,jac_pdf,lum,tau,ycm)
+      call get_lum(2,x(9:10),scoll,mmin**2,jac_pdf,lum,tau,ycm,x1bk,x2bk)
 
       shat = tau * scoll
       thresh = mmin**2/shat
@@ -419,11 +398,11 @@
       subroutine fill_vegas_x(x)
 C     fill the vegas x.
       implicit none
-      double precision x(10)
+      double precision x(12)
       integer i
       double precision ran2
       external ran2
-      do i = 1,10
+      do i = 1,12
          x(i) = ran2()
       enddo
 
@@ -674,7 +653,7 @@ C  2 -> double emission.
 C  1a/1b -> single emission from first/second leg.
 C  0 -> no emission (2->2)
 C  omy = 1-y (for better numerical accuracy)
-      double precision x(10)
+      double precision x(12)
       double precision shat, thresh
       integer icoll, isoft
       double precision y1, y2, omy1, omy2, xi1, xi2, ph1, ph2, phi, cth
