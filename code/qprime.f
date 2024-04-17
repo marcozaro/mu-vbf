@@ -18,12 +18,13 @@
       
       subroutine generate_qp_z(x, zmin, z, jac)
       ! generate z in the range [zmin, 1], using x as random number in [0,1]
-      ! for the moment, use a flat generation
+      ! use an adaptive generation towards 1, to suppress the log(1-z) in Q
       implicit none
       double precision x, zmin, z, jac
 
       z = zmin + x * (1d0-zmin)
-      jac = jac * (1d0-zmin)
+      z = 1d0 - x**2 * (1d0-zmin)
+      jac = jac * 2*x*(1d0-zmin)
       return
       end
 
