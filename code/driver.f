@@ -86,9 +86,12 @@
       double precision mmin
       common /to_mmin/mmin
       integer pdgs(6), istatus(6)
+      double precision tau_min, z1, z2
 
-      double precision compute_subtracted_me_2
-      external compute_subtracted_me_2
+      double precision compute_subtracted_me_2, compute_subtracted_me_1b,
+     $ compute_subtracted_me_1a, compute_subtracted_me_0, qprime
+      external compute_subtracted_me_2, compute_subtracted_me_1b,
+     $ compute_subtracted_me_1a, compute_subtracted_me_0, qprime
 
       logical mumu_doublereal
       parameter (mumu_doublereal=.true.)
@@ -108,6 +111,26 @@
       integrand_mumu = integrand_mumu + compute_subtracted_me_2(x,vegas_wgt,lum,tau,ycm,jac_pdf,istatus,pdgs)
 
  10   continue
+
+      ! THE CONVOLUTION OF M_GAM MU WITH Q'(Z1)
+      call generate_qp_z(x(11),tau_min/tau,z1,jac_pdf)
+
+      if (z1.ne.z1) stop 1
+      if ( qprime(z1,scoll*tau,scoll).ne. qprime(z1,scoll*tau,scoll)) stop 1 
+
+      integrand_mumu = integrand_mumu +
+     $ compute_subtracted_me_1b(x,vegas_wgt,lum*qprime(z1,scoll*tau,scoll),
+     $               tau*z1,ycm+0.5*dlog(z1),jac_pdf,istatus,pdgs)
+
+      ! THE CONVOLUTION OF M MU GAM WITH Q'(Z2)
+      call generate_qp_z(x(11),tau_min/tau,z2,jac_pdf)
+
+      if (z2.ne.z2) stop 1
+      if ( qprime(z2,scoll*tau,scoll).ne. qprime(z2,scoll*tau,scoll)) stop 1 
+
+      integrand_mumu = integrand_mumu +
+     $ compute_subtracted_me_1a(x,vegas_wgt,lum*qprime(z2,scoll*tau,scoll),
+     $               tau*z2,ycm-0.5*dlog(z2),jac_pdf,istatus,pdgs)
 
       return
       end

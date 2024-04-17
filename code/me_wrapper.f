@@ -428,7 +428,7 @@ C returns the matrix element for the gamma-gamma born term
 
 
       double precision function compute_subtracted_me_1a(x,vegas_wgt,lum,tau,ycm,jac,istatus,pdgs) 
-      ! the photon-photon (born-like) contribution
+      ! the muon-gamma (single-real) contribution
       implicit none
       double precision x(8),vegas_wgt,lum,tau,ycm,jac
 
@@ -497,7 +497,7 @@ C returns the matrix element for the gamma-gamma born term
 
 
       double precision function compute_subtracted_me_1b(x,vegas_wgt,lum,tau,ycm,jac,istatus,pdgs) 
-      ! the photon-photon (born-like) contribution
+      ! the gamma-muon (single-real) contribution
       implicit none
       double precision x(8),vegas_wgt,lum,tau,ycm,jac
       integer pdgs(6), istatus(6)
@@ -566,7 +566,7 @@ C returns the matrix element for the gamma-gamma born term
 
 
       double precision function compute_subtracted_me_2(x,vegas_wgt,lum,tau,ycm,jac,istatus,pdgs) 
-      ! the photon-photon (born-like) contribution
+      ! the muon-muon (single-real) contribution
       implicit none
       double precision x(8),vegas_wgt,lum,tau,ycm,jac
       integer pdgs(6), istatus(6)
