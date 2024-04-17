@@ -59,13 +59,13 @@
       integrand = 0d0
 
       ! mu-mu in initial state
-      !integrand = integrand + integrand_mumu(x,vegas_wgt) 
+      integrand = integrand + integrand_mumu(x,vegas_wgt) 
       ! gam-gam in initial state
       !integrand = integrand + integrand_gaga(x,vegas_wgt) 
       ! mu-gam in initial state
-      integrand = integrand + integrand_muga(x,vegas_wgt) 
+      !integrand = integrand + integrand_muga(x,vegas_wgt) 
       ! gam-mu in initial state
-      integrand = integrand + integrand_gamu(x,vegas_wgt) 
+      !integrand = integrand + integrand_gamu(x,vegas_wgt) 
 
       if (fill_histos) call HwU_add_points()
 
@@ -103,6 +103,9 @@
       logical fill_histos
       common /to_fill_histos/fill_histos
 
+      double precision compute_subtracted_me_2
+      external compute_subtracted_me_2
+
       logical mumu_doublereal
       parameter (mumu_doublereal=.true.)
 
@@ -121,41 +124,9 @@
       ! THE DOUBLE-REAL CONTRIBUTION FOR THE MUON PAIR
       if (.not.mumu_doublereal) goto 10
 
-      ! generate the momenta for all kinematic configs
-      do icoll = 1, 4
-        jac2(icoll) = jac_pdf
-        call generate_kinematics(x, shat, thresh, icoll, 0,  
-     &       y1(icoll), y2(icoll), omy1(icoll), omy2(icoll), xi1(icoll), xi2(icoll), 
-     &       ph1(icoll), ph2(icoll), phi(icoll), cth(icoll),
-     &       jac2(icoll), jac1a(icoll), jac1b(icoll), jac0(icoll))
-        call generate_momenta(shat, mfin, y1(icoll), y2(icoll), xi1(icoll), xi2(icoll), 
-     &                      ph1(icoll), ph2(icoll), cth(icoll), phi(icoll),
-     &                      p2(0,1,icoll), p1a(0,1,icoll), p1b(0,1,icoll), p0(0,1,icoll))
-      enddo
-
-      do icoll = 1, 4
-        me(icoll) = 0d0
-        ! boost the momenta to the lab frame. This is needed
-        ! both for cuts and for the analysis
-        call boost_to_lab_frame(p2(0,1,icoll),p_an,ycm)
-        if (passcuts(p_an,pdgs,istatus)) then 
-          call compute_me_doublereal(p2,y1(icoll),y2(icoll),omy1(icoll),omy2(icoll),xi1,
-     &                             xi2,ph1(icoll),ph2(icoll),me(icoll))
-
-          if (fill_histos) then
-            wgt_an(1) = jac2(icoll) * me(icoll) / (1d0-y1(1)) / (1d0-y2(1)) 
-     &           * vegas_wgt * lum
-            if (icoll.eq.2.or.icoll.eq.3) wgt_an(1) = - wgt_an(1) 
-            call analysis_fill(p_an,istatus,pdgs,wgt_an,icoll)
-          endif
-        endif
-      enddo
-      integrand_mumu = integrand_mumu + 
-     &  (jac2(1) * me(1) - jac2(2) * me(2) - jac2(3) * me(3) + jac2(4) * me(4))
-     &                       / (1d0-y1(1)) / (1d0-y2(1))
+      integrand_mumu = integrand_mumu + compute_subtracted_me_2(x,vegas_wgt,lum,tau,ycm,jac_pdf,istatus,pdgs)
 
  10   continue
-      integrand_mumu = integrand_mumu * lum
 
       return
       end
