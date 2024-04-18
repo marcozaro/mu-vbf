@@ -30,8 +30,11 @@
       call vegas01(12,integrand,0,10000,
      1        10,nprn,integral,error,prob)
 
+      ! for the analysis
       fill_histos = .true.
+      call set_error_estimation(1)
       call analysis_begin(1,"central value")
+
       call vegas01(12,integrand,1,50000,
      1        4,nprn,integral,error,prob)
       call analysis_end(1d0)
@@ -61,11 +64,11 @@
       ! mu-mu in initial state
       !integrand = integrand + integrand_mumu(x,vegas_wgt) 
       ! gam-gam in initial state
-      !integrand = integrand + integrand_gaga(x,vegas_wgt) 
+      integrand = integrand + integrand_gaga(x,vegas_wgt) 
       ! mu-gam in initial state
-      integrand = integrand + integrand_muga(x,vegas_wgt) 
+      !integrand = integrand + integrand_muga(x,vegas_wgt) 
       ! gam-mu in initial state
-      integrand = integrand + integrand_gamu(x,vegas_wgt) 
+      !integrand = integrand + integrand_gamu(x,vegas_wgt) 
 
       if (fill_histos) call HwU_add_points()
 
@@ -86,7 +89,7 @@
       double precision mmin
       common /to_mmin/mmin
       integer pdgs(6), istatus(6)
-      double precision tau_min, z1, z2
+      double precision tau_min, z1, z2, jac_pdf_save
 
       double precision compute_subtracted_me_2, compute_subtracted_me_1b,
      $ compute_subtracted_me_1a, compute_subtracted_me_0, qprime
@@ -103,6 +106,7 @@
       !
       ! generate the mu mu luminosity
       jac_pdf = 1d0
+      tau_min = mmin**2/scoll
       call get_lum(1,x(9:10),scoll,mmin**2,jac_pdf,lum,tau,ycm,x1bk,x2bk)
 
       ! THE DOUBLE-REAL CONTRIBUTION FOR THE MUON PAIR
@@ -113,6 +117,7 @@
  10   continue
 
       ! THE CONVOLUTION OF M_GAM MU WITH Q'(Z1)
+      jac_pdf_save = jac_pdf
       call generate_qp_z(x(11),tau_min/tau,z1,jac_pdf)
 
       if (z1.ne.z1) stop 1
@@ -123,6 +128,7 @@
      $               tau*z1,ycm+0.5*dlog(z1),jac_pdf,istatus,pdgs)
 
       ! THE CONVOLUTION OF M MU GAM WITH Q'(Z2)
+      jac_pdf = jac_pdf_save
       call generate_qp_z(x(11),tau_min/tau,z2,jac_pdf)
 
       if (z2.ne.z2) stop 1
@@ -131,6 +137,13 @@
       integrand_mumu = integrand_mumu +
      $ compute_subtracted_me_1a(x,vegas_wgt,lum*qprime(z2,scoll*tau,scoll),
      $               tau*z2,ycm-0.5*dlog(z2),jac_pdf,istatus,pdgs)
+
+      ! THE CONVOLUTION OF M GAM GAM WITH Q'(Z1) Q'(Z2)
+      jac_pdf = jac_pdf_save
+      call generate_qp_z(x(11),tau_min/tau,z1,jac_pdf)
+      call generate_qp_z(x(12),tau_min/tau/z1,z2,jac_pdf)
+      integrand_mumu = compute_subtracted_me_0(x,vegas_wgt,lum*qprime(z1,scoll*tau,scoll)*qprime(z2,scoll*tau,scoll),
+     $               tau*z1*z2,ycm+0.5*dlog(z1)-0.5*dlog(z2),jac_pdf,istatus,pdgs)
 
       return
       end
