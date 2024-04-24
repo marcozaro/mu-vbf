@@ -88,7 +88,6 @@
       common /to_scoll/scoll
       double precision mmin
       common /to_mmin/mmin
-      integer pdgs(6), istatus(6)
       double precision tau_min, z1, z2, jac_pdf_save
 
       double precision compute_subtracted_me_2, compute_subtracted_me_1b,
@@ -98,9 +97,6 @@
 
       logical mumu_doublereal
       parameter (mumu_doublereal=.true.)
-
-      istatus = (/-1,-1,1,1,1,1/)
-      pdgs = (/-13,13,6,-6,-13,13/)
 
       integrand_mumu = 0d0
       !
@@ -112,7 +108,7 @@
       ! THE DOUBLE-REAL CONTRIBUTION FOR THE MUON PAIR
       if (.not.mumu_doublereal) goto 10
 
-      integrand_mumu = integrand_mumu + compute_subtracted_me_2(x,vegas_wgt,lum,tau,ycm,jac_pdf,istatus,pdgs)
+      integrand_mumu = integrand_mumu + compute_subtracted_me_2(x,vegas_wgt,lum,tau,ycm,jac_pdf)
 
  10   continue
 
@@ -125,7 +121,7 @@
 
       integrand_mumu = integrand_mumu +
      $ compute_subtracted_me_1b(x,vegas_wgt,lum*qprime(z1,scoll*tau,scoll),
-     $               tau*z1,ycm+0.5*dlog(z1),jac_pdf,istatus,pdgs)
+     $               tau*z1,ycm+0.5*dlog(z1),jac_pdf)
 
       ! THE CONVOLUTION OF M MU GAM WITH Q'(Z2)
       jac_pdf = jac_pdf_save
@@ -136,14 +132,14 @@
 
       integrand_mumu = integrand_mumu +
      $ compute_subtracted_me_1a(x,vegas_wgt,lum*qprime(z2,scoll*tau,scoll),
-     $               tau*z2,ycm-0.5*dlog(z2),jac_pdf,istatus,pdgs)
+     $               tau*z2,ycm-0.5*dlog(z2),jac_pdf)
 
       ! THE CONVOLUTION OF M GAM GAM WITH Q'(Z1) Q'(Z2)
       jac_pdf = jac_pdf_save
       call generate_qp_z(x(11),tau_min/tau,z1,jac_pdf)
       call generate_qp_z(x(12),tau_min/tau/z1,z2,jac_pdf)
       integrand_mumu = compute_subtracted_me_0(x,vegas_wgt,lum*qprime(z1,scoll*tau,scoll)*qprime(z2,scoll*tau,scoll),
-     $               tau*z1*z2,ycm+0.5*dlog(z1)-0.5*dlog(z2),jac_pdf,istatus,pdgs)
+     $               tau*z1*z2,ycm+0.5*dlog(z1)-0.5*dlog(z2),jac_pdf)
 
       return
       end
@@ -160,16 +156,12 @@
       common /to_scoll/scoll
       double precision mmin
       common /to_mmin/mmin
-      integer pdgs(6), istatus(6)
 
       double precision compute_subtracted_me_0
       external compute_subtracted_me_0
 
       logical gaga_born
       parameter (gaga_born=.true.)
-
-      istatus = (/-1,-1,1,1,1,1/)
-      pdgs = (/-22,22,6,-6,0,0/)
       !
       ! generate the gamma-gamma luminosity
       jac_pdf = 1d0
@@ -177,7 +169,7 @@
 
       ! THE BORN CONTRIBUTION FOR THE PHOTON PAIR
       if (.not.gaga_born) goto 10
-      integrand_gaga = integrand_gaga + compute_subtracted_me_0(x,vegas_wgt,lum,tau,ycm,jac_pdf,istatus,pdgs)
+      integrand_gaga = integrand_gaga + compute_subtracted_me_0(x,vegas_wgt,lum,tau,ycm,jac_pdf)
 
  10   continue
 
@@ -197,7 +189,6 @@
       common /to_scoll/scoll
       double precision mmin
       common /to_mmin/mmin
-      integer pdgs(6), istatus(6)
       double precision tau_min, z1, z2
 
       logical muga_singlereal
@@ -205,9 +196,6 @@
 
       double precision compute_subtracted_me_1a, compute_subtracted_me_0, qprime
       external compute_subtracted_me_1a, compute_subtracted_me_0, qprime
-
-      istatus = (/-1,-1,1,1,1,1/)
-      pdgs = (/-13,22,6,-6,-13,0/)
 
       integrand_muga = 0d0
       !
@@ -221,7 +209,7 @@
 
       integrand_muga = integrand_muga +
      $ compute_subtracted_me_1a(x,vegas_wgt,lum,
-     $               tau,ycm,jac_pdf,istatus,pdgs)
+     $               tau,ycm,jac_pdf)
 
  10   continue
 
@@ -233,7 +221,7 @@
 
       integrand_muga = integrand_muga +
      $ compute_subtracted_me_0(x,vegas_wgt,lum*qprime(z1,scoll*tau,scoll),
-     $               tau*z1,ycm+0.5*dlog(z1),jac_pdf,istatus,pdgs)
+     $               tau*z1,ycm+0.5*dlog(z1),jac_pdf)
 
       return
       end
@@ -250,7 +238,6 @@
       common /to_scoll/scoll
       double precision mmin
       common /to_mmin/mmin
-      integer pdgs(6), istatus(6)
       double precision tau_min, z1, z2
 
       logical gamu_singlereal
@@ -258,9 +245,6 @@
 
       double precision compute_subtracted_me_1b, compute_subtracted_me_0, qprime
       external compute_subtracted_me_1b, compute_subtracted_me_0, qprime
-
-      istatus = (/-1,-1,1,1,1,1/)
-      pdgs = (/22,13,6,-6,13,0/)
 
       integrand_gamu = 0d0
       !
@@ -274,7 +258,7 @@
 
       integrand_gamu = integrand_gamu +
      $ compute_subtracted_me_1b(x,vegas_wgt,lum,
-     $               tau,ycm,jac_pdf,istatus,pdgs)
+     $               tau,ycm,jac_pdf)
 
  10   continue
 
@@ -287,7 +271,7 @@
 
       integrand_gamu = integrand_gamu +
      $ compute_subtracted_me_0(x,vegas_wgt,lum*qprime(z2,scoll*tau,scoll),
-     $               tau*z2,ycm-0.5*dlog(z2),jac_pdf,istatus,pdgs)
+     $               tau*z2,ycm-0.5*dlog(z2),jac_pdf)
 
       return
       end

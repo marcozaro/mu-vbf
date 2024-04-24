@@ -356,7 +356,7 @@ C returns the matrix element for the gamma-gamma born term
 ! now we have functions for the subtracted contributions. 
 ! they also fill the analysis etc
 
-      double precision function compute_subtracted_me_0(x,vegas_wgt,lum,tau,ycm,jac,istatus,pdgs) 
+      double precision function compute_subtracted_me_0(x,vegas_wgt,lum,tau,ycm,jac) 
       ! the photon-photon (born-like) contribution
       implicit none
       double precision x(8),vegas_wgt,lum,tau,ycm,jac
@@ -383,6 +383,9 @@ C returns the matrix element for the gamma-gamma born term
       double precision wgt_an(1)
       logical fill_histos
       common /to_fill_histos/fill_histos
+
+      pdgs = (/22,22,6,-6,0,0/)
+      istatus = (/-1,-1,1,1,1,1/)
 
       shat = tau * scoll
       thresh = mmin**2/shat
@@ -417,7 +420,7 @@ C returns the matrix element for the gamma-gamma born term
       end
 
 
-      double precision function compute_subtracted_me_1a(x,vegas_wgt,lum,tau,ycm,jac,istatus,pdgs) 
+      double precision function compute_subtracted_me_1a(x,vegas_wgt,lum,tau,ycm,jac) 
       ! the muon-gamma (single-real) contribution
       implicit none
       double precision x(8),vegas_wgt,lum,tau,ycm,jac
@@ -444,6 +447,9 @@ C returns the matrix element for the gamma-gamma born term
       double precision wgt_an(1)
       logical fill_histos
       common /to_fill_histos/fill_histos
+
+      pdgs = (/-13,22,6,-6,-13,0/)
+      istatus = (/-1,-1,1,1,1,1/)
 
       shat = tau * scoll
       thresh = mmin**2/shat
@@ -486,7 +492,7 @@ C returns the matrix element for the gamma-gamma born term
       end
 
 
-      double precision function compute_subtracted_me_1b(x,vegas_wgt,lum,tau,ycm,jac,istatus,pdgs) 
+      double precision function compute_subtracted_me_1b(x,vegas_wgt,lum,tau,ycm,jac) 
       ! the gamma-muon (single-real) contribution
       implicit none
       double precision x(8),vegas_wgt,lum,tau,ycm,jac
@@ -513,6 +519,9 @@ C returns the matrix element for the gamma-gamma born term
       double precision wgt_an(1)
       logical fill_histos
       common /to_fill_histos/fill_histos
+
+      pdgs = (/22,13,6,-6,13,0/)
+      istatus = (/-1,-1,1,1,1,1/)
 
       shat = tau * scoll
       thresh = mmin**2/shat
@@ -555,7 +564,7 @@ C returns the matrix element for the gamma-gamma born term
       end
 
 
-      double precision function compute_subtracted_me_2(x,vegas_wgt,lum,tau,ycm,jac,istatus,pdgs) 
+      double precision function compute_subtracted_me_2(x,vegas_wgt,lum,tau,ycm,jac) 
       ! the muon-muon (single-real) contribution
       implicit none
       double precision x(8),vegas_wgt,lum,tau,ycm,jac
@@ -582,6 +591,9 @@ C returns the matrix element for the gamma-gamma born term
       double precision wgt_an(1)
       logical fill_histos
       common /to_fill_histos/fill_histos
+
+      pdgs = (/-13,13,6,-6,-13,13/)
+      istatus = (/-1,-1,1,1,1,1/)
 
       shat = tau * scoll
       thresh = mmin**2/shat
