@@ -62,13 +62,13 @@
       integrand = 0d0
 
       ! mu-mu in initial state
-      !integrand = integrand + integrand_mumu(x,vegas_wgt) 
+      integrand = integrand + integrand_mumu(x,vegas_wgt) 
       ! gam-gam in initial state
       integrand = integrand + integrand_gaga(x,vegas_wgt) 
       ! mu-gam in initial state
-      !integrand = integrand + integrand_muga(x,vegas_wgt) 
+      integrand = integrand + integrand_muga(x,vegas_wgt) 
       ! gam-mu in initial state
-      !integrand = integrand + integrand_gamu(x,vegas_wgt) 
+      integrand = integrand + integrand_gamu(x,vegas_wgt) 
 
       if (fill_histos) call HwU_add_points()
 
@@ -98,6 +98,9 @@
       logical mumu_doublereal
       parameter (mumu_doublereal=.true.)
 
+      integer orders_tag ! 0->LO,1->NLO,2->NNLO
+      common/to_orderstag/orders_tag
+
       integrand_mumu = 0d0
       !
       ! generate the mu mu luminosity
@@ -108,6 +111,7 @@
       ! THE DOUBLE-REAL CONTRIBUTION FOR THE MUON PAIR
       if (.not.mumu_doublereal) goto 10
 
+      orders_tag = 2
       integrand_mumu = integrand_mumu + compute_subtracted_me_2(x,vegas_wgt,lum,tau,ycm,jac_pdf)
 
  10   continue
@@ -119,6 +123,7 @@
       if (z1.ne.z1) stop 1
       if ( qprime(z1,scoll*tau,scoll).ne. qprime(z1,scoll*tau,scoll)) stop 1 
 
+      orders_tag = 2
       integrand_mumu = integrand_mumu +
      $ compute_subtracted_me_1b(x,vegas_wgt,lum*qprime(z1,scoll*tau,scoll),
      $               tau*z1,ycm+0.5*dlog(z1),jac_pdf)
@@ -130,6 +135,7 @@
       if (z2.ne.z2) stop 1
       if ( qprime(z2,scoll*tau,scoll).ne. qprime(z2,scoll*tau,scoll)) stop 1 
 
+      orders_tag = 2
       integrand_mumu = integrand_mumu +
      $ compute_subtracted_me_1a(x,vegas_wgt,lum*qprime(z2,scoll*tau,scoll),
      $               tau*z2,ycm-0.5*dlog(z2),jac_pdf)
@@ -138,7 +144,9 @@
       jac_pdf = jac_pdf_save
       call generate_qp_z(x(11),tau_min/tau,z1,jac_pdf)
       call generate_qp_z(x(12),tau_min/tau/z1,z2,jac_pdf)
-      integrand_mumu = compute_subtracted_me_0(x,vegas_wgt,lum*qprime(z1,scoll*tau,scoll)*qprime(z2,scoll*tau,scoll),
+      orders_tag = 2
+      integrand_mumu = integrand_mumu + 
+     $ compute_subtracted_me_0(x,vegas_wgt,lum*qprime(z1,scoll*tau,scoll)*qprime(z2,scoll*tau,scoll),
      $               tau*z1*z2,ycm+0.5*dlog(z1)-0.5*dlog(z2),jac_pdf)
 
       return
@@ -162,13 +170,19 @@
 
       logical gaga_born
       parameter (gaga_born=.true.)
-      !
+
+      integer orders_tag ! 0->LO,1->NLO,2->NNLO
+      common/to_orderstag/orders_tag
+       
+      integrand_gaga = 0d0
+
       ! generate the gamma-gamma luminosity
       jac_pdf = 1d0
       call get_lum(4,x(9:10),scoll,mmin**2,jac_pdf,lum,tau,ycm,x1bk,x2bk)
 
       ! THE BORN CONTRIBUTION FOR THE PHOTON PAIR
       if (.not.gaga_born) goto 10
+      orders_tag = 0
       integrand_gaga = integrand_gaga + compute_subtracted_me_0(x,vegas_wgt,lum,tau,ycm,jac_pdf)
 
  10   continue
@@ -197,6 +211,9 @@
       double precision compute_subtracted_me_1a, compute_subtracted_me_0, qprime
       external compute_subtracted_me_1a, compute_subtracted_me_0, qprime
 
+      integer orders_tag ! 0->LO,1->NLO,2->NNLO
+      common/to_orderstag/orders_tag
+
       integrand_muga = 0d0
       !
       ! generate the mu gam luminosity
@@ -206,7 +223,7 @@
 
       ! THE SINGLE-REAL CONTRIBUTION 
       if (.not.muga_singlereal) goto 10
-
+      orders_tag = 1
       integrand_muga = integrand_muga +
      $ compute_subtracted_me_1a(x,vegas_wgt,lum,
      $               tau,ycm,jac_pdf)
@@ -219,6 +236,7 @@
       if (z1.ne.z1) stop 1
       if ( qprime(z1,scoll*tau,scoll).ne. qprime(z1,scoll*tau,scoll)) stop 1 
 
+      orders_tag = 1
       integrand_muga = integrand_muga +
      $ compute_subtracted_me_0(x,vegas_wgt,lum*qprime(z1,scoll*tau,scoll),
      $               tau*z1,ycm+0.5*dlog(z1),jac_pdf)
@@ -246,6 +264,9 @@
       double precision compute_subtracted_me_1b, compute_subtracted_me_0, qprime
       external compute_subtracted_me_1b, compute_subtracted_me_0, qprime
 
+      integer orders_tag ! 0->LO,1->NLO,2->NNLO
+      common/to_orderstag/orders_tag
+
       integrand_gamu = 0d0
       !
       ! generate the gam mu luminosity
@@ -256,6 +277,7 @@
       ! THE SINGLE-REAL CONTRIBUTION 
       if (.not.gamu_singlereal) goto 10
 
+      orders_tag = 1
       integrand_gamu = integrand_gamu +
      $ compute_subtracted_me_1b(x,vegas_wgt,lum,
      $               tau,ycm,jac_pdf)
@@ -269,6 +291,7 @@
       if (z2.ne.z2) stop 1
       if ( qprime(z2,scoll*tau,scoll).ne. qprime(z2,scoll*tau,scoll)) stop 1 
 
+      orders_tag = 1
       integrand_gamu = integrand_gamu +
      $ compute_subtracted_me_0(x,vegas_wgt,lum*qprime(z2,scoll*tau,scoll),
      $               tau*z2,ycm-0.5*dlog(z2),jac_pdf)

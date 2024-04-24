@@ -34,25 +34,33 @@ c weights considered is nwgt
 c In the weights_info, there is an text string that explains what each
 c weight will mean. The size of this array of strings is equal to nwgt.
       character*(*) weights_info(*)
+      integer i,l
+      character*8 orders(0:3)
+      data orders /' |T@LO  ',' |T@NLO ',' |T@NNLO',' |T@TOT '/
+
 c Initialize the histogramming package (HwU). Pass the number of
 c weights and the information on the weights:
       call HwU_inithist(nwgt,weights_info)
+
+      do i = 0,3
 c declare (i.e. book) the histograms
-      call HwU_book(1,'total rate      ', 5,0.5d0,5.5d0)
-      call HwU_book(2,'total rate real ', 5,0.5d0,5.5d0)
-      call HwU_book(3,'mtt ',   50,0d0,1000d0)
-      call HwU_book(4,'thetatt ', 50,-1.5707963268d0,1.5707963268d0)
-      call HwU_book(5,'pttt ', 50,0d0,1000d0)
-      call HwU_book(6,'ptmup', 50,0d0,1000d0)
-      call HwU_book(7,'ptmum', 50,0d0,1000d0)
-      call HwU_book(8,'pttop', 50,0d0,1000d0)
-      call HwU_book(9,'ptatop', 50,0d0,1000d0)
-      call HwU_book(10,'mmumu ',   50,0d0,1000d0)
-      call HwU_book(11,'thetamup', 50,-1.5707963268d0,1.5707963268d0)
-      call HwU_book(12,'thetamum', 50,-1.5707963268d0,1.5707963268d0)
-      call HwU_book(13,'2mu2top invm', 50, 0d0, 1000d0)
-      call HwU_book(14,'2mu2top rap', 50,-3d0,3d0)
-      call HwU_book(15,'2mu2top pt', 50, 0d0, 1000d0)
+        l=i*20
+        call HwU_book(l+1,'total rate      '//orders(i), 5,0.5d0,5.5d0)
+        call HwU_book(l+2,'total rate real '//orders(i), 5,0.5d0,5.5d0)
+        call HwU_book(l+3,'mtt '//orders(i),   50,0d0,1000d0)
+        call HwU_book(l+4,'thetatt '//orders(i), 50,-1.5707963268d0,1.5707963268d0)
+        call HwU_book(l+5,'pttt '//orders(i), 50,0d0,1000d0)
+        call HwU_book(l+6,'ptmup'//orders(i), 50,0d0,1000d0)
+        call HwU_book(l+7,'ptmum'//orders(i), 50,0d0,1000d0)
+        call HwU_book(l+8,'pttop'//orders(i), 50,0d0,1000d0)
+        call HwU_book(l+9,'ptatop'//orders(i), 50,0d0,1000d0)
+        call HwU_book(l+10,'mmumu '//orders(i),   50,0d0,1000d0)
+        call HwU_book(l+11,'thetamup'//orders(i), 50,-1.5707963268d0,1.5707963268d0)
+        call HwU_book(l+12,'thetamum'//orders(i), 50,-1.5707963268d0,1.5707963268d0)
+        call HwU_book(l+13,'2mu2top invm'//orders(i), 50, 0d0, 1000d0)
+        call HwU_book(l+14,'2mu2top rap'//orders(i), 50,-3d0,3d0)
+        call HwU_book(l+15,'2mu2top pt'//orders(i), 50, 0d0, 1000d0)
+      enddo
       return
       end
 
@@ -115,7 +123,7 @@ c them separately might lead to larger than expected statistical
 c fluctuations).
       integer ibody
 c local variable
-      integer i
+      integer i,l
       double precision var
       double precision p_t(0:3), p_tx(0:3),p_mup(0:3),p_mum(0:3)
       double precision p_tt(0:3), p_mm(0:3), p_ttmm(0:3)
@@ -123,6 +131,9 @@ c local variable
       double precision th_mp, th_mm, m_mm
       double precision y_ttmm, m_ttmm, pt_ttmm
       double precision pt_mp, pt_mm, pt_t, pt_tx
+
+      integer orders_tag ! 0->LO,1->NLO,2->NNLO
+      common/to_orderstag/orders_tag
 c
 c Fill the histograms here using a call to the HwU_fill()
 c subroutine. The first argument is the histogram label, the second is
@@ -162,24 +173,27 @@ c phase-space point.
       th_mm= -99d0
       if (p_mup(0).gt.0d0) th_mp = datan(pt_mp / p_mup(3))
       if (p_mum(0).gt.0d0) th_mm = datan(pt_mm / p_mum(3))
+
+      do i = 0,3
+        l=i*20
+        if (i.ne.3.and.i.ne.orders_tag) cycle
 c always fill the total rate
-      call HwU_fill(1,var,wgts)
-c only fill the total rate for the Born when ibody=3
-      if (ibody.eq.3) call HwU_fill(2,var,wgts)
+        call HwU_fill(l+1,var,wgts)
 
-      call HwU_fill(3,m_tt,wgts)
-      call HwU_fill(4,th_tt,wgts)
-      call HwU_fill(5,pt_tt,wgts)
+        call HwU_fill(l+3,m_tt,wgts)
+        call HwU_fill(l+4,th_tt,wgts)
+        call HwU_fill(l+5,pt_tt,wgts)
 
-      call HwU_fill(6,pt_mp,wgts)
-      call HwU_fill(7,pt_mm,wgts)
-      call HwU_fill(8,pt_t ,wgts)
-      call HwU_fill(9,pt_tx,wgts)
-      call HwU_fill(10,m_mm,wgts)
-      call HwU_fill(11,th_mp,wgts)
-      call HwU_fill(12,th_mm,wgts)
-      call HwU_fill(13,m_ttmm,wgts)
-      call HwU_fill(14,y_ttmm,wgts)
-      call HwU_fill(15,pt_ttmm,wgts)
+        call HwU_fill(l+6,pt_mp,wgts)
+        call HwU_fill(l+7,pt_mm,wgts)
+        call HwU_fill(l+8,pt_t ,wgts)
+        call HwU_fill(l+9,pt_tx,wgts)
+        call HwU_fill(l+10,m_mm,wgts)
+        call HwU_fill(l+11,th_mp,wgts)
+        call HwU_fill(l+12,th_mm,wgts)
+        call HwU_fill(l+13,m_ttmm,wgts)
+        call HwU_fill(l+14,y_ttmm,wgts)
+        call HwU_fill(l+15,pt_ttmm,wgts)
+      enddo
       return
       end

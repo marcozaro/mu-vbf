@@ -15,44 +15,63 @@
 
       double precision mupdf, gampdf
       external mupdf, gampdf
-
-      ! set the scale, for the moment to the collider energy
-      mu2 = scoll
+      integer imu2
+      imu2 = 1
 
       ! generate the bjorken x's
       if (ilum.eq.1) then 
         ! mu mu scattering
         call generate_x_ee(rnd(1), smin/scoll, x1, omx1, jac_ee)
         jac = jac * jac_ee
-        lum = mupdf(x1, omx1, mu2)
         call generate_x_ee(rnd(2), smin/scoll/x1, x2, omx2, jac_ee)
         jac = jac * jac_ee
+        if (imu2.eq.0) then
+            mu2 = scoll
+        else if (imu2.eq.1) then
+            mu2 = scoll*x1*x2
+        endif
+        lum = mupdf(x1, omx1, mu2)
         lum = lum*mupdf(x2, omx2, mu2)
       else if (ilum.eq.2) then
         ! gamma mu scattering
         call generate_x_gam(rnd(1), smin/scoll, x1, omx1, jac_ee)
         jac = jac * jac_ee
-        lum = gampdf(x1, omx1, mu2)
         call generate_x_ee(rnd(2), smin/scoll/x1, x2, omx2, jac_ee)
         jac = jac * jac_ee
+        if (imu2.eq.0) then
+            mu2 = scoll
+        else if (imu2.eq.1) then
+            mu2 = scoll*x1*x2
+        endif
+        lum = gampdf(x1, omx1, mu2)
         lum = lum*mupdf(x2, omx2, mu2)
 
       else if (ilum.eq.3) then
         ! mu gamma scattering
         call generate_x_ee(rnd(1), smin/scoll, x1, omx1, jac_ee)
         jac = jac * jac_ee
-        lum = mupdf(x1, omx1, mu2)
         call generate_x_gam(rnd(2), smin/scoll/x1, x2, omx2, jac_ee)
         jac = jac * jac_ee
+        if (imu2.eq.0) then
+            mu2 = scoll
+        else if (imu2.eq.1) then
+            mu2 = scoll*x1*x2
+        endif
+        lum = mupdf(x1, omx1, mu2)
         lum = lum*gampdf(x2, omx2, mu2)
 
       else if (ilum.eq.4) then
         ! gamma gamma scattering
         call generate_x_gam(rnd(1), smin/scoll, x1, omx1, jac_ee)
         jac = jac * jac_ee
-        lum = gampdf(x1, omx1, mu2)
         call generate_x_gam(rnd(2), smin/scoll/x1, x2, omx2, jac_ee)
         jac = jac * jac_ee
+        if (imu2.eq.0) then
+            mu2 = scoll
+        else if (imu2.eq.1) then
+            mu2 = scoll*x1*x2
+        endif
+        lum = gampdf(x1, omx1, mu2)
         lum = lum*gampdf(x2, omx2, mu2)
       else
         write(*,*) 'ERROR: wrong ilum', ilum
@@ -185,7 +204,11 @@
       real*8 me
       data me /0.105658d0/
       double precision x, omx, q2
+      double precision mupdf
+      external mupdf
       gampdf = dble(gal(1)**2)/8d0/pi**2 * (1d0+(1d0-x)**2)*dlog(q2/me**2)
+      ! MZMZ DO NOT COMMIT
+      !gampdf = dble(gal(1)**2)/8d0/pi**2 * x * mupdf(x,omx,q2)
       return
       end
 
