@@ -17,8 +17,10 @@
       integer nprn
       logical fill_histos
       common /to_fill_histos/fill_histos
+      include 'input.inc'
 
-      scoll = (1000d0)**2
+      scoll = ecm**2
+
       call setpara('Cards/param_card.dat')
       call printout()
       !MZ leave this for now, to keep the RN sequence

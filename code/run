@@ -1,0 +1,103 @@
+#!/usr/bin/python
+import subprocess
+import os
+import sys
+import time
+import shutil
+
+types = {'ecm':float, 'ymin':float, 'mmin':float, 'imuf':int}
+
+def parse_input(inputfile):
+    content = open(inputfile).read()
+    incfile = open('input.inc', 'w')
+    print(content)
+    input_dict = {}
+    for l in content.split('\n'):
+        if l.startswith('#'): continue
+        try:
+            name, string_value = [v.strip() for v in l.split('=')]
+        except ValueError:
+            continue
+        ttype = types[name]
+        input_dict[name] = ttype(string_value)
+    return input_dict
+
+
+def write_input(inputinc, input_dict):
+    incfile = open(inputinc, 'w')
+    declarations = ''
+    assignments = ''
+    for name, value in input_dict.items():
+        ttype = types[name]
+        if ttype == int:
+            declarations+= '      integer %s\n' % name
+            assignments+= '      %s = %d\n' %(name, value)
+        elif ttype == float:
+            declarations+= '      double precision %s\n' % name
+            assignments+= '      %s = %fd0\n' %(name, value)
+    incfile.write(declarations + '\n' + assignments)
+
+
+def compile(arg=[], cwd=None, mode='fortran', job_specs = True, nb_core=1 ,**opt):
+    """compile a given directory"""
+
+    if 'nocompile' in opt:
+        if opt['nocompile'] == True:
+            if not arg:
+                return
+            if cwd:
+                executable = pjoin(cwd, arg[0])
+            else:
+                executable = arg[0]
+            if os.path.exists(executable):
+                return
+        del opt['nocompile']
+
+    cmd = ['make']
+    try:
+        if nb_core > 1:
+            cmd.append('-j%s' % nb_core)
+        cmd += arg
+        p = subprocess.Popen(cmd, stdout=subprocess.PIPE, 
+                             stderr=subprocess.STDOUT, cwd=cwd, **opt)
+        (out, err) = p.communicate()
+        print(out)
+    except OSError as error:
+        if cwd and not os.path.exists(cwd):
+            raise OSError('Directory %s doesn\'t exists. Impossible to run make' % cwd)
+        else:
+            error_text = "Impossible to compile %s directory\n" % cwd
+            error_text += "Trying to launch make command returns:\n"
+            error_text += "    " + str(error) + "\n"
+            raise Exception(error_text)
+
+
+def run(run_name, input_dict):
+    if os.path.isdir(run_name):
+        print('Warning, directory %s exists, will be removed' % run_name)
+        time.sleep(4)
+        shutil.rmtree(run_name)
+    os.mkdir(run_name)
+    # write the input
+    infile = open(os.path.join(run_name, 'input.txt'), 'w')
+    for k, v in input_dict.items():
+        infile.writelines("%s = %f" % (k,v))
+    infile.close()
+    subprocess.call('./driver')
+    subprocess.call(['./histograms.py',  'MADatNLO.HwU', '--out=%s' % os.path.join(run_name, 'MADatNLO')])
+
+
+
+try:
+    run_name = sys.argv[1]
+except IndexError:
+    run_name = 'tmprun'
+
+input_dict = parse_input(os.path.join('Cards','run_card.dat'))
+write_input('input.inc', input_dict)
+compile()
+run(run_name, input_dict)
+
+
+
+

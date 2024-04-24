@@ -15,8 +15,7 @@
 
       double precision mupdf, gampdf
       external mupdf, gampdf
-      integer imu2
-      imu2 = 1
+      include 'input.inc'
 
       ! generate the bjorken x's
       if (ilum.eq.1) then 
@@ -25,9 +24,9 @@
         jac = jac * jac_ee
         call generate_x_ee(rnd(2), smin/scoll/x1, x2, omx2, jac_ee)
         jac = jac * jac_ee
-        if (imu2.eq.0) then
+        if (imuf.eq.0) then
             mu2 = scoll
-        else if (imu2.eq.1) then
+        else if (imuf.eq.1) then
             mu2 = scoll*x1*x2
         endif
         lum = mupdf(x1, omx1, mu2)
@@ -38,9 +37,9 @@
         jac = jac * jac_ee
         call generate_x_ee(rnd(2), smin/scoll/x1, x2, omx2, jac_ee)
         jac = jac * jac_ee
-        if (imu2.eq.0) then
+        if (imuf.eq.0) then
             mu2 = scoll
-        else if (imu2.eq.1) then
+        else if (imuf.eq.1) then
             mu2 = scoll*x1*x2
         endif
         lum = gampdf(x1, omx1, mu2)
@@ -52,9 +51,9 @@
         jac = jac * jac_ee
         call generate_x_gam(rnd(2), smin/scoll/x1, x2, omx2, jac_ee)
         jac = jac * jac_ee
-        if (imu2.eq.0) then
+        if (imuf.eq.0) then
             mu2 = scoll
-        else if (imu2.eq.1) then
+        else if (imuf.eq.1) then
             mu2 = scoll*x1*x2
         endif
         lum = mupdf(x1, omx1, mu2)
@@ -66,9 +65,9 @@
         jac = jac * jac_ee
         call generate_x_gam(rnd(2), smin/scoll/x1, x2, omx2, jac_ee)
         jac = jac * jac_ee
-        if (imu2.eq.0) then
+        if (imuf.eq.0) then
             mu2 = scoll
-        else if (imu2.eq.1) then
+        else if (imuf.eq.1) then
             mu2 = scoll*x1*x2
         endif
         lum = gampdf(x1, omx1, mu2)

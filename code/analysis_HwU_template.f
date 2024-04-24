@@ -37,6 +37,7 @@ c weight will mean. The size of this array of strings is equal to nwgt.
       integer i,l
       character*8 orders(0:3)
       data orders /' |T@LO  ',' |T@NLO ',' |T@NNLO',' |T@TOT '/
+      include 'input.inc'
 
 c Initialize the histogramming package (HwU). Pass the number of
 c weights and the information on the weights:
@@ -47,19 +48,19 @@ c declare (i.e. book) the histograms
         l=i*20
         call HwU_book(l+1,'total rate      '//orders(i), 5,0.5d0,5.5d0)
         call HwU_book(l+2,'total rate real '//orders(i), 5,0.5d0,5.5d0)
-        call HwU_book(l+3,'mtt '//orders(i),   50,0d0,1000d0)
-        call HwU_book(l+4,'thetatt '//orders(i), 50,-1.5707963268d0,1.5707963268d0)
-        call HwU_book(l+5,'pttt '//orders(i), 50,0d0,1000d0)
-        call HwU_book(l+6,'ptmup'//orders(i), 50,0d0,1000d0)
-        call HwU_book(l+7,'ptmum'//orders(i), 50,0d0,1000d0)
-        call HwU_book(l+8,'pttop'//orders(i), 50,0d0,1000d0)
-        call HwU_book(l+9,'ptatop'//orders(i), 50,0d0,1000d0)
-        call HwU_book(l+10,'mmumu '//orders(i),   50,0d0,1000d0)
-        call HwU_book(l+11,'thetamup'//orders(i), 50,-1.5707963268d0,1.5707963268d0)
-        call HwU_book(l+12,'thetamum'//orders(i), 50,-1.5707963268d0,1.5707963268d0)
-        call HwU_book(l+13,'2mu2top invm'//orders(i), 50, 0d0, 1000d0)
+        call HwU_book(l+3,'mtt '//orders(i),   50,0d0,ecm)
+        call HwU_book(l+4,'thetatt '//orders(i), 50,0d0,3.141592653589793d0)
+        call HwU_book(l+5,'pttt '//orders(i), 50,0d0,ecm)
+        call HwU_book(l+6,'ptmup'//orders(i), 50,0d0,ecm)
+        call HwU_book(l+7,'ptmum'//orders(i), 50,0d0,ecm)
+        call HwU_book(l+8,'pttop'//orders(i), 50,0d0,ecm)
+        call HwU_book(l+9,'ptatop'//orders(i), 50,0d0,ecm)
+        call HwU_book(l+10,'mmumu '//orders(i),   50,0d0,ecm)
+        call HwU_book(l+11,'thetamup'//orders(i), 50,0d0,3.141592653589793d0)
+        call HwU_book(l+12,'thetamum'//orders(i), 50,0d0,3.141592653589793d0)
+        call HwU_book(l+13,'2mu2top invm'//orders(i), 50, 0d0, ecm)
         call HwU_book(l+14,'2mu2top rap'//orders(i), 50,-3d0,3d0)
-        call HwU_book(l+15,'2mu2top pt'//orders(i), 50, 0d0, 1000d0)
+        call HwU_book(l+15,'2mu2top pt'//orders(i), 50, 0d0, ecm)
       enddo
       return
       end
@@ -155,11 +156,11 @@ c phase-space point.
       p_mm(:) = p_mup(:) + p_mum(:)
       p_ttmm(:) = p_tt(:) + p_mm(:)
       pt_tt = max(dsqrt(p_tt(1)**2 + p_tt(2)**2),1d-6)
-      th_tt = datan(pt_tt / p_tt(3))
+      th_tt = datan2(pt_tt, p_tt(3))
       m_tt = p_tt(0)**2 - p_tt(1)**2 - p_tt(2)**2 - p_tt(3)**2
       m_mm = p_mm(0)**2 - p_mm(1)**2 - p_mm(2)**2 - p_mm(3)**2
       m_tt = dsqrt(m_tt)
-      m_mm = dsqrt(m_mm)
+      m_mm = dsqrt(max(m_mm,1e-4))
       m_ttmm = p_ttmm(0)**2 - p_ttmm(1)**2 - p_ttmm(2)**2 - p_ttmm(3)**2
       m_ttmm = min(dsqrt(m_ttmm), 999.9999d0) ! prevent overflow
       pt_ttmm = dsqrt(p_ttmm(1)**2 + p_ttmm(2)**2)
@@ -171,8 +172,8 @@ c phase-space point.
       pt_mm = dsqrt(p_mum(1)**2 + p_mum(2)**2)
       th_mp= -99d0
       th_mm= -99d0
-      if (p_mup(0).gt.0d0) th_mp = datan(pt_mp / p_mup(3))
-      if (p_mum(0).gt.0d0) th_mm = datan(pt_mm / p_mum(3))
+      if (p_mup(0).gt.0d0) th_mp = datan2(pt_mp, p_mup(3))
+      if (p_mum(0).gt.0d0) th_mm = datan2(pt_mm, p_mum(3))
 
       do i = 0,3
         l=i*20
