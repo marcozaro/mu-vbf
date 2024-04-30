@@ -2,18 +2,24 @@ include ./Source/make_opts
 SHELL = /bin/bash
 LIBDIR = ./lib/
 PROG   = driver
-LINKLIBS_ME =  -Llib/ -ldhelas -lmodel
+LINKLIBS_ME =  -Llib/ -ldhelas -lmodel 
 #LINKLIBS_ALL =  -L../lib/ -lmatrix -ldhelas -lmodel
 #LIBS = $(LIBDIR)libdhelas.$(libext) $(LIBDIR)libmodel.$(libext)
 
 
 
 MEFILES = $(patsubst %.f,%.o,$(wildcard */matrix_mod.f))
-FILES = ranmar.o vegas.o cuts.o me_wrapper.o HwU.o analysis_HwU_template.o driver.o $(MEFILES) 
+FILES = ranmar.o boostwdir2.o pdf.o vegas.o cuts.o me_wrapper.o qprime.o HwU.o analysis_HwU_template.o driver.o $(MEFILES) 
+
 
 
 driver: libs $(FILES)
 	$(FC) -o driver $(FILES) $(LINKLIBS_ME) 
+
+cuts.o: input.inc
+driver.o: input.inc
+pdf.o: input.inc
+analysis_HwU_template.o : input.inc
 
 libs:
 	cd Source; make

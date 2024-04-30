@@ -13,8 +13,8 @@ BIASLIBRARY=libbias.$(libext)
 
 # Rest of the makefile
 ifeq ($(origin FFLAGS),undefined)
-FFLAGS= -w -fPIC -O3
-FFLAGS+= -g -fbounds-check -fbacktrace 
+FFLAGS= -w -fPIC 
+FFLAGS+= -g -O3 -fbounds-check -fbacktrace  -Wall
 #FFLAGS+= -g -fbounds-check -ffpe-trap=invalid,zero,overflow,underflow,denormal -Wall -fimplicit-none
 endif
 
