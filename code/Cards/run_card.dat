@@ -1,9 +1,9 @@
 # do not use 'd' (as in fortran) for decimal exponents
 # center of mass energy
-ecm = 1e3
+ecm = 1e4
 # minimum rapidity such that y(mu+) > ymin
 #   and y(mu-) < -ymin
-ymin = -2
+ymin = 0
 # minimum invariant mass of mu+ mu-
 mmin = 200e0
 # 1 for muf=sqrt(shat), 0 for muf = ecm
