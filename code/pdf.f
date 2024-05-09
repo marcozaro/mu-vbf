@@ -203,11 +203,16 @@
       real*8 me
       data me /0.105658d0/
       double precision x, omx, q2
-      double precision mupdf
-      external mupdf
-      gampdf = dble(gal(1)**2)/8d0/pi**2 * (1d0+(1d0-x)**2)*dlog(q2/me**2)
-      ! MZMZ DO NOT COMMIT
-      !gampdf = dble(gal(1)**2)/8d0/pi**2 * x * mupdf(x,omx,q2)
+      double precision q2max,q2min
+
+      q2min= me**2*x**2/(1-x)
+      q2max=q2
+      if(q2min.lt.q2max) then 
+             gampdf = dble(gal(1)**2)/8d0/pi**2*
+     &           (2d0*me**2*x**2*(-1/q2min+1/q2max)+
+     &           (2-2d0*x+x*x)*dlog(q2max/q2min))
+      endif
+
       return
       end
 
