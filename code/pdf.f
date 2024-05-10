@@ -13,9 +13,8 @@
       parameter (tolerance=1e-3)
       double precision lx1, lx2
 
-      double precision mupdf, gampdf
-      external mupdf, gampdf
-      include 'input.inc'
+      double precision mupdf, gampdf, getscale
+      external mupdf, gampdf, getscale
 
       ! generate the bjorken x's
       if (ilum.eq.1) then 
@@ -24,24 +23,19 @@
         jac = jac * jac_ee
         call generate_x_ee(rnd(2), smin/scoll/x1, x2, omx2, jac_ee)
         jac = jac * jac_ee
-        if (imuf.eq.0) then
-            mu2 = scoll
-        else if (imuf.eq.1) then
-            mu2 = scoll*x1*x2
-        endif
+        mu2 = getscale(scoll, x1, x2)
+
         lum = mupdf(x1, omx1, mu2)
         lum = lum*mupdf(x2, omx2, mu2)
+
       else if (ilum.eq.2) then
         ! gamma mu scattering
         call generate_x_gam(rnd(1), smin/scoll, x1, omx1, jac_ee)
         jac = jac * jac_ee
         call generate_x_ee(rnd(2), smin/scoll/x1, x2, omx2, jac_ee)
         jac = jac * jac_ee
-        if (imuf.eq.0) then
-            mu2 = scoll
-        else if (imuf.eq.1) then
-            mu2 = scoll*x1*x2
-        endif
+        mu2 = getscale(scoll, x1, x2)
+
         lum = gampdf(x1, omx1, mu2)
         lum = lum*mupdf(x2, omx2, mu2)
 
@@ -51,11 +45,8 @@
         jac = jac * jac_ee
         call generate_x_gam(rnd(2), smin/scoll/x1, x2, omx2, jac_ee)
         jac = jac * jac_ee
-        if (imuf.eq.0) then
-            mu2 = scoll
-        else if (imuf.eq.1) then
-            mu2 = scoll*x1*x2
-        endif
+        mu2 = getscale(scoll, x1, x2)
+
         lum = mupdf(x1, omx1, mu2)
         lum = lum*gampdf(x2, omx2, mu2)
 
@@ -65,11 +56,8 @@
         jac = jac * jac_ee
         call generate_x_gam(rnd(2), smin/scoll/x1, x2, omx2, jac_ee)
         jac = jac * jac_ee
-        if (imuf.eq.0) then
-            mu2 = scoll
-        else if (imuf.eq.1) then
-            mu2 = scoll*x1*x2
-        endif
+        mu2 = getscale(scoll, x1, x2)
+
         lum = gampdf(x1, omx1, mu2)
         lum = lum*gampdf(x2, omx2, mu2)
       else
@@ -98,6 +86,22 @@
       end
 
 
+      double precision function getscale(scoll,x1,x2)
+      implicit none
+      double precision scoll, x1, x2
+      include 'input.inc'
+
+      if (imuf.eq.0) then
+        getscale = scoll
+      else if (imuf.eq.1) then
+        getscale = scoll*x1*x2
+      else if (imuf.eq.-1) then
+        getscale = fixscale**2 
+      endif
+
+      return
+      end
+
 
       subroutine generate_x_ee(rnd, xmin, x, omx, jac)
       implicit none
@@ -113,6 +117,13 @@
       double precision get_ee_expo
       double precision tolerance
       parameter (tolerance=1.d-5)
+      include 'input.inc'
+
+      x = 1d0
+      omx = 0d0
+      jac = 1d0
+      ! if we do not need to convolve with the muon PDF, just return here
+      if (convolvemuon.eq.0) return
 
       expo = get_ee_expo()
 
@@ -176,6 +187,12 @@
       double precision eepdf_tilde, eepdf_tilde_power, get_ee_expo
       external eepdf_tilde, eepdf_tilde_power, get_ee_expo
       double precision k_exp, ps_expo
+      include 'input.inc'
+
+      if (convolvemuon.eq.0) then
+          mupdf = 1d0
+          return
+      endif
 
       mupdf = eepdf_tilde(x,Q2,1,13,13)
       k_exp = eepdf_tilde_power(Q2,1,13,13)

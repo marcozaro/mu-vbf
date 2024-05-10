@@ -3,8 +3,12 @@
 ecm = 1e4
 # minimum rapidity such that y(mu+) > ymin
 #   and y(mu-) < -ymin
-ymin = 0
+ymin = -6
 # minimum invariant mass of mu+ mu-
 mmin = 200e0
-# 1 for muf=sqrt(shat), 0 for muf = ecm
-imuf = 1
+# 1 for muf=sqrt(shat), 0 for muf = ecm, -1 for fixed scale
+imuf = -1
+#fixed scale value
+fixscale = 1000.
+# convolve muon PDF (0 muon PDF delta, 1 muon PDF as in mupdf)
+convolvemuon = 0 

@@ -93,9 +93,10 @@
       double precision tau_min, z1, z2, jac_pdf_save
 
       double precision compute_subtracted_me_2, compute_subtracted_me_1b,
-     $ compute_subtracted_me_1a, compute_subtracted_me_0, qprime
+     $ compute_subtracted_me_1a, compute_subtracted_me_0, qprime, getscale
       external compute_subtracted_me_2, compute_subtracted_me_1b,
-     $ compute_subtracted_me_1a, compute_subtracted_me_0, qprime
+     $ compute_subtracted_me_1a, compute_subtracted_me_0, qprime, getscale
+      double precision mu2
 
       logical mumu_doublereal
       parameter (mumu_doublereal=.true.)
@@ -123,11 +124,12 @@
       call generate_qp_z(x(11),tau_min/tau,z1,jac_pdf)
 
       if (z1.ne.z1) stop 1
-      if ( qprime(z1,scoll*tau,scoll).ne. qprime(z1,scoll*tau,scoll)) stop 1 
+      mu2 = getscale(scoll, x1bk, x2bk)
+      if ( qprime(z1,scoll*tau,mu2).ne. qprime(z1,scoll*tau,mu2)) stop 1 
 
       orders_tag = 2
       integrand_mumu = integrand_mumu +
-     $ compute_subtracted_me_1b(x,vegas_wgt,lum*qprime(z1,scoll*tau,scoll),
+     $ compute_subtracted_me_1b(x,vegas_wgt,lum*qprime(z1,scoll*tau,mu2),
      $               tau*z1,ycm+0.5*dlog(z1),jac_pdf)
 
       ! THE CONVOLUTION OF M MU GAM WITH Q'(Z2)
@@ -135,11 +137,12 @@
       call generate_qp_z(x(11),tau_min/tau,z2,jac_pdf)
 
       if (z2.ne.z2) stop 1
-      if ( qprime(z2,scoll*tau,scoll).ne. qprime(z2,scoll*tau,scoll)) stop 1 
+      mu2 = getscale(scoll, x1bk, x2bk)
+      if ( qprime(z2,scoll*tau,mu2).ne. qprime(z2,scoll*tau,mu2)) stop 1 
 
       orders_tag = 2
       integrand_mumu = integrand_mumu +
-     $ compute_subtracted_me_1a(x,vegas_wgt,lum*qprime(z2,scoll*tau,scoll),
+     $ compute_subtracted_me_1a(x,vegas_wgt,lum*qprime(z2,scoll*tau,mu2),
      $               tau*z2,ycm-0.5*dlog(z2),jac_pdf)
 
       ! THE CONVOLUTION OF M GAM GAM WITH Q'(Z1) Q'(Z2)
@@ -148,7 +151,7 @@
       call generate_qp_z(x(12),tau_min/tau/z1,z2,jac_pdf)
       orders_tag = 2
       integrand_mumu = integrand_mumu + 
-     $ compute_subtracted_me_0(x,vegas_wgt,lum*qprime(z1,scoll*tau,scoll)*qprime(z2,scoll*tau,scoll),
+     $ compute_subtracted_me_0(x,vegas_wgt,lum*qprime(z1,scoll*tau,mu2)*qprime(z2,scoll*tau,mu2),
      $               tau*z1*z2,ycm+0.5*dlog(z1)-0.5*dlog(z2),jac_pdf)
 
       return
@@ -210,8 +213,9 @@
       logical muga_singlereal
       parameter (muga_singlereal=.true.)
 
-      double precision compute_subtracted_me_1a, compute_subtracted_me_0, qprime
-      external compute_subtracted_me_1a, compute_subtracted_me_0, qprime
+      double precision compute_subtracted_me_1a, compute_subtracted_me_0, qprime, getscale
+      external compute_subtracted_me_1a, compute_subtracted_me_0, qprime, getscale
+      double precision mu2
 
       integer orders_tag ! 0->LO,1->NLO,2->NNLO
       common/to_orderstag/orders_tag
@@ -236,11 +240,12 @@
       call generate_qp_z(x(11),tau_min/tau,z1,jac_pdf)
 
       if (z1.ne.z1) stop 1
-      if ( qprime(z1,scoll*tau,scoll).ne. qprime(z1,scoll*tau,scoll)) stop 1 
+      mu2 = getscale(scoll, x1bk, x2bk)
+      if ( qprime(z1,scoll*tau,mu2).ne. qprime(z1,scoll*tau,mu2)) stop 1 
 
       orders_tag = 1
       integrand_muga = integrand_muga +
-     $ compute_subtracted_me_0(x,vegas_wgt,lum*qprime(z1,scoll*tau,scoll),
+     $ compute_subtracted_me_0(x,vegas_wgt,lum*qprime(z1,scoll*tau,mu2),
      $               tau*z1,ycm+0.5*dlog(z1),jac_pdf)
 
       return
@@ -263,8 +268,9 @@
       logical gamu_singlereal
       parameter (gamu_singlereal=.true.)
 
-      double precision compute_subtracted_me_1b, compute_subtracted_me_0, qprime
-      external compute_subtracted_me_1b, compute_subtracted_me_0, qprime
+      double precision compute_subtracted_me_1b, compute_subtracted_me_0, qprime, getscale
+      external compute_subtracted_me_1b, compute_subtracted_me_0, qprime, getscale
+      double precision mu2
 
       integer orders_tag ! 0->LO,1->NLO,2->NNLO
       common/to_orderstag/orders_tag
@@ -291,11 +297,12 @@
       call generate_qp_z(x(11),tau_min/tau,z2,jac_pdf)
 
       if (z2.ne.z2) stop 1
-      if ( qprime(z2,scoll*tau,scoll).ne. qprime(z2,scoll*tau,scoll)) stop 1 
+      mu2 = getscale(scoll, x1bk, x2bk)
+      if ( qprime(z2,scoll*tau,mu2).ne. qprime(z2,scoll*tau,mu2)) stop 1 
 
       orders_tag = 1
       integrand_gamu = integrand_gamu +
-     $ compute_subtracted_me_0(x,vegas_wgt,lum*qprime(z2,scoll*tau,scoll),
+     $ compute_subtracted_me_0(x,vegas_wgt,lum*qprime(z2,scoll*tau,mu2),
      $               tau*z2,ycm-0.5*dlog(z2),jac_pdf)
 
       return

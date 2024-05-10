@@ -18,7 +18,7 @@ Block loop
 ## INFORMATION FOR MASS
 ###################################
 Block mass 
-    6 1.743000e+02 # MT 
+    6 1.720000e+02 # MT 
    23 9.118800e+01 # MZ 
    24 8.041900e+01 # MW 
    25 1.250000e+02 # MH 
@@ -57,7 +57,7 @@ Block sminputs
 ## INFORMATION FOR YUKAWA
 ###################################
 Block yukawa 
-    6 1.743000e+02 # ymt 
+    6 1.720000e+02 # ymt 
 
 ###################################
 ## INFORMATION FOR DECAY

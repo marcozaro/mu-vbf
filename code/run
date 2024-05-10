@@ -5,7 +5,7 @@ import sys
 import time
 import shutil
 
-types = {'ecm':float, 'ymin':float, 'mmin':float, 'imuf':int}
+types = {'ecm':float, 'ymin':float, 'mmin':float, 'imuf':int, 'fixscale':float, 'convolvemuon': int}
 
 def parse_input(inputfile):
     content = open(inputfile).read()
@@ -84,7 +84,7 @@ def run(run_name, input_dict):
         infile.writelines("%s = %f" % (k,v))
     infile.close()
     subprocess.call('./driver')
-    subprocess.call(['./histograms.py',  'MADatNLO.HwU', '--out=%s' % os.path.join(run_name, 'MADatNLO')])
+    subprocess.call(['./histograms.py',  'MADatNLO.HwU', '--out=%s' % os.path.join(run_name, 'MADatNLO'), '--no_open'])
 
 
 
