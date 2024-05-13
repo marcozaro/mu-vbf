@@ -1,5 +1,3 @@
-      program driver
-      implicit none
 
       double precision scoll
       common /to_scoll/scoll
@@ -123,9 +121,7 @@
       jac_pdf_save = jac_pdf
       call generate_qp_z(x(11),tau_min/tau,z1,jac_pdf)
 
-      if (z1.ne.z1) stop 1
       mu2 = getscale(scoll, x1bk, x2bk)
-      if ( qprime(z1,scoll*tau,mu2).ne. qprime(z1,scoll*tau,mu2)) stop 1 
 
       orders_tag = 2
       integrand_mumu = integrand_mumu +
@@ -136,9 +132,7 @@
       jac_pdf = jac_pdf_save
       call generate_qp_z(x(11),tau_min/tau,z2,jac_pdf)
 
-      if (z2.ne.z2) stop 1
       mu2 = getscale(scoll, x1bk, x2bk)
-      if ( qprime(z2,scoll*tau,mu2).ne. qprime(z2,scoll*tau,mu2)) stop 1 
 
       orders_tag = 2
       integrand_mumu = integrand_mumu +
@@ -150,8 +144,12 @@
       call generate_qp_z(x(11),tau_min/tau,z1,jac_pdf)
       call generate_qp_z(x(12),tau_min/tau/z1,z2,jac_pdf)
       orders_tag = 2
+      !! caareful here with the scale that enters in the logs inside q'
+      ! it is the only non-trivial place. In Q'(z_i), the com energy
+      ! that enters is z_1 * z_2 * tau * shat / z_i
+
       integrand_mumu = integrand_mumu + 
-     $ compute_subtracted_me_0(x,vegas_wgt,lum*qprime(z1,scoll*tau,mu2)*qprime(z2,scoll*tau,mu2),
+     $ compute_subtracted_me_0(x,vegas_wgt,lum*qprime(z1,scoll*tau*z2,mu2)*qprime(z2,scoll*tau*z1,mu2),
      $               tau*z1*z2,ycm+0.5*dlog(z1)-0.5*dlog(z2),jac_pdf)
 
       return
@@ -239,9 +237,7 @@
       ! THE CONVOLUTION OF M_GAM GAM WITH Q'(Z1)
       call generate_qp_z(x(11),tau_min/tau,z1,jac_pdf)
 
-      if (z1.ne.z1) stop 1
       mu2 = getscale(scoll, x1bk, x2bk)
-      if ( qprime(z1,scoll*tau,mu2).ne. qprime(z1,scoll*tau,mu2)) stop 1 
 
       orders_tag = 1
       integrand_muga = integrand_muga +
@@ -296,9 +292,7 @@
       !We use jac0, since we convolve with the born-like matrix element
       call generate_qp_z(x(11),tau_min/tau,z2,jac_pdf)
 
-      if (z2.ne.z2) stop 1
       mu2 = getscale(scoll, x1bk, x2bk)
-      if ( qprime(z2,scoll*tau,mu2).ne. qprime(z2,scoll*tau,mu2)) stop 1 
 
       orders_tag = 1
       integrand_gamu = integrand_gamu +
