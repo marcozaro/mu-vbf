@@ -1,4 +1,4 @@
-      subroutine get_lum(ilum,rnd,scoll,smin,jac,lum,tau,ycm)
+      subroutine get_lum(ilum,rnd,scoll,smin,jac,lum,tau,ycm,x1,x2)
       ! ilum = 1 -> mu+ mu-
       ! ilum = 2 -> gamma mu-
       ! ilum = 3 -> mu+ gamma
