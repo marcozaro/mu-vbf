@@ -230,6 +230,10 @@
      &           (2-2d0*x+x*x)*dlog(q2max/q2min))
       endif
 
+      ! MZ, this is eq 28
+        gampdf = dble(gal(1)**2)/8d0/pi**2*
+     &           (2-2d0*x+x*x)*(dlog(q2/me**2)-2d0*dlog(x)-1)
+
       return
       end
 
