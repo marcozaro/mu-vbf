@@ -9,8 +9,13 @@
       logical foundmup, foundmum
       double precision rap2
       external rap2
+      double precision pbeam(0:3,2)
 
       include 'input.inc'
+
+      ! define the beam momenta
+      pbeam(:,1) = (/ecm/2d0, 0d0, 0d0, ecm/2d0/)
+      pbeam(:,2) = (/ecm/2d0, 0d0, 0d0,-ecm/2d0/)
 
       ! we ask that mu+ has rapidity larger than ymin
       ! and that mu- has rapidity smaller than -ymin
@@ -23,17 +28,37 @@
         if (istatus(i).eq.1.and.pdgs(i).eq.-13) then
          ! mu+ must have positive z component
          if (rap2(p(0,i)).lt.ymin) passcuts = .false.
-         pmumu(:) = pmumu+p(:,i)
+         pmumu(:) = pmumu(:)+p(:,i)
          foundmup = .true.
         endif
         if (istatus(i).eq.1.and.pdgs(i).eq.+13) then
          ! mu- must have negative z component
          if (rap2(p(0,i)).gt.-ymin) passcuts = .false.
-         pmumu(:) = pmumu+p(:,i)
+         pmumu(:) = pmumu(:)+p(:,i)
          foundmum = .true.
+        endif
+        if (istatus(i).eq.1.and.abs(pdgs(i)).eq.6) then
+            if (ymaxtop.gt.0d0) then
+                if (abs(rap2(p(0,i))).gt.ymaxtop) passcuts = .false.
+            endif
         endif
 
       enddo
+
+      ! MZ if mup/m have not been found, define them starting from the
+      ! remnants
+      if (.not. foundmup) then
+          if (pdgs(1).ne.22) write(*,*) 'error mup', pdgs, foundmup
+          foundmup = .true.
+          pmumu(:) = pmumu(:) + pbeam(:,1) - p(:,1)
+      endif
+      if (.not. foundmum) then
+          if (pdgs(2).ne.22) write(*,*) 'error mum', pdgs, foundmum
+          foundmum = .true.
+          pmumu(:) = pmumu(:) + pbeam(:,2) - p(:,2)
+      endif
+
+
       if (foundmup.and.foundmum) then
         if (dot(pmumu,pmumu).lt.mmin**2) passcuts = .false.
       endif

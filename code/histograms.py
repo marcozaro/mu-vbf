@@ -1106,6 +1106,7 @@ class HwU(Histogram):
         on whether the starting definition of a new plot could be found in this
         stream."""
         n_bins = 0
+        total_rate = False
         
         if consider_reweights=='ALL' or raw_labels:
             weight_header = all_weight_header 
@@ -1123,6 +1124,7 @@ class HwU(Histogram):
             start = HwU.histo_start_re.match(line)
             if not start is None:
                 self.process_histogram_name(start.group('histo_name'))
+                total_rate = "total" in start.group('histo_name') and not 'real' in start.group('histo_name')
                 # We do not want to include auxiliary diagrams which would be
                 # recreated anyway.
                 if self.type == 'AUX':
@@ -1166,6 +1168,8 @@ class HwU(Histogram):
             self.bins.append(Bin(tuple(boundaries), bin_weights))
             if len(self.bins)==n_bins:
                 break
+        if total_rate and self.type != 'AUX':
+            print("TOTAL RATE", self.type, "%(central)s +- %(stat_error)s" % self.bins[0].wgts)
 
         if len(self.bins)!=n_bins:
             raise HwU.ParseError("%i bin specification "%len(self.bins)+\
@@ -3430,6 +3434,7 @@ if __name__ == "__main__":
            '--assign_types=<type1>,<type2>,...' to assign a type to all histograms of the first, second, etc... files loaded.
            '--multiply=<fact1>,<fact2>,...' to multiply all histograms of the first, second, etc... files by the fact1, fact2, etc...
            '--no_suffix'     Do no add any suffix (like '#1, #2, etc..) to the histograms types.
+           '--no_output'     Do not output any file, just parse (and print total rates).
            '--lhapdf-config=<PATH_TO_LHAPDF-CONFIG>' give path to lhapdf-config to compute PDF certainties using LHAPDF (only for lhapdf6)
            '--jet_samples=[int1,int2]' Specifies what jet samples to keep. 'None' is the default and keeps them all.
            '--central_only'  This option specifies to disregard all extra weights, so as to make it possible
@@ -3462,7 +3467,7 @@ if __name__ == "__main__":
                       '--no_scale','--no_pdf','--no_stat','--no_merging','--no_alpsfact',
                       '--only_scale','--only_pdf','--only_stat','--only_merging','--only_alpsfact',
                       '--variations','--band','--central_only', '--lhapdf-config','--titles',
-                      '--keep_all_weights','--colours']
+                      '--keep_all_weights','--colours', '--no_output']
     n_ratios   = -1
     uncertainties = ['scale','pdf','statistical','merging_scale','alpsfact']
     # The list of type of uncertainties for which to use bands. None is a 'smart' default
@@ -3524,6 +3529,10 @@ if __name__ == "__main__":
     no_suffix = False
     if '--no_suffix' in sys.argv:
         no_suffix = True
+
+    no_output = False
+    if '--no_output' in sys.argv:
+        no_output = True
     
     if '--central_only' in sys.argv:
         consider_reweights = []
@@ -3561,7 +3570,7 @@ if __name__ == "__main__":
         ratio_correlations = False
     
     for arg in sys.argv:
-        if arg.startswith('--no_') and not arg.startswith('--no_open'):
+        if arg.startswith('--no_') and not arg.startswith('--no_open') and not arg.startswith('--no_output'):
             uncertainties.remove(variation_type_map[arg[5:]])
         if arg.startswith('--only_'):
             uncertainties= [variation_type_map[arg[7:]]]
@@ -3651,6 +3660,8 @@ if __name__ == "__main__":
         
     log("A total of %i histograms were found."%len(histo_list))
     log("=======")
+    if no_output:
+        sys.exit(0)
 
     n_rebin = 1
     for arg in sys.argv[1:]:

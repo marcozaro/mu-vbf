@@ -3,9 +3,11 @@
 ecm = 1e4
 # minimum rapidity such that y(mu+) > ymin
 #   and y(mu-) < -ymin
-ymin = -6
+ymin = -1000
 # minimum invariant mass of mu+ mu-
 mmin = 200e0
+# maximum abs(rap) for top/antitop
+ymaxtop = -1
 # 1 for muf=sqrt(shat), 0 for muf = ecm, -1 for fixed scale
 imuf = -1
 #fixed scale value
