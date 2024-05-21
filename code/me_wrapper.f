@@ -447,6 +447,7 @@ C returns the matrix element for the gamma-gamma born term
       double precision wgt_an(1)
       logical fill_histos
       common /to_fill_histos/fill_histos
+      include 'input.inc' 
 
       pdgs = (/-13,22,6,-6,-13,0/)
       istatus = (/-1,-1,1,1,1,1/)
@@ -469,6 +470,10 @@ C returns the matrix element for the gamma-gamma born term
 
       do icoll = 3, 4
         me(icoll) = 0d0
+        ! check y against deltaI for the counterterm
+        if (y1(3).lt.1d0-deltaI.and.icoll.eq.4)then
+            cycle
+        endif
         ! boost the momenta to the lab frame. This is needed
         ! both for cuts and for the analysis
         call boost_to_lab_frame(p1a(0,1,icoll),p_an,ycm)
@@ -519,6 +524,7 @@ C returns the matrix element for the gamma-gamma born term
       double precision wgt_an(1)
       logical fill_histos
       common /to_fill_histos/fill_histos
+      include 'input.inc' 
 
       pdgs = (/22,13,6,-6,13,0/)
       istatus = (/-1,-1,1,1,1,1/)
@@ -541,6 +547,8 @@ C returns the matrix element for the gamma-gamma born term
 
       do icoll = 2, 4, 2
         me(icoll) = 0d0
+        ! check y against deltaI for the counterterm
+        if (y2(2).lt.1d0-deltaI.and.icoll.eq.4) cycle
         ! boost the momenta to the lab frame. This is needed
         ! both for cuts and for the analysis
         call boost_to_lab_frame(p1b(0,1,icoll),p_an,ycm)
@@ -591,6 +599,7 @@ C returns the matrix element for the gamma-gamma born term
       double precision wgt_an(1)
       logical fill_histos
       common /to_fill_histos/fill_histos
+      include 'input.inc' 
 
       pdgs = (/-13,13,6,-6,-13,13/)
       istatus = (/-1,-1,1,1,1,1/)
@@ -610,8 +619,17 @@ C returns the matrix element for the gamma-gamma born term
      &                      p2(0,1,icoll), p1a(0,1,icoll), p1b(0,1,icoll), p0(0,1,icoll))
       enddo
 
+C   icoll:
+C   1-> doubly resolved collinear emissions
+C   2-> single resolved collinear emission (y1=1)
+C   3-> single resolved collinear emission (y2=1)
+C   4-> no resolved collinear emission (y1=y2=1)
       do icoll = 1, 4
         me(icoll) = 0d0
+        ! check y against deltaI for the counterterm
+        if (y1(1).lt.1d0-deltaI.and.(icoll.eq.2.or.icoll.eq.4)) cycle
+        if (y2(1).lt.1d0-deltaI.and.(icoll.eq.3.or.icoll.eq.4)) cycle
+        !if ((y1(1).lt.1d0-deltaI.or.y2(1).lt.1d0-deltaI).and.icoll.eq.4) cycle
         ! boost the momenta to the lab frame. This is needed
         ! both for cuts and for the analysis
         call boost_to_lab_frame(p2(0,1,icoll),p_an,ycm)
@@ -628,7 +646,7 @@ C returns the matrix element for the gamma-gamma born term
         endif
       enddo
 
-      compute_subtracted_me_2 =  
+      compute_subtracted_me_2 = 
      &  (jac2(1) * me(1) - jac2(2) * me(2) - jac2(3) * me(3) + jac2(4) * me(4))
      &                       / (1d0-y1(1)) / (1d0-y2(1)) * lum
       return

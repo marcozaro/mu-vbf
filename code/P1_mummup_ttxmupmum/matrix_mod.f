@@ -422,6 +422,8 @@ C
       COMPLEX*16 W(20,NWAVEFUNCS)
       COMPLEX*16 DUM0,DUM1
       DATA DUM0, DUM1/(0D0, 0D0), (1D0, 0D0)/
+      logical sameflav_diags
+      common /to_sameflav/sameflav_diags
 C     
 C     FUNCTION
 C     
@@ -580,6 +582,10 @@ C     Amplitude(s) for diagram number 49
       CALL FFV2_4_0(W(1,8),W(1,2),W(1,7),GC_68,GC_77,AMP(49))
 C     Amplitude(s) for diagram number 50
       CALL FFV2_4_0(W(1,12),W(1,2),W(1,11),GC_68,GC_77,AMP(50))
+      if (.not.sameflav_diags) then
+          amp(1:17)=dcmplx(0d0,0d0)
+          amp(43:50)=dcmplx(0d0,0d0)
+      endif
 C     JAMPs contributing to orders QCD=3 QED=1
       JAMP(1,1)=-AMP(10)-AMP(11)+AMP(27)+AMP(28)+AMP(35)+AMP(36)-AMP
      $ (43)-AMP(44)

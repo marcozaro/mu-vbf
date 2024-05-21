@@ -19,7 +19,9 @@ driver: libs $(FILES)
 cuts.o: input.inc
 driver.o: input.inc
 pdf.o: input.inc
+qprime.o: input.inc
 analysis_HwU_template.o : input.inc
+me_wrapper.o : input.inc
 
 libs:
 	cd Source; make

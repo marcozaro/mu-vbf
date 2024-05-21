@@ -5,7 +5,7 @@ import sys
 import time
 import shutil
 
-types = {'ecm':float, 'ymin':float, 'mmin':float, 'imuf':int, 'fixscale':float, 'convolvemuon': int, 'ymaxtop': float}
+types = {'ecm':float, 'ymin':float, 'mllmin':float, 'imuf':int, 'fixscale':float, 'convolvemuon': int, 'ymaxtop': float, 'deltai': float, 'sameflav': int}
 
 def parse_input(inputfile):
     content = open(inputfile).read()
