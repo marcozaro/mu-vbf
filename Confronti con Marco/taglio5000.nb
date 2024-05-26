@@ -1,0 +1,166 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 12.2' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[      5632,        156]
+NotebookOptionsPosition[      4380,        129]
+NotebookOutlinePosition[      4780,        145]
+CellTagsIndexPosition[      4737,        142]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell["massa 10^-1", "Text",
+ CellChangeTimes->{{3.92519320687959*^9, 
+  3.9251932131095963`*^9}},ExpressionUUID->"bb3eacb0-d9ba-40ab-ba8d-\
+2530eced65a3"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"mue", "=", "0.02699"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"mumu", "=", "0.02693"}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"aa", "=", "0.0116"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"mua", "=", "0.01784"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Dlog", "=", "aa"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"Slog", "=", 
+    RowBox[{"2", 
+     RowBox[{"(", 
+      RowBox[{"mua", "-", "aa"}], ")"}]}]}], ";"}], "\[IndentingNewLine]", 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]"}], "Input",
+ CellChangeTimes->{{3.9251927076692257`*^9, 3.925192975122485*^9}, 
+   3.925193147696731*^9},
+ CellLabel->
+  "In[355]:=",ExpressionUUID->"672e70ed-56a9-4b23-adb1-b27462ef8d8d"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{"NNLOmue", "=", 
+  RowBox[{"mue", "-", "Dlog", "-", "Slog"}]}], "\[IndentingNewLine]", 
+ RowBox[{"NNLOmumu", "=", 
+  RowBox[{"mumu", "-", "Dlog", "-", "Slog"}]}]}], "Input",
+ CellChangeTimes->{{3.925192980989183*^9, 3.92519300592237*^9}},
+ CellLabel->
+  "In[361]:=",ExpressionUUID->"1b813697-0988-440e-ac78-7d10be3cc3fe"],
+
+Cell[BoxData["0.002909999999999996`"], "Output",
+ CellChangeTimes->{{3.925192937218395*^9, 3.9251929599254503`*^9}, 
+   3.9251930076154118`*^9, 3.925193149634811*^9},
+ CellLabel->
+  "Out[361]=",ExpressionUUID->"6c4716d7-6d6c-4940-8570-3d8f4a47d71d"],
+
+Cell[BoxData["0.002849999999999995`"], "Output",
+ CellChangeTimes->{{3.925192937218395*^9, 3.9251929599254503`*^9}, 
+   3.9251930076154118`*^9, 3.9251931496357737`*^9},
+ CellLabel->
+  "Out[362]=",ExpressionUUID->"828fd6a0-919a-41bc-9539-825b3028cb92"]
+}, Open  ]],
+
+Cell["massa 10^-0", "Text",
+ CellChangeTimes->{{3.92519320687959*^9, 
+  3.9251932224616423`*^9}},ExpressionUUID->"9b59d732-97be-43ec-aaf7-\
+45795132188c"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"mue", "=", "0.01788"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"mumu", "=", "0.01786"}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"aa", "=", "0.005986"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"mua", "=", "00.0104"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Dlog", "=", "aa"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"Slog", "=", 
+    RowBox[{"2", 
+     RowBox[{"(", 
+      RowBox[{"mua", "-", "aa"}], ")"}]}]}], ";"}], "\[IndentingNewLine]", 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]"}], "Input",
+ CellChangeTimes->{{3.9251927076692257`*^9, 3.925192975122485*^9}, {
+  3.9251930642548027`*^9, 3.925193082537706*^9}, {3.925193129504447*^9, 
+  3.925193144014312*^9}},
+ CellLabel->
+  "In[363]:=",ExpressionUUID->"39c3c093-f630-4da5-a1e7-c1b0714f32a7"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{"NNLOmue", "=", 
+  RowBox[{"mue", "-", "Dlog", "-", "Slog"}]}], "\[IndentingNewLine]", 
+ RowBox[{"NNLOmumu", "=", 
+  RowBox[{"mumu", "-", "Dlog", "-", "Slog"}]}]}], "Input",
+ CellChangeTimes->{{3.925192980989183*^9, 3.92519300592237*^9}},
+ CellLabel->
+  "In[369]:=",ExpressionUUID->"21ddb03d-bacb-4bb7-9124-45bc2e69f31e"],
+
+Cell[BoxData["0.003066000000000001`"], "Output",
+ CellChangeTimes->{{3.925192937218395*^9, 3.9251929599254503`*^9}, 
+   3.9251930076154118`*^9, 3.925193149656249*^9},
+ CellLabel->
+  "Out[369]=",ExpressionUUID->"9ceda570-6ad5-421d-aa2a-e496c148b386"],
+
+Cell[BoxData["0.003046000000000002`"], "Output",
+ CellChangeTimes->{{3.925192937218395*^9, 3.9251929599254503`*^9}, 
+   3.9251930076154118`*^9, 3.92519314965738*^9},
+ CellLabel->
+  "Out[370]=",ExpressionUUID->"ec95c36d-feef-47ca-89eb-7ab8c05cc64d"]
+}, Open  ]]
+},
+WindowSize->{808, 816},
+WindowMargins->{{Automatic, 255}, {-101, Automatic}},
+FrontEndVersion->"12.2 for Mac OS X x86 (64-bit) (December 12, 2020)",
+StyleDefinitions->"Default.nb",
+ExpressionUUID->"81b59ca6-0988-43c2-ab36-c586ff17f1ad"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[558, 20, 154, 3, 35, "Text",ExpressionUUID->"bb3eacb0-d9ba-40ab-ba8d-2530eced65a3"],
+Cell[715, 25, 826, 23, 220, "Input",ExpressionUUID->"672e70ed-56a9-4b23-adb1-b27462ef8d8d"],
+Cell[CellGroupData[{
+Cell[1566, 52, 345, 7, 52, "Input",ExpressionUUID->"1b813697-0988-440e-ac78-7d10be3cc3fe"],
+Cell[1914, 61, 249, 4, 34, "Output",ExpressionUUID->"6c4716d7-6d6c-4940-8570-3d8f4a47d71d"],
+Cell[2166, 67, 251, 4, 34, "Output",ExpressionUUID->"828fd6a0-919a-41bc-9539-825b3028cb92"]
+}, Open  ]],
+Cell[2432, 74, 154, 3, 35, "Text",ExpressionUUID->"9b59d732-97be-43ec-aaf7-45795132188c"],
+Cell[2589, 79, 902, 24, 220, "Input",ExpressionUUID->"39c3c093-f630-4da5-a1e7-c1b0714f32a7"],
+Cell[CellGroupData[{
+Cell[3516, 107, 345, 7, 52, "Input",ExpressionUUID->"21ddb03d-bacb-4bb7-9124-45bc2e69f31e"],
+Cell[3864, 116, 249, 4, 34, "Output",ExpressionUUID->"9ceda570-6ad5-421d-aa2a-e496c148b386"],
+Cell[4116, 122, 248, 4, 34, "Output",ExpressionUUID->"ec95c36d-feef-47ca-89eb-7ab8c05cc64d"]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)
+
