@@ -15,7 +15,11 @@
       integer nprn
       logical fill_histos
       common /to_fill_histos/fill_histos
+      logical sameflav_diags
+      common /to_sameflav/sameflav_diags
       include 'input.inc'
+
+      sameflav_diags = sameflav.gt.0
 
       scoll = ecm**2
 
@@ -27,7 +31,7 @@
       nprn = 0
       ! fill histogram only in the refine phase
       fill_histos = .false.
-      call vegas01(12,integrand,0,20000,
+      call vegas01(12,integrand,0,10000,
      1        10,nprn,integral,error,prob)
 
       ! for the analysis
@@ -35,7 +39,7 @@
       call set_error_estimation(1)
       call analysis_begin(1,"central value")
 
-      call vegas01(12,integrand,1,500000,
+      call vegas01(12,integrand,1,100000,
      1        4,nprn,integral,error,prob)
       call analysis_end(1d0)
 
@@ -64,11 +68,11 @@
       ! mu-mu in initial state
       integrand = integrand + integrand_mumu(x,vegas_wgt) 
       ! gam-gam in initial state
-      integrand = integrand + integrand_gaga(x,vegas_wgt) 
+      !integrand = integrand + integrand_gaga(x,vegas_wgt) 
       ! mu-gam in initial state
-      integrand = integrand + integrand_muga(x,vegas_wgt) 
+      !integrand = integrand + integrand_muga(x,vegas_wgt) 
       ! gam-mu in initial state
-      integrand = integrand + integrand_gamu(x,vegas_wgt) 
+      !integrand = integrand + integrand_gamu(x,vegas_wgt) 
 
       if (fill_histos) call HwU_add_points()
 
@@ -615,17 +619,21 @@ C  omy = 1-y (for better numerical accuracy)
       omega = sqrt(1d0-y1**2)*sqrt(1d0-y2**2)*dcos(ph1-ph2)-y1*y2
 
       if (isoft.eq.0) then
-          if (x(7).lt.0.5d0) then
-              xi1 = x(7)*2d0*(1d0-thresh)
-              jac2 = jac2*2d0*(1d0-thresh)
-              xi2 = x(8)*2d0*(1d0-thresh-xi1)/(2d0-(1d0-omega)*xi1)
-              jac2 = jac2*2d0*(1d0-thresh-xi1)/(2d0-(1d0-omega)*xi1)
-          else
-              xi2 = (x(7)-0.5d0)*2d0*(1d0-thresh)
-              jac2 = jac2*2d0*(1d0-thresh)
-              xi1 = x(8)*2d0*(1d0-thresh-xi2)/(2d0-(1d0-omega)*xi2)
-              jac2 = jac2*2d0*(1d0-thresh-xi2)/(2d0-(1d0-omega)*xi2)
-          endif
+          xi1 = x(7)*(1d0-thresh)
+          jac2 = jac2*(1d0-thresh)
+          xi2 = x(8)*2d0*(1d0-thresh-xi1)/(2d0-(1d0-omega)*xi1)
+          jac2 = jac2*2d0*(1d0-thresh-xi1)/(2d0-(1d0-omega)*xi1)
+C          if (x(7).lt.0.5d0) then
+C              xi1 = x(7)*2d0*(1d0-thresh)
+C              jac2 = jac2*2d0*(1d0-thresh)
+C              xi2 = x(8)*2d0*(1d0-thresh-xi1)/(2d0-(1d0-omega)*xi1)
+C              jac2 = jac2*2d0*(1d0-thresh-xi1)/(2d0-(1d0-omega)*xi1)
+C          else
+C              xi2 = (x(7)-0.5d0)*2d0*(1d0-thresh)
+C              jac2 = jac2*2d0*(1d0-thresh)
+C              xi1 = x(8)*2d0*(1d0-thresh-xi2)/(2d0-(1d0-omega)*xi2)
+C              jac2 = jac2*2d0*(1d0-thresh-xi2)/(2d0-(1d0-omega)*xi2)
+C          endif
       else if (isoft.eq.1) then
           xi2 = x(7)*(1d0-thresh)
           xi1 = 0d0 
@@ -659,7 +667,7 @@ C  omy = 1-y (for better numerical accuracy)
 
       ! extra factor 2 (needed to get agreement on PS volume with MG, 
       ! may be hidden somewhere else
-      jac2 = jac2 / 2d0
+      !!!!!!!jac2 = jac2 / 2d0
 
       ! check for NaN's
       if (jac2.ne.jac2) jac2 = 0d0
