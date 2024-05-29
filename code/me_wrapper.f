@@ -296,7 +296,7 @@ C (1-y2), possibly approximated in the collinear limit(s)
           call ME_ACCESSOR_HOOK_3(p_pass,-1,0.118d0,ANS_splitorders)
           ans = ans_splitorders(0)*omy2
           !
-      else if (1d0-y1.lt.tiny) then !collinear on leg 2 (mu-)
+      else if (1d0-y2.lt.tiny) then !collinear on leg 2 (mu-)
           p_pass(:,3:4) = p(:,3:4,4)
           p_pass(:,2) = p(:,2,4) * (1d0-xi2(4))
           p_pass(:,1) = p(:,1,4) 
