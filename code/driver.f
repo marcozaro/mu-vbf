@@ -25,6 +25,7 @@
 
       call setpara('Cards/param_card.dat')
       call printout()
+      call print_run()
       !MZ leave this for now, to keep the RN sequence
       call fill_vegas_x(x)
 
@@ -99,12 +100,19 @@
       external compute_subtracted_me_2, compute_subtracted_me_1b,
      $ compute_subtracted_me_1a, compute_subtracted_me_0, qprime, getscale
       double precision mu2
+      double precision qq, pploglog
+      double precision pgamu
+      external pgamu
 
       logical mumu_doublereal
       parameter (mumu_doublereal=.true.)
 
       integer orders_tag ! 0->LO,1->NLO,2->NNLO
       common/to_orderstag/orders_tag
+
+      double precision delta_used
+      common/to_delta_used/delta_used
+      include 'input.inc'
 
       integrand_mumu = 0d0
       !
@@ -117,6 +125,7 @@
       if (.not.mumu_doublereal) goto 10
 
       orders_tag = 2
+      delta_used = deltaI
       integrand_mumu = integrand_mumu + compute_subtracted_me_2(x,vegas_wgt,lum,tau,ycm,jac_pdf)
 
  10   continue
@@ -128,8 +137,9 @@
       mu2 = getscale(scoll, x1bk, x2bk)
 
       orders_tag = 2
+      delta_used = deltaIb
       integrand_mumu = integrand_mumu +
-     $ compute_subtracted_me_1b(x,vegas_wgt,lum*qprime(z1,scoll*tau,mu2),
+     $ compute_subtracted_me_1b(x,vegas_wgt,lum*qprime(z1,scoll*tau,mu2,deltaI),
      $               tau*z1,ycm+0.5*dlog(z1),jac_pdf)
 
       ! THE CONVOLUTION OF M MU GAM WITH Q'(Z2)
@@ -139,8 +149,9 @@
       mu2 = getscale(scoll, x1bk, x2bk)
 
       orders_tag = 2
+      delta_used = deltaIb
       integrand_mumu = integrand_mumu +
-     $ compute_subtracted_me_1a(x,vegas_wgt,lum*qprime(z2,scoll*tau,mu2),
+     $ compute_subtracted_me_1a(x,vegas_wgt,lum*qprime(z2,scoll*tau,mu2,deltaI),
      $               tau*z2,ycm-0.5*dlog(z2),jac_pdf)
 
       ! THE CONVOLUTION OF M GAM GAM WITH Q'(Z1) Q'(Z2)
@@ -152,8 +163,11 @@
       ! it is the only non-trivial place. In Q'(z_i), the com energy
       ! that enters is z_1 * z_2 * tau * shat / z_i
 
+      qq = qprime(z1,scoll*tau*z2,mu2,deltaIb)*qprime(z2,scoll*tau*z1,mu2,deltaIb)
+      pploglog = Pgamu(z1)*Pgamu(z2)*dlog(z1*deltaIb/deltaI)*dlog(z2*deltaIb/deltaI)
+
       integrand_mumu = integrand_mumu + 
-     $ compute_subtracted_me_0(x,vegas_wgt,lum*qprime(z1,scoll*tau*z2,mu2)*qprime(z2,scoll*tau*z1,mu2),
+     $ compute_subtracted_me_0(x,vegas_wgt,lum*(qq-pploglog),
      $               tau*z1*z2,ycm+0.5*dlog(z1)-0.5*dlog(z2),jac_pdf)
 
       return
@@ -221,6 +235,9 @@
 
       integer orders_tag ! 0->LO,1->NLO,2->NNLO
       common/to_orderstag/orders_tag
+      include 'input.inc'
+      double precision delta_used
+      common/to_delta_used/delta_used
 
       integrand_muga = 0d0
       !
@@ -232,6 +249,7 @@
       ! THE SINGLE-REAL CONTRIBUTION 
       if (.not.muga_singlereal) goto 10
       orders_tag = 1
+      delta_used = deltaI
       integrand_muga = integrand_muga +
      $ compute_subtracted_me_1a(x,vegas_wgt,lum,
      $               tau,ycm,jac_pdf)
@@ -245,7 +263,7 @@
 
       orders_tag = 1
       integrand_muga = integrand_muga +
-     $ compute_subtracted_me_0(x,vegas_wgt,lum*qprime(z1,scoll*tau,mu2),
+     $ compute_subtracted_me_0(x,vegas_wgt,lum*qprime(z1,scoll*tau,mu2,deltaI),
      $               tau*z1,ycm+0.5*dlog(z1),jac_pdf)
 
       return
@@ -274,6 +292,9 @@
 
       integer orders_tag ! 0->LO,1->NLO,2->NNLO
       common/to_orderstag/orders_tag
+      include 'input.inc'
+      double precision delta_used
+      common/to_delta_used/delta_used
 
       integrand_gamu = 0d0
       !
@@ -286,6 +307,7 @@
       if (.not.gamu_singlereal) goto 10
 
       orders_tag = 1
+      delta_used = deltaI
       integrand_gamu = integrand_gamu +
      $ compute_subtracted_me_1b(x,vegas_wgt,lum,
      $               tau,ycm,jac_pdf)
@@ -300,7 +322,7 @@
 
       orders_tag = 1
       integrand_gamu = integrand_gamu +
-     $ compute_subtracted_me_0(x,vegas_wgt,lum*qprime(z2,scoll*tau,mu2),
+     $ compute_subtracted_me_0(x,vegas_wgt,lum*qprime(z2,scoll*tau,mu2,deltaI),
      $               tau*z2,ycm-0.5*dlog(z2),jac_pdf)
 
       return
@@ -747,6 +769,31 @@ C****************************************************************************
          call boostwdir2(chybst,shybst,chybstmo,xd,
      &        p_cm(0,i),p_an(0,i))
       enddo
+
+      return
+      end
+
+
+      double precision function Pgamu(z)
+      implicit none
+      double precision z
+      double precision pi
+      parameter (pi=3.14159265359d0)
+      include 'coupl.inc'
+
+      Pgamu = (1+(1-z)**2)/z
+      !include alpha/2pi
+      Pgamu = Pgamu * dble(gal(1))**2/8d0/pi**2
+
+      return
+      end
+
+
+      subroutine print_run()
+      implicit none
+      include "input.inc"
+
+      include "printout.inc"
 
       return
       end

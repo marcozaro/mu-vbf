@@ -25,7 +25,7 @@ C (1-y1)*(1-y2), possibly approximated in the collinear limit(s)
       double precision scvec(max_sc_vectors,4)
 
       double precision tiny
-      parameter (tiny=1d-4)
+      parameter (tiny=1d-6)
       double precision alp8pi
 
       double precision p_pass(0:3,6)
@@ -447,7 +447,8 @@ C returns the matrix element for the gamma-gamma born term
       double precision wgt_an(1)
       logical fill_histos
       common /to_fill_histos/fill_histos
-      include 'input.inc' 
+      double precision delta_used
+      common/to_delta_used/delta_used
 
       pdgs = (/-13,22,6,-6,-13,0/)
       istatus = (/-1,-1,1,1,1,1/)
@@ -471,7 +472,7 @@ C returns the matrix element for the gamma-gamma born term
       do icoll = 3, 4
         me(icoll) = 0d0
         ! check y against deltaI for the counterterm
-        if (y1(3).lt.1d0-deltaI.and.icoll.eq.4)then
+        if (y1(3).lt.1d0-delta_used.and.icoll.eq.4)then
             cycle
         endif
         ! boost the momenta to the lab frame. This is needed
@@ -524,7 +525,8 @@ C returns the matrix element for the gamma-gamma born term
       double precision wgt_an(1)
       logical fill_histos
       common /to_fill_histos/fill_histos
-      include 'input.inc' 
+      double precision delta_used
+      common/to_delta_used/delta_used
 
       pdgs = (/22,13,6,-6,13,0/)
       istatus = (/-1,-1,1,1,1,1/)
@@ -548,7 +550,7 @@ C returns the matrix element for the gamma-gamma born term
       do icoll = 2, 4, 2
         me(icoll) = 0d0
         ! check y against deltaI for the counterterm
-        if (y2(2).lt.1d0-deltaI.and.icoll.eq.4) cycle
+        if (y2(2).lt.1d0-delta_used.and.icoll.eq.4) cycle
         ! boost the momenta to the lab frame. This is needed
         ! both for cuts and for the analysis
         call boost_to_lab_frame(p1b(0,1,icoll),p_an,ycm)
@@ -599,7 +601,8 @@ C returns the matrix element for the gamma-gamma born term
       double precision wgt_an(1)
       logical fill_histos
       common /to_fill_histos/fill_histos
-      include 'input.inc' 
+      double precision delta_used
+      common/to_delta_used/delta_used
 
       pdgs = (/-13,13,6,-6,-13,13/)
       istatus = (/-1,-1,1,1,1,1/)
@@ -627,8 +630,8 @@ C   4-> no resolved collinear emission (y1=y2=1)
       do icoll = 1, 4
         me(icoll) = 0d0
         ! check y against deltaI for the counterterm
-        if (y1(1).lt.1d0-deltaI.and.(icoll.eq.2.or.icoll.eq.4)) cycle
-        if (y2(1).lt.1d0-deltaI.and.(icoll.eq.3.or.icoll.eq.4)) cycle
+        if (y1(1).lt.1d0-delta_used.and.(icoll.eq.2.or.icoll.eq.4)) cycle
+        if (y2(1).lt.1d0-delta_used.and.(icoll.eq.3.or.icoll.eq.4)) cycle
         !if ((y1(1).lt.1d0-deltaI.or.y2(1).lt.1d0-deltaI).and.icoll.eq.4) cycle
         ! boost the momenta to the lab frame. This is needed
         ! both for cuts and for the analysis
@@ -646,8 +649,11 @@ C   4-> no resolved collinear emission (y1=y2=1)
         endif
       enddo
 
+C      write(*,*) 'YY', y1(1), y2(1), me, jac2
       compute_subtracted_me_2 = 
      &  (jac2(1) * me(1) - jac2(2) * me(2) - jac2(3) * me(3) + jac2(4) * me(4))
      &                       / (1d0-y1(1)) / (1d0-y2(1)) * lum
+
+
       return
       end

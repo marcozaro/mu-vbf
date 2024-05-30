@@ -17,4 +17,5 @@ convolvemuon = 0
 # include same-flavour contribution (only in mu+ mu- > t t~ mu+ mu- ME)
 sameflav = 1
 # techincal parameter for subtraction
-deltai = 2.
+deltai = 2
+deltaib = 2

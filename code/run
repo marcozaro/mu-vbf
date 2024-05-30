@@ -5,7 +5,16 @@ import sys
 import time
 import shutil
 
-types = {'ecm':float, 'ymin':float, 'mllmin':float, 'imuf':int, 'fixscale':float, 'convolvemuon': int, 'ymaxtop': float, 'deltai': float, 'sameflav': int}
+types = {'ecm':float, 
+         'ymin':float, 
+         'mllmin':float, 
+         'imuf':int, 
+         'fixscale':float, 
+         'convolvemuon': int, 
+         'ymaxtop': float, 
+         'deltai': float, 
+         'deltaib': float, 
+         'sameflav': int}
 
 def parse_input(inputfile):
     content = open(inputfile).read()
@@ -31,11 +40,17 @@ def write_input(inputinc, input_dict):
         ttype = types[name]
         if ttype == int:
             declarations+= '      integer %s\n' % name
-            assignments+= '      %s = %d\n' %(name, value)
+            assignments+= '      parameter(%s = %d)\n' %(name, value)
         elif ttype == float:
             declarations+= '      double precision %s\n' % name
-            assignments+= '      %s = %fd0\n' %(name, value)
+            assignments+= '      parameter(%s = %fd0)\n' %(name, value)
     incfile.write(declarations + '\n' + assignments)
+
+def write_printout(printoutinc, input_dict):
+    pfile = open(printoutinc, 'w')
+    for name in input_dict.keys():
+        pfile.write("      write(*,*) \"%s =\", %s\n" %(name, name))
+    pfile.close()
 
 
 def compile(arg=[], cwd=None, mode='fortran', job_specs = True, nb_core=1 ,**opt):
@@ -95,6 +110,7 @@ except IndexError:
 
 input_dict = parse_input(os.path.join('Cards','run_card.dat'))
 write_input('input.inc', input_dict)
+write_printout('printout.inc', input_dict)
 compile()
 run(run_name, input_dict)
 
