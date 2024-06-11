@@ -69,11 +69,11 @@
       ! mu-mu in initial state
       integrand = integrand + integrand_mumu(x,vegas_wgt) 
       ! gam-gam in initial state
-      !integrand = integrand + integrand_gaga(x,vegas_wgt) 
+      integrand = integrand + integrand_gaga(x,vegas_wgt) 
       ! mu-gam in initial state
-      !integrand = integrand + integrand_muga(x,vegas_wgt) 
+      integrand = integrand + integrand_muga(x,vegas_wgt) 
       ! gam-mu in initial state
-      !integrand = integrand + integrand_gamu(x,vegas_wgt) 
+      integrand = integrand + integrand_gamu(x,vegas_wgt) 
 
       if (fill_histos) call HwU_add_points()
 
@@ -593,6 +593,7 @@ C  omy = 1-y (for better numerical accuracy)
       double precision y1, y2, omy1, omy2, xi1, xi2, ph1, ph2, phi, cth
       double precision jac2, jac1a, jac1b, jac0
       double precision omega, sborn1a, sborn1b, sborn2
+      double precision lambda, lambdamax, t
       double precision pi
       parameter (pi=3.14159265359d0)
       double precision conv
@@ -641,10 +642,28 @@ C  omy = 1-y (for better numerical accuracy)
       omega = sqrt(1d0-y1**2)*sqrt(1d0-y2**2)*dcos(ph1-ph2)-y1*y2
 
       if (isoft.eq.0) then
-          xi1 = x(7)*(1d0-thresh)
-          jac2 = jac2*(1d0-thresh)
-          xi2 = x(8)*2d0*(1d0-thresh-xi1)/(2d0-(1d0-omega)*xi1)
-          jac2 = jac2*2d0*(1d0-thresh-xi1)/(2d0-(1d0-omega)*xi1)
+          ! symmetric generation with lambda/t
+          t = x(7)
+          ! be careful when omega->1
+          if (abs(omega-1).lt.1d-3) then
+            lambdamax =1 - thresh + ((-1 + omega)*(-1 + t)*t*(-1 + thresh)**2)/2d0- 
+     $  ((-1 + omega)**2*(-1 + t)**2*t**2*(-1 + thresh)**3)/2d0+ 
+     $  (5*(-1 + omega)**3*(-1 + t)**3*t**3*(-1 + thresh)**4)/8d0- 
+     $  (7*(-1 + omega)**4*(-1 + t)**4*t**4*(-1 + thresh)**5)/8d0
+          else
+            lambdamax = (1d0- dsqrt(1-2*(1-thresh)*(1-omega)*(1-t)*t))
+     $        /(1-omega)/(1-t)/t
+          endif
+
+          lambda = x(8)*lambdamax
+          jac2 = jac2*lambdamax*lambda
+          xi1 = lambda*t
+          xi2 = lambda*(1-t)
+
+C          xi1 = x(7)*(1d0-thresh)
+C          jac2 = jac2*(1d0-thresh)
+C          xi2 = x(8)*2d0*(1d0-thresh-xi1)/(2d0-(1d0-omega)*xi1)
+C          jac2 = jac2*2d0*(1d0-thresh-xi1)/(2d0-(1d0-omega)*xi1)
 C          if (x(7).lt.0.5d0) then
 C              xi1 = x(7)*2d0*(1d0-thresh)
 C              jac2 = jac2*2d0*(1d0-thresh)

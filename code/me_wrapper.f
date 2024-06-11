@@ -5,7 +5,7 @@
       ! 2: P1_amup_ttxmup 
       ! 1: P1_aa_ttx
 
-      subroutine compute_me_doublereal(p,y1,y2,omy1,omy2,xi1,xi2,ph1,ph2,ans)
+      subroutine compute_me_doublereal(p,icoll,y1,y2,omy1,omy2,xi1,xi2,ph1,ph2,ans)
 C returns the matrix element for the double real emission times
 C (1-y1)*(1-y2), possibly approximated in the collinear limit(s)
       implicit none
@@ -17,6 +17,7 @@ C (1-y1)*(1-y2), possibly approximated in the collinear limit(s)
       ! 3-> single resolved collinear emission (y2=1)
       ! 4-> no resolved collinear emission (y1=y2=1)
       !!! note that xi are different in the various kinematics
+      integer icoll
       double precision y1,y2,omy1,omy2,xi1(4),xi2(4),ph1,ph2 
       double precision ans, ansk1, ansk2, ansk12
       double precision ans_splitorders(0:99)
@@ -25,7 +26,7 @@ C (1-y1)*(1-y2), possibly approximated in the collinear limit(s)
       double precision scvec(max_sc_vectors,4)
 
       double precision tiny
-      parameter (tiny=1d-6)
+      parameter (tiny=1d-4)
       double precision alp8pi
 
       double precision p_pass(0:3,6)
@@ -81,7 +82,7 @@ C (1-y1)*(1-y2), possibly approximated in the collinear limit(s)
           ansk1 = ans_splitorders(0)
           call reset_spin_correlation_vectors_3()
           ksq1 = -xi1(2)*shat/2d0
-          z1 = 1d0 - xi1(2)
+          z1 = 1d0 - xi1(icoll)
           ans = alp8pi/-ksq1*(z1*ans+ansk1*4d0*(1d0-z1)/z1)/z1*omy2
           !
       else if (1d0-y1.gt.tiny.and.1d0-y2.lt.tiny) then !collinear on leg 2 (mu-)
@@ -101,7 +102,7 @@ C (1-y1)*(1-y2), possibly approximated in the collinear limit(s)
           ansk2 = ans_splitorders(0)
           call reset_spin_correlation_vectors_2()
           ksq2 = -xi2(3)*shat/2d0
-          z2 = 1d0 - xi2(3)
+          z2 = 1d0 - xi2(icoll)
           ans = alp8pi/-ksq2*(z2*ans+ansk2*4d0*(1d0-z2)/z2)/z2*omy1
           !
       else if (1d0-y1.lt.tiny.and.1d0-y2.lt.tiny) then !collinear on legs 1/2
@@ -141,9 +142,9 @@ C (1-y1)*(1-y2), possibly approximated in the collinear limit(s)
           ansk12 = ans_splitorders(0)
           call reset_spin_correlation_vectors_1()
           ksq1 = -xi1(4)*shat/2d0
-          z1 = 1d0 - xi1(4)
+          z1 = 1d0 - xi1(icoll)
           ksq2 = -xi2(4)*shat/2d0
-          z2 = 1d0 - xi2(4)
+          z2 = 1d0 - xi2(icoll)
           ans = alp8pi**2 / -ksq1 / -ksq2 * 
      #        (z1*z2*ans + z2*ansk1*4d0*(1d0-z1)/z1 + 
      #          z1*ansk2*4d0*(1d0-z2)/z2 +     
@@ -637,7 +638,7 @@ C   4-> no resolved collinear emission (y1=y2=1)
         ! both for cuts and for the analysis
         call boost_to_lab_frame(p2(0,1,icoll),p_an,ycm)
         if (passcuts(p_an,pdgs,istatus)) then 
-          call compute_me_doublereal(p2,y1(icoll),y2(icoll),omy1(icoll),omy2(icoll),xi1,
+          call compute_me_doublereal(p2,icoll,y1(icoll),y2(icoll),omy1(icoll),omy2(icoll),xi1,
      &                             xi2,ph1(icoll),ph2(icoll),me(icoll))
 
           if (fill_histos) then
@@ -649,7 +650,7 @@ C   4-> no resolved collinear emission (y1=y2=1)
         endif
       enddo
 
-C      write(*,*) 'YY', y1(1), y2(1), me, jac2
+      !write(*,*) 'YY', y1(1), y2(1), me, jac2
       compute_subtracted_me_2 = 
      &  (jac2(1) * me(1) - jac2(2) * me(2) - jac2(3) * me(3) + jac2(4) * me(4))
      &                       / (1d0-y1(1)) / (1d0-y2(1)) * lum
