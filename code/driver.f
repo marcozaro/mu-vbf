@@ -136,26 +136,14 @@
  10   continue
 
       ! THE CONVOLUTION OF M_GAM MU WITH Q'(Z1)
-      jac_pdf_save = jac_pdf
-      call generate_qp_z(x(11),tau_min/tau,z1,jac_pdf)
-
-      mu2 = getscale(scoll, x1bk*x2bk*scoll)
-
       orders_tag = 2
-      delta_used = deltaIb
       !tiny=2*tinycoll/(2*z1+tinycoll*(1-z1))
       integrand_mumu = integrand_mumu +
      $ compute_subtracted_me_1b(x,vegas_wgt,lum,
      $               tau,ycm,jac_pdf,1)
 
       ! THE CONVOLUTION OF M MU GAM WITH Q'(Z2)
-      jac_pdf = jac_pdf_save
-      call generate_qp_z(x(11),tau_min/tau,z2,jac_pdf)
-
-      mu2 = getscale(scoll, x1bk*x2bk*scoll)
-
       orders_tag = 2
-      delta_used = deltaIb
       !tiny=2*tinycoll/(2*z2+tinycoll*(1-z2))
       integrand_mumu = integrand_mumu +
      $ compute_subtracted_me_1a(x,vegas_wgt,lum,
@@ -172,6 +160,8 @@
 
       !!!!qq = qprime(z1,scoll*tau*z2,mu2)*qprime(z2,scoll*tau*z1,mu2)
       !!!!pploglog = Pgamu(z1)*Pgamu(z2)*dlog(z1*deltaIb/deltaI)*dlog(z2*deltaIb/deltaI)
+
+      mu2 = getscale(scoll, x1bk*x2bk*scoll)
       qq = qprime(z1,scoll*tau,mu2)*qprime(z2,scoll*tau,mu2)
 
       integrand_mumu = integrand_mumu + 

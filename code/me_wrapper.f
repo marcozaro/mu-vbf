@@ -394,6 +394,9 @@ C returns the matrix element for the gamma-gamma born term
       icoll = 1
 
       jac0(icoll) = jac
+      jac1a(icoll) = 0d0
+      jac1b(icoll) = 0d0
+      jac2(icoll) = 0d0
       call generate_kinematics(x, shat, thresh, icoll, 0, 
      &       y1(icoll), y2(icoll), omy1(icoll), omy2(icoll), xi1(icoll), xi2(icoll), 
      &       ph1(icoll), ph2(icoll), phi(icoll), cth(icoll),
@@ -468,6 +471,9 @@ C returns the matrix element for the gamma-gamma born term
       ! generate the momenta for all kinematic configs
       do icoll = 3, 4
         jac1a(icoll) = jac
+        jac2(icoll) = jac
+        jac1b(icoll) = 0d0
+        jac0(icoll) = 0d0
 
         call generate_kinematics(x, shat, thresh, icoll, isoft, 
      &       y1(icoll), y2(icoll), omy1(icoll), omy2(icoll), xi1(icoll), xi2(icoll), 
@@ -492,7 +498,7 @@ C returns the matrix element for the gamma-gamma born term
      &                             xi2,ph1(icoll),ph2(icoll),me(icoll))
 
           if (fill_histos) then
-            wgt_an(1) = jac1a(icoll) * me(icoll) / (1d0-y1(3)) 
+            wgt_an(1) = jac1a(icoll) * me(icoll) / omy1(3) 
      &           * vegas_wgt * lum
             if (icoll.eq.4) wgt_an(1) = - wgt_an(1) 
             call analysis_fill(p_an,istatus,pdgs,wgt_an,icoll)
@@ -504,13 +510,14 @@ C returns the matrix element for the gamma-gamma born term
       if (iqp.eq.0) then
         compute_subtracted_me_1a =  
      &    (jac1a(3) * me(3) - jac1a(4) * me(4))
-     &                       / (1d0-y1(3)) * lum 
+     &                       / omy1(3) * lum 
       else
         if (iqp.ne.2) write(*,*) 'ERROR, iqp-1a', iqp
         mu2 = getscale(scoll, shat)
         compute_subtracted_me_1a =  
-     &    (jac2(3) * me(3) * qprime(1-xi2(3),shat,mu2) - jac2(4) * me(4) * qprime(1-xi2(4),shat,mu2))
-     &                         / (1d0-y1(3)) * lum /(shat/16d0/pi**2)
+     &    (jac2(3) * me(3) * qprime(1-xi2(3),shat,mu2) / xi2(3) -
+     &     jac2(4) * me(4) * qprime(1-xi2(4),shat,mu2) / xi2(4))
+     &                         / omy1(3) * lum * (16*pi**2/shat)
       endif
       return
       end
@@ -564,6 +571,8 @@ C returns the matrix element for the gamma-gamma born term
       do icoll = 2, 4, 2
         jac1b(icoll) = jac
         jac2(icoll) = jac
+        jac1a(icoll) = 0d0
+        jac0(icoll) = 0d0
 
         call generate_kinematics(x, shat, thresh, icoll, isoft, 
      &       y1(icoll), y2(icoll), omy1(icoll), omy2(icoll), xi1(icoll), xi2(icoll), 
@@ -586,7 +595,7 @@ C returns the matrix element for the gamma-gamma born term
      &                             xi2,ph1(icoll),ph2(icoll),me(icoll))
 
           if (fill_histos) then
-            wgt_an(1) = jac1b(icoll) * me(icoll) / (1d0-y2(2)) 
+            wgt_an(1) = jac1b(icoll) * me(icoll) / omy2(2) 
      &           * vegas_wgt * lum
             if (icoll.eq.4) wgt_an(1) = - wgt_an(1) 
             call analysis_fill(p_an,istatus,pdgs,wgt_an,icoll)
@@ -597,13 +606,14 @@ C returns the matrix element for the gamma-gamma born term
       if (iqp.eq.0) then
         compute_subtracted_me_1b =  
      &    (jac1b(2) * me(2) - jac1b(4) * me(4))
-     &                         / (1d0-y2(2)) * lum 
+     &                         / omy2(2) * lum 
       else
         if (iqp.ne.1) write(*,*) 'ERROR, iqp-1b', iqp
         mu2 = getscale(scoll, shat)
         compute_subtracted_me_1b =  
-     &    (jac2(2) * me(2) * qprime(1-xi1(2),shat,mu2) - jac2(4) * me(4) * qprime(1-xi1(4),shat,mu2))
-     &                         / (1d0-y2(2)) * lum /(shat/16d0/pi**2)
+     &    (jac2(2) * me(2) * qprime(1-xi1(2),shat,mu2) / xi1(2) - 
+     &     jac2(4) * me(4) * qprime(1-xi1(4),shat,mu2) / xi1(4))
+     &                         / omy2(2) * lum * (16*pi**2/shat)
       endif
       return
       end
@@ -648,6 +658,9 @@ C returns the matrix element for the gamma-gamma born term
       ! generate the momenta for all kinematic configs
       do icoll = 1, 4
         jac2(icoll) = jac
+        jac1a(icoll) = 0d0
+        jac1b(icoll) = 0d0
+        jac0(icoll) = 0d0
         call generate_kinematics(x, shat, thresh, icoll, 0,  
      &       y1(icoll), y2(icoll), omy1(icoll), omy2(icoll), xi1(icoll), xi2(icoll), 
      &       ph1(icoll), ph2(icoll), phi(icoll), cth(icoll),
@@ -687,7 +700,7 @@ C   4-> no resolved collinear emission (y1=y2=1)
       !write(*,*) 'YY', y1(1), y2(1), me, jac2
       compute_subtracted_me_2 = 
      &  (jac2(1) * me(1) - jac2(2) * me(2) - jac2(3) * me(3) + jac2(4) * me(4))
-     &                       / (1d0-y1(1)) / (1d0-y2(1)) * lum
+     &                       / omy1(1) / omy2(1) * lum
 
 
       return

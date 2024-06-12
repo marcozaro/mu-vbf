@@ -112,5 +112,11 @@ c  Begin Code
 c-----
 c      pm=dsqrt(p(1)**2+p(2)**2+p(3)**2)
       pm = p(0)
-      rap2 = .5d0*dlog((pm+p(3))/(pm-p(3)))
+      if (abs(pm+p(3)).lt.1e-8) then
+         rap2 =-10
+      elseif (abs(pm-p(3)).lt.1e-8) then
+         rap2 = 10
+      else
+         rap2 = .5d0*dlog((pm+p(3))/(pm-p(3)))
+      endif
       end
