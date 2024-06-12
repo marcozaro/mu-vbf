@@ -17,9 +17,13 @@
       common /to_fill_histos/fill_histos
       logical sameflav_diags
       common /to_sameflav/sameflav_diags
+      double precision tiny
+      common/to_coll_cutoff/tiny
       include 'input.inc'
 
       sameflav_diags = sameflav.gt.0
+
+      tiny = tinycoll
 
       scoll = ecm**2
 
@@ -32,7 +36,7 @@
       nprn = 0
       ! fill histogram only in the refine phase
       fill_histos = .false.
-      call vegas01(12,integrand,0,10000,
+      call vegas01(12,integrand,0,20000,
      1        10,nprn,integral,error,prob)
 
       ! for the analysis
@@ -40,7 +44,7 @@
       call set_error_estimation(1)
       call analysis_begin(1,"central value")
 
-      call vegas01(12,integrand,1,100000,
+      call vegas01(12,integrand,1,400000,
      1        4,nprn,integral,error,prob)
       call analysis_end(1d0)
 
@@ -126,6 +130,7 @@
 
       orders_tag = 2
       delta_used = deltaI
+      !tiny=tinycoll
       integrand_mumu = integrand_mumu + compute_subtracted_me_2(x,vegas_wgt,lum,tau,ycm,jac_pdf)
 
  10   continue
@@ -134,25 +139,27 @@
       jac_pdf_save = jac_pdf
       call generate_qp_z(x(11),tau_min/tau,z1,jac_pdf)
 
-      mu2 = getscale(scoll, x1bk, x2bk)
+      mu2 = getscale(scoll, x1bk*x2bk*scoll)
 
       orders_tag = 2
       delta_used = deltaIb
+      !tiny=2*tinycoll/(2*z1+tinycoll*(1-z1))
       integrand_mumu = integrand_mumu +
-     $ compute_subtracted_me_1b(x,vegas_wgt,lum*qprime(z1,scoll*tau,mu2,deltaI),
-     $               tau*z1,ycm+0.5*dlog(z1),jac_pdf)
+     $ compute_subtracted_me_1b(x,vegas_wgt,lum,
+     $               tau,ycm,jac_pdf,1)
 
       ! THE CONVOLUTION OF M MU GAM WITH Q'(Z2)
       jac_pdf = jac_pdf_save
       call generate_qp_z(x(11),tau_min/tau,z2,jac_pdf)
 
-      mu2 = getscale(scoll, x1bk, x2bk)
+      mu2 = getscale(scoll, x1bk*x2bk*scoll)
 
       orders_tag = 2
       delta_used = deltaIb
+      !tiny=2*tinycoll/(2*z2+tinycoll*(1-z2))
       integrand_mumu = integrand_mumu +
-     $ compute_subtracted_me_1a(x,vegas_wgt,lum*qprime(z2,scoll*tau,mu2,deltaI),
-     $               tau*z2,ycm-0.5*dlog(z2),jac_pdf)
+     $ compute_subtracted_me_1a(x,vegas_wgt,lum,
+     $               tau,ycm,jac_pdf,2)
 
       ! THE CONVOLUTION OF M GAM GAM WITH Q'(Z1) Q'(Z2)
       jac_pdf = jac_pdf_save
@@ -163,12 +170,14 @@
       ! it is the only non-trivial place. In Q'(z_i), the com energy
       ! that enters is z_1 * z_2 * tau * shat / z_i
 
-      qq = qprime(z1,scoll*tau*z2,mu2,deltaIb)*qprime(z2,scoll*tau*z1,mu2,deltaIb)
-      pploglog = Pgamu(z1)*Pgamu(z2)*dlog(z1*deltaIb/deltaI)*dlog(z2*deltaIb/deltaI)
+      !!!!qq = qprime(z1,scoll*tau*z2,mu2)*qprime(z2,scoll*tau*z1,mu2)
+      !!!!pploglog = Pgamu(z1)*Pgamu(z2)*dlog(z1*deltaIb/deltaI)*dlog(z2*deltaIb/deltaI)
+      qq = qprime(z1,scoll*tau,mu2)*qprime(z2,scoll*tau,mu2)
 
       integrand_mumu = integrand_mumu + 
-     $ compute_subtracted_me_0(x,vegas_wgt,lum*(qq-pploglog),
+     $ compute_subtracted_me_0(x,vegas_wgt,lum*qq,
      $               tau*z1*z2,ycm+0.5*dlog(z1)-0.5*dlog(z2),jac_pdf)
+CCC      !$ compute_subtracted_me_0(x,vegas_wgt,lum*(qq-pploglog),
 
       return
       end
@@ -252,18 +261,18 @@
       delta_used = deltaI
       integrand_muga = integrand_muga +
      $ compute_subtracted_me_1a(x,vegas_wgt,lum,
-     $               tau,ycm,jac_pdf)
+     $               tau,ycm,jac_pdf,0)
 
  10   continue
 
       ! THE CONVOLUTION OF M_GAM GAM WITH Q'(Z1)
       call generate_qp_z(x(11),tau_min/tau,z1,jac_pdf)
 
-      mu2 = getscale(scoll, x1bk, x2bk)
+      mu2 = getscale(scoll, x1bk*x2bk*scoll)
 
       orders_tag = 1
       integrand_muga = integrand_muga +
-     $ compute_subtracted_me_0(x,vegas_wgt,lum*qprime(z1,scoll*tau,mu2,deltaI),
+     $ compute_subtracted_me_0(x,vegas_wgt,lum*qprime(z1,scoll*tau,mu2),
      $               tau*z1,ycm+0.5*dlog(z1),jac_pdf)
 
       return
@@ -310,7 +319,7 @@
       delta_used = deltaI
       integrand_gamu = integrand_gamu +
      $ compute_subtracted_me_1b(x,vegas_wgt,lum,
-     $               tau,ycm,jac_pdf)
+     $               tau,ycm,jac_pdf,0)
 
  10   continue
 
@@ -318,11 +327,11 @@
       !We use jac0, since we convolve with the born-like matrix element
       call generate_qp_z(x(11),tau_min/tau,z2,jac_pdf)
 
-      mu2 = getscale(scoll, x1bk, x2bk)
+      mu2 = getscale(scoll, x1bk*x2bk*scoll)
 
       orders_tag = 1
       integrand_gamu = integrand_gamu +
-     $ compute_subtracted_me_0(x,vegas_wgt,lum*qprime(z2,scoll*tau,mu2,deltaI),
+     $ compute_subtracted_me_0(x,vegas_wgt,lum*qprime(z2,scoll*tau,mu2),
      $               tau*z2,ycm-0.5*dlog(z2),jac_pdf)
 
       return
@@ -456,16 +465,6 @@ C  All momenta array have the same size (6). Unused momenta are set to 0
       ! p0
       call generate_is(shat, p0(0,1))
       call generate_born_fs(shat,m,cth,phi,p0(0,3))
-      ! p1a
-      call generate_is(shat, p1a(0,1))
-      call generate_born_fs(shat*(1d0-xi1),m,cth,phi,p1a(0,3))
-      call generate_fks_momentum(shat,xi1,y1,ph1,1,p1a(0,5))
-      call boost_momenta_born(p1a(0,3),p1a(0,5))
-      ! p1b
-      call generate_is(shat, p1b(0,1))
-      call generate_born_fs(shat*(1d0-xi2),m,cth,phi,p1b(0,3))
-      call generate_fks_momentum(shat,xi2,y2,ph2,2,p1b(0,5))
-      call boost_momenta_born(p1b(0,3),p1b(0,5))
       ! p2
       omega = dsqrt(1d0-y1**2)*dsqrt(1d0-y2**2)*dcos(ph1-ph2)-y1*y2
       sborn = shat*(1d0-xi1-xi2+xi1*xi2*(1d0-omega)/2d0) 
@@ -475,6 +474,22 @@ C  All momenta array have the same size (6). Unused momenta are set to 0
       call generate_fks_momentum(shat,xi2,y2,ph2,2,p2(0,6))
       prec(:) = p2(:,5)+p2(:,6)
       call boost_momenta_born(p2(0,3),prec)
+      ! p1a
+      !!!call generate_is(shat, p1a(0,1))
+      p1a(:,1) = p2(:,1)*(1-xi1) 
+      p1a(:,2) = p2(:,2)
+      call generate_born_fs(shat*(1d0-xi1),m,cth,phi,p1a(0,3))
+      call generate_fks_momentum(shat,xi1,y1,ph1,1,p1a(0,5))
+      prec = p1a(:,5) - p1a(:,1) - p1a(:,2) 
+      call boost_momenta_born(p1a(0,3),prec)
+      ! p1b
+      p1a(:,1) = p2(:,1) 
+      p1a(:,2) = p2(:,2)*(1-xi2)
+      !!!call generate_is(shat, p1b(0,1))
+      call generate_born_fs(shat*(1d0-xi2),m,cth,phi,p1b(0,3))
+      call generate_fks_momentum(shat,xi2,y2,ph2,2,p1b(0,5))
+      prec = p1b(:,5) - p1b(:,1) - p1b(:,2) 
+      call boost_momenta_born(p1b(0,3),prec)
 
       return 
       end
@@ -614,7 +629,7 @@ C  omy = 1-y (for better numerical accuracy)
       if (icoll.ne.2.and.icoll.ne.4) then
         y1 = -2d0*x(3)**2+1d0
         omy1 = 2d0*x(3)**2
-      else
+      else 
         y1 = 1d0
         omy1 = 0d0
       endif
@@ -623,7 +638,7 @@ C  omy = 1-y (for better numerical accuracy)
       if (icoll.ne.3.and.icoll.ne.4) then
         y2 = -2d0*x(4)**2+1d0
         omy2 = 2d0*x(4)**2
-      else
+      else if (icoll.eq.3.or.icoll.eq.4) then
         y2 = 1d0
         omy2 = 0d0
       endif

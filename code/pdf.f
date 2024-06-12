@@ -23,7 +23,7 @@
         jac = jac * jac_ee
         call generate_x_ee(rnd(2), smin/scoll/x1, x2, omx2, jac_ee)
         jac = jac * jac_ee
-        mu2 = getscale(scoll, x1, x2)
+        mu2 = getscale(scoll, x1*x2*scoll)
 
         lum = mupdf(x1, omx1, mu2)
         lum = lum*mupdf(x2, omx2, mu2)
@@ -34,7 +34,7 @@
         jac = jac * jac_ee
         call generate_x_ee(rnd(2), smin/scoll/x1, x2, omx2, jac_ee)
         jac = jac * jac_ee
-        mu2 = getscale(scoll, x1, x2)
+        mu2 = getscale(scoll, x1*x2*scoll)
 
         lum = gampdf(x1, omx1, mu2)
         lum = lum*mupdf(x2, omx2, mu2)
@@ -45,7 +45,7 @@
         jac = jac * jac_ee
         call generate_x_gam(rnd(2), smin/scoll/x1, x2, omx2, jac_ee)
         jac = jac * jac_ee
-        mu2 = getscale(scoll, x1, x2)
+        mu2 = getscale(scoll, x1*x2*scoll)
 
         lum = mupdf(x1, omx1, mu2)
         lum = lum*gampdf(x2, omx2, mu2)
@@ -56,7 +56,7 @@
         jac = jac * jac_ee
         call generate_x_gam(rnd(2), smin/scoll/x1, x2, omx2, jac_ee)
         jac = jac * jac_ee
-        mu2 = getscale(scoll, x1, x2)
+        mu2 = getscale(scoll, x1*x2*scoll)
 
         lum = gampdf(x1, omx1, mu2)
         lum = lum*gampdf(x2, omx2, mu2)
@@ -86,15 +86,15 @@
       end
 
 
-      double precision function getscale(scoll,x1,x2)
+      double precision function getscale(scoll,shat)
       implicit none
-      double precision scoll, x1, x2
+      double precision scoll, shat
       include 'input.inc'
 
       if (imuf.eq.0) then
         getscale = scoll
       else if (imuf.eq.1) then
-        getscale = scoll*x1*x2
+        getscale = shat
       else if (imuf.eq.-1) then
         getscale = fixscale**2 
       endif

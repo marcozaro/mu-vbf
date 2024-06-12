@@ -26,7 +26,7 @@ C (1-y1)*(1-y2), possibly approximated in the collinear limit(s)
       double precision scvec(max_sc_vectors,4)
 
       double precision tiny
-      parameter (tiny=1d-4)
+      common/to_coll_cutoff/tiny
       double precision alp8pi
 
       double precision p_pass(0:3,6)
@@ -176,7 +176,7 @@ C (1-y1), possibly approximated in the collinear limit(s)
       double precision scvec(max_sc_vectors,4)
 
       double precision tiny
-      parameter (tiny=1d-4)
+      common/to_coll_cutoff/tiny
       double precision alp8pi
 
       double precision p_pass(0:3,6)
@@ -261,7 +261,7 @@ C (1-y2), possibly approximated in the collinear limit(s)
       double precision scvec(max_sc_vectors,4)
 
       double precision tiny
-      parameter (tiny=1d-4)
+      common/to_coll_cutoff/tiny
       double precision alp8pi
 
       double precision p_pass(0:3,6)
@@ -421,10 +421,11 @@ C returns the matrix element for the gamma-gamma born term
       end
 
 
-      double precision function compute_subtracted_me_1a(x,vegas_wgt,lum,tau,ycm,jac) 
+      double precision function compute_subtracted_me_1a(x,vegas_wgt,lum,tau,ycm,jac,iqp) 
       ! the muon-gamma (single-real) contribution
       implicit none
       double precision x(8),vegas_wgt,lum,tau,ycm,jac
+      integer iqp
 
       double precision scoll
       common /to_scoll/scoll
@@ -438,7 +439,10 @@ C returns the matrix element for the gamma-gamma born term
 
       double precision jac2(4), jac1a(4), jac1b(4), jac0(4), me(4)
       double precision y1(4), y2(4), omy1(4), omy2(4), xi1(4), xi2(4), ph1(4), ph2(4), phi(4), cth(4)
-      integer icoll
+      integer icoll, isoft
+      double precision mu2
+      double precision getscale, qprime
+      external getscale, qprime
       logical passcuts
       external passcuts
       double precision p2(0:3,6,4), p1a(0:3,6,4), p1b(0:3,6,4),p0(0:3,6,4)
@@ -450,6 +454,8 @@ C returns the matrix element for the gamma-gamma born term
       common /to_fill_histos/fill_histos
       double precision delta_used
       common/to_delta_used/delta_used
+      double precision pi
+      parameter (pi=3.14159265359d0)
 
       pdgs = (/-13,22,6,-6,-13,0/)
       istatus = (/-1,-1,1,1,1,1/)
@@ -457,11 +463,13 @@ C returns the matrix element for the gamma-gamma born term
       shat = tau * scoll
       thresh = mmin**2/shat
 
+      if (iqp.ne.0) isoft = 0
+      if (iqp.eq.0) isoft = 2
       ! generate the momenta for all kinematic configs
       do icoll = 3, 4
         jac1a(icoll) = jac
 
-        call generate_kinematics(x, shat, thresh, icoll, 2, 
+        call generate_kinematics(x, shat, thresh, icoll, isoft, 
      &       y1(icoll), y2(icoll), omy1(icoll), omy2(icoll), xi1(icoll), xi2(icoll), 
      &       ph1(icoll), ph2(icoll), phi(icoll), cth(icoll),
      &       jac2(icoll), jac1a(icoll), jac1b(icoll), jac0(icoll))
@@ -492,17 +500,27 @@ C returns the matrix element for the gamma-gamma born term
         endif
       enddo
 
-      compute_subtracted_me_1a =  
-     &  (jac1a(3) * me(3) - jac1a(4) * me(4))
+
+      if (iqp.eq.0) then
+        compute_subtracted_me_1a =  
+     &    (jac1a(3) * me(3) - jac1a(4) * me(4))
      &                       / (1d0-y1(3)) * lum 
+      else
+        if (iqp.ne.2) write(*,*) 'ERROR, iqp-1a', iqp
+        mu2 = getscale(scoll, shat)
+        compute_subtracted_me_1a =  
+     &    (jac2(3) * me(3) * qprime(1-xi2(3),shat,mu2) - jac2(4) * me(4) * qprime(1-xi2(4),shat,mu2))
+     &                         / (1d0-y1(3)) * lum * shat/64d0/pi**3
+      endif
       return
       end
 
 
-      double precision function compute_subtracted_me_1b(x,vegas_wgt,lum,tau,ycm,jac) 
+      double precision function compute_subtracted_me_1b(x,vegas_wgt,lum,tau,ycm,jac, iqp) 
       ! the gamma-muon (single-real) contribution
       implicit none
       double precision x(8),vegas_wgt,lum,tau,ycm,jac
+      integer iqp
       integer pdgs(6), istatus(6)
 
       double precision scoll
@@ -517,7 +535,10 @@ C returns the matrix element for the gamma-gamma born term
 
       double precision jac2(4), jac1a(4), jac1b(4), jac0(4), me(4)
       double precision y1(4), y2(4), omy1(4), omy2(4), xi1(4), xi2(4), ph1(4), ph2(4), phi(4), cth(4)
-      integer icoll
+      integer icoll, isoft
+      double precision mu2
+      double precision getscale, qprime
+      external getscale, qprime
       logical passcuts
       external passcuts
       double precision p2(0:3,6,4), p1a(0:3,6,4), p1b(0:3,6,4),p0(0:3,6,4)
@@ -528,6 +549,8 @@ C returns the matrix element for the gamma-gamma born term
       common /to_fill_histos/fill_histos
       double precision delta_used
       common/to_delta_used/delta_used
+      double precision pi
+      parameter (pi=3.14159265359d0)
 
       pdgs = (/22,13,6,-6,13,0/)
       istatus = (/-1,-1,1,1,1,1/)
@@ -535,11 +558,14 @@ C returns the matrix element for the gamma-gamma born term
       shat = tau * scoll
       thresh = mmin**2/shat
 
+      if (iqp.ne.0) isoft = 0
+      if (iqp.eq.0) isoft = 1
       ! generate the momenta for all kinematic configs
       do icoll = 2, 4, 2
         jac1b(icoll) = jac
+        jac2(icoll) = jac
 
-        call generate_kinematics(x, shat, thresh, icoll, 1, 
+        call generate_kinematics(x, shat, thresh, icoll, isoft, 
      &       y1(icoll), y2(icoll), omy1(icoll), omy2(icoll), xi1(icoll), xi2(icoll), 
      &       ph1(icoll), ph2(icoll), phi(icoll), cth(icoll),
      &       jac2(icoll), jac1a(icoll), jac1b(icoll), jac0(icoll))
@@ -568,9 +594,17 @@ C returns the matrix element for the gamma-gamma born term
         endif
       enddo
 
-      compute_subtracted_me_1b =  
-     &  (jac1b(2) * me(2) - jac1b(4) * me(4))
-     &                       / (1d0-y2(2)) * lum 
+      if (iqp.eq.0) then
+        compute_subtracted_me_1b =  
+     &    (jac1b(2) * me(2) - jac1b(4) * me(4))
+     &                         / (1d0-y2(2)) * lum 
+      else
+        if (iqp.ne.1) write(*,*) 'ERROR, iqp-1b', iqp
+        mu2 = getscale(scoll, shat)
+        compute_subtracted_me_1b =  
+     &    (jac2(2) * me(2) * qprime(1-xi1(2),shat,mu2) - jac2(4) * me(4) * qprime(1-xi1(4),shat,mu2))
+     &                         / (1d0-y2(2)) * lum * shat/64d0/pi**3
+      endif
       return
       end
 
