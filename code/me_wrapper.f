@@ -510,7 +510,7 @@ C returns the matrix element for the gamma-gamma born term
         mu2 = getscale(scoll, shat)
         compute_subtracted_me_1a =  
      &    (jac2(3) * me(3) * qprime(1-xi2(3),shat,mu2) - jac2(4) * me(4) * qprime(1-xi2(4),shat,mu2))
-     &                         / (1d0-y1(3)) * lum * shat/64d0/pi**3
+     &                         / (1d0-y1(3)) * lum /(shat/16d0/pi**2)
       endif
       return
       end
@@ -603,7 +603,7 @@ C returns the matrix element for the gamma-gamma born term
         mu2 = getscale(scoll, shat)
         compute_subtracted_me_1b =  
      &    (jac2(2) * me(2) * qprime(1-xi1(2),shat,mu2) - jac2(4) * me(4) * qprime(1-xi1(4),shat,mu2))
-     &                         / (1d0-y2(2)) * lum * shat/64d0/pi**3
+     &                         / (1d0-y2(2)) * lum /(shat/16d0/pi**2)
       endif
       return
       end

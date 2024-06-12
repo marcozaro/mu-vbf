@@ -36,7 +36,7 @@
       nprn = 0
       ! fill histogram only in the refine phase
       fill_histos = .false.
-      call vegas01(12,integrand,0,20000,
+      call vegas01(12,integrand,0,10000,
      1        10,nprn,integral,error,prob)
 
       ! for the analysis
@@ -44,7 +44,7 @@
       call set_error_estimation(1)
       call analysis_begin(1,"central value")
 
-      call vegas01(12,integrand,1,400000,
+      call vegas01(12,integrand,1,100000,
      1        4,nprn,integral,error,prob)
       call analysis_end(1d0)
 
@@ -73,11 +73,11 @@
       ! mu-mu in initial state
       integrand = integrand + integrand_mumu(x,vegas_wgt) 
       ! gam-gam in initial state
-      integrand = integrand + integrand_gaga(x,vegas_wgt) 
+      !integrand = integrand + integrand_gaga(x,vegas_wgt) 
       ! mu-gam in initial state
-      integrand = integrand + integrand_muga(x,vegas_wgt) 
+      !integrand = integrand + integrand_muga(x,vegas_wgt) 
       ! gam-mu in initial state
-      integrand = integrand + integrand_gamu(x,vegas_wgt) 
+      !integrand = integrand + integrand_gamu(x,vegas_wgt) 
 
       if (fill_histos) call HwU_add_points()
 
@@ -476,17 +476,17 @@ C  All momenta array have the same size (6). Unused momenta are set to 0
       call boost_momenta_born(p2(0,3),prec)
       ! p1a
       !!!call generate_is(shat, p1a(0,1))
-      p1a(:,1) = p2(:,1)*(1-xi1) 
-      p1a(:,2) = p2(:,2)
-      call generate_born_fs(shat*(1d0-xi1),m,cth,phi,p1a(0,3))
+      p1a(:,1) = p2(:,1) 
+      p1a(:,2) = p2(:,2)*(1-xi2)
+      call generate_born_fs(sborn,m,cth,phi,p1a(0,3))
       call generate_fks_momentum(shat,xi1,y1,ph1,1,p1a(0,5))
       prec = p1a(:,5) - p1a(:,1) - p1a(:,2) 
       call boost_momenta_born(p1a(0,3),prec)
       ! p1b
-      p1a(:,1) = p2(:,1) 
-      p1a(:,2) = p2(:,2)*(1-xi2)
+      p1b(:,1) = p2(:,1)*(1-xi1) 
+      p1b(:,2) = p2(:,2)
       !!!call generate_is(shat, p1b(0,1))
-      call generate_born_fs(shat*(1d0-xi2),m,cth,phi,p1b(0,3))
+      call generate_born_fs(sborn,m,cth,phi,p1b(0,3))
       call generate_fks_momentum(shat,xi2,y2,ph2,2,p1b(0,5))
       prec = p1b(:,5) - p1b(:,1) - p1b(:,2) 
       call boost_momenta_born(p1b(0,3),prec)
