@@ -26,7 +26,7 @@ C (1-y1)*(1-y2), possibly approximated in the collinear limit(s)
       double precision scvec(max_sc_vectors,4)
 
       double precision tiny
-      parameter (tiny=1d-8)
+      common/to_coll_cutoff/tiny
       double precision alp8pi
 
       double precision p_pass(0:3,6)
@@ -176,7 +176,7 @@ C (1-y1), possibly approximated in the collinear limit(s)
       double precision scvec(max_sc_vectors,4)
 
       double precision tiny
-      parameter (tiny=1d-4)
+      common/to_coll_cutoff/tiny
       double precision alp8pi
 
       double precision p_pass(0:3,6)
@@ -261,7 +261,7 @@ C (1-y2), possibly approximated in the collinear limit(s)
       double precision scvec(max_sc_vectors,4)
 
       double precision tiny
-      parameter (tiny=1d-4)
+      common/to_coll_cutoff/tiny
       double precision alp8pi
 
       double precision p_pass(0:3,6)

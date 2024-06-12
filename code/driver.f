@@ -17,9 +17,13 @@
       common /to_fill_histos/fill_histos
       logical sameflav_diags
       common /to_sameflav/sameflav_diags
+      double precision tiny
+      common/to_coll_cutoff/tiny
       include 'input.inc'
 
       sameflav_diags = sameflav.gt.0
+
+      tiny = tinycoll
 
       scoll = ecm**2
 
@@ -112,6 +116,8 @@
 
       double precision delta_used
       common/to_delta_used/delta_used
+      double precision tiny_used
+      common/to_coll_cutoff/tiny_used
       include 'input.inc'
 
       integrand_mumu = 0d0
@@ -126,6 +132,7 @@
 
       orders_tag = 2
       delta_used = deltaI
+      tiny_used = tinycoll
       integrand_mumu = integrand_mumu + compute_subtracted_me_2(x,vegas_wgt,lum,tau,ycm,jac_pdf)
 
  10   continue
@@ -138,6 +145,7 @@
 
       orders_tag = 2
       delta_used = deltaIb
+      tiny_used = tinycoll*2/(2*z1+tinycoll*(1-z1))
       integrand_mumu = integrand_mumu +
      $ compute_subtracted_me_1b(x,vegas_wgt,lum*qprime(z1,scoll*tau,mu2,deltaI),
      $               tau*z1,ycm+0.5*dlog(z1),jac_pdf)
@@ -150,6 +158,7 @@
 
       orders_tag = 2
       delta_used = deltaIb
+      tiny_used = tinycoll*2/(2*z2+tinycoll*(1-z2))
       integrand_mumu = integrand_mumu +
      $ compute_subtracted_me_1a(x,vegas_wgt,lum*qprime(z2,scoll*tau,mu2,deltaI),
      $               tau*z2,ycm-0.5*dlog(z2),jac_pdf)
@@ -238,6 +247,8 @@
       include 'input.inc'
       double precision delta_used
       common/to_delta_used/delta_used
+      double precision tiny_used
+      common/to_coll_cutoff/tiny_used
 
       integrand_muga = 0d0
       !
@@ -250,6 +261,7 @@
       if (.not.muga_singlereal) goto 10
       orders_tag = 1
       delta_used = deltaI
+      tiny_used = tinycoll
       integrand_muga = integrand_muga +
      $ compute_subtracted_me_1a(x,vegas_wgt,lum,
      $               tau,ycm,jac_pdf)
@@ -295,6 +307,8 @@
       include 'input.inc'
       double precision delta_used
       common/to_delta_used/delta_used
+      double precision tiny_used
+      common/to_coll_cutoff/tiny_used
 
       integrand_gamu = 0d0
       !
@@ -308,6 +322,7 @@
 
       orders_tag = 1
       delta_used = deltaI
+      tiny_used = tinycoll
       integrand_gamu = integrand_gamu +
      $ compute_subtracted_me_1b(x,vegas_wgt,lum,
      $               tau,ycm,jac_pdf)
