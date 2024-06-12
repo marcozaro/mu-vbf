@@ -26,7 +26,7 @@ C (1-y1)*(1-y2), possibly approximated in the collinear limit(s)
       double precision scvec(max_sc_vectors,4)
 
       double precision tiny
-      parameter (tiny=1d-4)
+      parameter (tiny=1d-8)
       double precision alp8pi
 
       double precision p_pass(0:3,6)
@@ -484,7 +484,7 @@ C returns the matrix element for the gamma-gamma born term
      &                             xi2,ph1(icoll),ph2(icoll),me(icoll))
 
           if (fill_histos) then
-            wgt_an(1) = jac1a(icoll) * me(icoll) / (1d0-y1(3)) 
+            wgt_an(1) = jac1a(icoll) * me(icoll) / omy1(3) 
      &           * vegas_wgt * lum
             if (icoll.eq.4) wgt_an(1) = - wgt_an(1) 
             call analysis_fill(p_an,istatus,pdgs,wgt_an,icoll)
@@ -494,7 +494,7 @@ C returns the matrix element for the gamma-gamma born term
 
       compute_subtracted_me_1a =  
      &  (jac1a(3) * me(3) - jac1a(4) * me(4))
-     &                       / (1d0-y1(3)) * lum 
+     &                       / omy1(3) * lum 
       return
       end
 
@@ -560,7 +560,7 @@ C returns the matrix element for the gamma-gamma born term
      &                             xi2,ph1(icoll),ph2(icoll),me(icoll))
 
           if (fill_histos) then
-            wgt_an(1) = jac1b(icoll) * me(icoll) / (1d0-y2(2)) 
+            wgt_an(1) = jac1b(icoll) * me(icoll) / omy2(2) 
      &           * vegas_wgt * lum
             if (icoll.eq.4) wgt_an(1) = - wgt_an(1) 
             call analysis_fill(p_an,istatus,pdgs,wgt_an,icoll)
@@ -570,7 +570,7 @@ C returns the matrix element for the gamma-gamma born term
 
       compute_subtracted_me_1b =  
      &  (jac1b(2) * me(2) - jac1b(4) * me(4))
-     &                       / (1d0-y2(2)) * lum 
+     &                       / omy2(2) * lum 
       return
       end
 
@@ -642,7 +642,7 @@ C   4-> no resolved collinear emission (y1=y2=1)
      &                             xi2,ph1(icoll),ph2(icoll),me(icoll))
 
           if (fill_histos) then
-            wgt_an(1) = jac2(icoll) * me(icoll) / (1d0-y1(1)) / (1d0-y2(1)) 
+            wgt_an(1) = jac2(icoll) * me(icoll) / omy1(1) / omy2(1) 
      &           * vegas_wgt * lum
             if (icoll.eq.2.or.icoll.eq.3) wgt_an(1) = - wgt_an(1) 
             call analysis_fill(p_an,istatus,pdgs,wgt_an,icoll)
@@ -653,7 +653,7 @@ C   4-> no resolved collinear emission (y1=y2=1)
       !write(*,*) 'YY', y1(1), y2(1), me, jac2
       compute_subtracted_me_2 = 
      &  (jac2(1) * me(1) - jac2(2) * me(2) - jac2(3) * me(3) + jac2(4) * me(4))
-     &                       / (1d0-y1(1)) / (1d0-y2(1)) * lum
+     &                       / omy1(1) / omy2(1) * lum
 
 
       return
