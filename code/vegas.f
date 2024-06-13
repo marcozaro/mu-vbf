@@ -21,6 +21,8 @@ c...............
 
 
 
+
+
         SUBROUTINE vegas(region,ndim,fxn,init,ncall,itmx,nprn,
      >    tgral,sd,chi2a)
         INTEGER init,itmx,ncall,ndim,nprn,NDMX,MXDIM

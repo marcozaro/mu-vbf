@@ -233,6 +233,7 @@ C (1-y1), possibly approximated in the collinear limit(s)
           ksq1 = -xi1(3)*shat/2d0
           z1 = 1d0 - xi1(3)
           ans = alp8pi/-ksq1*(z1*ans+ansk1*4d0*(1d0-z1)/z1)/z1
+          !ans = alp8pi/-ksq1*((1+(1-z1)**2)/z1*ans)/z1
           !
       endif
 
