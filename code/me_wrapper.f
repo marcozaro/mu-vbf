@@ -515,8 +515,8 @@ C returns the matrix element for the gamma-gamma born term
         if (iqp.ne.2) write(*,*) 'ERROR, iqp-1a', iqp
         mu2 = getscale(scoll, shat)
         compute_subtracted_me_1a =  
-     &    (jac2(3) * me(3) * qprime(1-xi2(3),shat,mu2) / xi2(3) -
-     &     jac2(4) * me(4) * qprime(1-xi2(4),shat,mu2) / xi2(4))
+     &    (jac2(3) * me(3) * qprime(1-xi2(3),shat,mu2) / xi2(3) / (1-xi2(3)) -
+     &     jac2(4) * me(4) * qprime(1-xi2(4),shat,mu2) / xi2(4) / (1-xi2(4)))
      &                         / omy1(3) * lum * (16*pi**2/shat)
       endif
       return
@@ -611,8 +611,8 @@ C returns the matrix element for the gamma-gamma born term
         if (iqp.ne.1) write(*,*) 'ERROR, iqp-1b', iqp
         mu2 = getscale(scoll, shat)
         compute_subtracted_me_1b =  
-     &    (jac2(2) * me(2) * qprime(1-xi1(2),shat,mu2) / xi1(2) - 
-     &     jac2(4) * me(4) * qprime(1-xi1(4),shat,mu2) / xi1(4))
+     &    (jac2(2) * me(2) * qprime(1-xi1(2),shat,mu2) / xi1(2) / (1-xi1(2)) - 
+     &     jac2(4) * me(4) * qprime(1-xi1(4),shat,mu2) / xi1(4) / (1-xi1(4)))
      &                         / omy2(2) * lum * (16*pi**2/shat)
       endif
       return
