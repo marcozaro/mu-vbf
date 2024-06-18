@@ -17,7 +17,7 @@
       integrand = 0d0
 
       ! mu-mu in initial state
-      !integrand = integrand + integrand_mumu(x,vegas_wgt) 
+      integrand = integrand + integrand_mumu(x,vegas_wgt) 
       ! gam-gam in initial state
       integrand = integrand + integrand_gaga(x,vegas_wgt) 
       ! mu-gam in initial state
