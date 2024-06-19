@@ -21,6 +21,8 @@
       common /to_sameflav/sameflav_diags
       double precision tiny
       common/to_coll_cutoff/tiny
+      logical use_emela
+      common/to_use_emela/use_emela
       include 'input.inc'
 
       sameflav_diags = sameflav.gt.0
@@ -32,6 +34,9 @@
       call setpara('Cards/param_card.dat')
       call printout()
       call print_run()
+      use_emela=photonpdf.ge.10000
+      if (use_emela) call initfromgrid_lhaid(photonpdf)
+
       !MZ leave this for now, to keep the RN sequence
       call fill_vegas_x(x)
 

@@ -6,6 +6,11 @@ LINKLIBS_ME =  -Llib/ -ldhelas -lmodel
 #LINKLIBS_ALL =  -L../lib/ -lmatrix -ldhelas -lmodel
 #LIBS = $(LIBDIR)libdhelas.$(libext) $(LIBDIR)libmodel.$(libext)
 
+emela = /home/mg_user/private_MG5/eMELA_muon_install/bin/eMELA-config
+lhapdf = lhapdf-config
+LIBEMELA = $(shell $(emela) --ldflags) $(shell $(lhapdf) --ldflags) -lstdc++
+ 
+
 
 
 MEFILES = $(patsubst %.f,%.o,$(wildcard */matrix_mod.f))
@@ -16,10 +21,10 @@ CHECK1 = check_1coll.o $(FILES)
 
 
 driver: libs $(DRIVER)
-	$(FC) -o driver $(DRIVER) $(LINKLIBS_ME) 
+	$(FC) -o driver $(DRIVER) $(LINKLIBS_ME) $(LIBEMELA) 
 
 check_1coll: libs $(CHECK1)
-	$(FC) -o check_1coll $(CHECK1) $(LINKLIBS_ME) 
+	$(FC) -o check_1coll $(CHECK1) $(LINKLIBS_ME)  $(LIBEMELA) 
 
 cuts.o: input.inc
 driver.o: input.inc

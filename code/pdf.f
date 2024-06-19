@@ -187,6 +187,8 @@
       double precision eepdf_tilde, eepdf_tilde_power, get_ee_expo
       external eepdf_tilde, eepdf_tilde_power, get_ee_expo
       double precision k_exp, ps_expo
+      logical use_emela
+      common/to_use_emela/use_emela
       include 'input.inc'
 
       if (convolvemuon.eq.0) then
@@ -194,15 +196,20 @@
           return
       endif
 
-      mupdf = eepdf_tilde(x,Q2,1,13,13)
-      k_exp = eepdf_tilde_power(Q2,1,13,13)
-      ps_expo = get_ee_expo()
+      if (use_emela) then
+        ps_expo = get_ee_expo()
+        call elpdfq2(0, 13, x, omx, dsqrt(q2), 1d0-ps_expo, mupdf)
+      else
+        mupdf = eepdf_tilde(x,Q2,1,13,13)
+        k_exp = eepdf_tilde_power(Q2,1,13,13)
+        ps_expo = get_ee_expo()
 
-      if (k_exp.gt.ps_expo) then
+        if (k_exp.gt.ps_expo) then
           write(*,*) 'WARNING, e+e- exponent exceeding limit', k_exp, ps_expo
           stop 1
+        endif
+        mupdf = mupdf * omx**(-k_exp+ps_expo)
       endif
-      mupdf = mupdf * omx**(-k_exp+ps_expo)
       return
       end
 
@@ -221,18 +228,26 @@
       data me /0.105658d0/
       double precision x, omx, q2
       double precision q2max,q2min
+      logical use_emela
+      common/to_use_emela/use_emela
+      include 'input.inc'
 
-      q2min= me**2*x**2/(1-x)
-      q2max=q2
-      if(q2min.lt.q2max) then 
+      if (photonpdf.eq.1) then
+        q2min= me**2*x**2/(1-x)
+        q2max=q2
+        if(q2min.lt.q2max) then 
              gampdf = dble(gal(1)**2)/8d0/pi**2*
      &           (2d0*me**2*x**2*(-1/q2min+1/q2max)+
      &           (2-2d0*x+x*x)*dlog(q2max/q2min))
-      endif
-
+        endif
+      else if (photonpdf.eq.0) then
       ! MZ, this is eq 28
         gampdf = dble(gal(1)**2)/8d0/pi**2*
      &           (2-2d0*x+x*x)*(dlog(q2/me**2)-2d0*dlog(x)-1)
+      else if (photonpdf.ge.10000.and.use_emela) then
+        call elpdfq2(0, 22, x, omx, q2, 1d0, gampdf)
+        gampdf = gampdf*x
+      endif
 
       return
       end
