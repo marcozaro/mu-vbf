@@ -9,7 +9,7 @@
 # For more information, visit madgraph.phys.ucl.ac.be and amcatnlo.web.cern.ch
 #
 ################################################################################
-# ./histograms.py tmprun_photontrunc_nomuonconvolve_10tev/MADatNLO.HwU tmprun_photonmsbar_nomuonconvolve_10tev/MADatNLO.HwU --assign_types=photontrunc,photonNLL-msb
+# ./histograms.py tmprun_photontrunc_nomuonconvolve_10tev/MADatNLO.HwU tmprun_photonmsbar_nomuonconvolve_10tev_new/MADatNLO.HwU --assign_types=photontrunc,photonNLL-msb
 reset
 
 set lmargin 10
@@ -156,7 +156,7 @@ plot \
 #-- rendering subhistograms 'Relative scale and PDF uncertainty'
 unset label
 unset format
-set yrange [-8.1775e-03:7.7354e-03]
+set yrange [-5.7913e-03:5.4783e-03]
 set origin 0.0000e+00, 3.5000e-01
 set size 1.0000e+00, 1.5000e-01
 set mytics 2
@@ -388,7 +388,7 @@ plot \
 #-- rendering subhistograms 'Relative scale and PDF uncertainty'
 unset label
 unset format
-set yrange [-1.0161e-01:9.7174e-02]
+set yrange [-1.0701e-01:1.0180e-01]
 set origin 0.0000e+00, 3.5000e-01
 set size 1.0000e+00, 1.5000e-01
 set mytics 2
@@ -410,7 +410,7 @@ plot \
 #-- rendering subhistograms '(LO|photontruncNNLO|photontruncTOT|photontruncNLO|photonNLL-msbLO|photonNLL-msbNNLO|photonNLL-msbTOT|photonNLL-msb)/(NLO|photontrunc central value) ratio'
 unset label
 unset format
-set yrange [-2.6633e+00:6.8935e+00]
+set yrange [-2.6213e+00:6.7979e+00]
 set origin 0.0000e+00, 2.0000e-01
 set size 1.0000e+00, 1.5000e-01
 set mytics 2
@@ -504,7 +504,7 @@ plot \
 #-- rendering subhistograms 'Relative scale and PDF uncertainty'
 unset label
 unset format
-set yrange [-3.6678e-01:3.5388e-01]
+set yrange [-3.8992e-01:3.6978e-01]
 set origin 0.0000e+00, 3.5000e-01
 set size 1.0000e+00, 1.5000e-01
 set mytics 2
@@ -526,7 +526,7 @@ plot \
 #-- rendering subhistograms '(LO|photontruncNNLO|photontruncTOT|photontruncNLO|photonNLL-msbLO|photonNLL-msbNNLO|photonNLL-msbTOT|photonNLL-msb)/(NLO|photontrunc central value) ratio'
 unset label
 unset format
-set yrange [-1.0545e+00:1.6584e+00]
+set yrange [-1.0158e+00:1.7348e+00]
 set origin 0.0000e+00, 2.0000e-01
 set size 1.0000e+00, 1.5000e-01
 set mytics 2
@@ -620,7 +620,7 @@ plot \
 #-- rendering subhistograms 'Relative scale and PDF uncertainty'
 unset label
 unset format
-set yrange [-1.1564e-01:1.0939e-01]
+set yrange [-9.9045e-02:9.3691e-02]
 set origin 0.0000e+00, 3.5000e-01
 set size 1.0000e+00, 1.5000e-01
 set mytics 2
@@ -642,7 +642,7 @@ plot \
 #-- rendering subhistograms '(LO|photontruncNNLO|photontruncTOT|photontruncNLO|photonNLL-msbLO|photonNLL-msbNNLO|photonNLL-msbTOT|photonNLL-msb)/(NLO|photontrunc central value) ratio'
 unset label
 unset format
-set yrange [-1.3684e+00:5.3376e+00]
+set yrange [-1.3395e+00:5.2643e+00]
 set origin 0.0000e+00, 2.0000e-01
 set size 1.0000e+00, 1.5000e-01
 set mytics 2
@@ -736,7 +736,7 @@ plot \
 #-- rendering subhistograms 'Relative scale and PDF uncertainty'
 unset label
 unset format
-set yrange [-4.3254e-02:4.0982e-02]
+set yrange [-4.3240e-02:4.0913e-02]
 set origin 0.0000e+00, 3.5000e-01
 set size 1.0000e+00, 1.5000e-01
 set mytics 2
@@ -758,7 +758,7 @@ plot \
 #-- rendering subhistograms '(LO|photontruncNNLO|photontruncTOT|photontruncNLO|photonNLL-msbLO|photonNLL-msbNNLO|photonNLL-msbTOT|photonNLL-msb)/(NLO|photontrunc central value) ratio'
 unset label
 unset format
-set yrange [-3.1845e+00:7.2752e+00]
+set yrange [-3.1932e+00:7.2767e+00]
 set origin 0.0000e+00, 2.0000e-01
 set size 1.0000e+00, 1.5000e-01
 set mytics 2
@@ -852,7 +852,7 @@ plot \
 #-- rendering subhistograms 'Relative scale and PDF uncertainty'
 unset label
 unset format
-set yrange [-2.1207e-01:2.0060e-01]
+set yrange [-2.1770e-01:2.0594e-01]
 set origin 0.0000e+00, 3.5000e-01
 set size 1.0000e+00, 1.5000e-01
 set mytics 2
@@ -874,7 +874,7 @@ plot \
 #-- rendering subhistograms '(LO|photontruncNNLO|photontruncTOT|photontruncNLO|photonNLL-msbLO|photonNLL-msbNNLO|photonNLL-msbTOT|photonNLL-msb)/(NLO|photontrunc central value) ratio'
 unset label
 unset format
-set yrange [-1.6763e+00:4.9226e+00]
+set yrange [-1.6706e+00:4.8945e+00]
 set origin 0.0000e+00, 2.0000e-01
 set size 1.0000e+00, 1.5000e-01
 set mytics 2
@@ -968,7 +968,7 @@ plot \
 #-- rendering subhistograms 'Relative scale and PDF uncertainty'
 unset label
 unset format
-set yrange [-3.8772e-02:3.6679e-02]
+set yrange [-3.5270e-02:3.3392e-02]
 set origin 0.0000e+00, 3.5000e-01
 set size 1.0000e+00, 1.5000e-01
 set mytics 2
@@ -990,7 +990,7 @@ plot \
 #-- rendering subhistograms '(LO|photontruncNNLO|photontruncTOT|photontruncNLO|photonNLL-msbLO|photonNLL-msbNNLO|photonNLL-msbTOT|photonNLL-msb)/(NLO|photontrunc central value) ratio'
 unset label
 unset format
-set yrange [-3.3421e+00:2.8311e+00]
+set yrange [-3.1988e+00:2.7666e+00]
 set origin 0.0000e+00, 2.0000e-01
 set size 1.0000e+00, 1.5000e-01
 set mytics 2
@@ -1084,7 +1084,7 @@ plot \
 #-- rendering subhistograms 'Relative scale and PDF uncertainty'
 unset label
 unset format
-set yrange [-3.8993e-02:3.6992e-02]
+set yrange [-3.6652e-02:3.5503e-02]
 set origin 0.0000e+00, 3.5000e-01
 set size 1.0000e+00, 1.5000e-01
 set mytics 2
@@ -1106,7 +1106,7 @@ plot \
 #-- rendering subhistograms '(LO|photontruncNNLO|photontruncTOT|photontruncNLO|photonNLL-msbLO|photonNLL-msbNNLO|photonNLL-msbTOT|photonNLL-msb)/(NLO|photontrunc central value) ratio'
 unset label
 unset format
-set yrange [-3.5301e+00:2.8713e+00]
+set yrange [-3.5286e+00:2.8638e+00]
 set origin 0.0000e+00, 2.0000e-01
 set size 1.0000e+00, 1.5000e-01
 set mytics 2
@@ -1316,7 +1316,7 @@ plot \
 #-- rendering subhistograms 'Relative scale and PDF uncertainty'
 unset label
 unset format
-set yrange [-6.4171e-01:6.1198e-01]
+set yrange [-6.8687e-01:6.5187e-01]
 set origin 0.0000e+00, 3.5000e-01
 set size 1.0000e+00, 1.5000e-01
 set mytics 2
@@ -1338,7 +1338,7 @@ plot \
 #-- rendering subhistograms '(LO|photontruncNNLO|photontruncTOT|photontruncNLO|photonNLL-msbLO|photonNLL-msbNNLO|photonNLL-msbTOT|photonNLL-msb)/(NLO|photontrunc central value) ratio'
 unset label
 unset format
-set yrange [-4.4463e+00:2.9512e+00]
+set yrange [-4.3846e+00:2.9412e+00]
 set origin 0.0000e+00, 2.0000e-01
 set size 1.0000e+00, 1.5000e-01
 set mytics 2
@@ -1432,7 +1432,7 @@ plot \
 #-- rendering subhistograms 'Relative scale and PDF uncertainty'
 unset label
 unset format
-set yrange [-4.6887e-01:4.4833e-01]
+set yrange [-4.5924e-01:4.3984e-01]
 set origin 0.0000e+00, 3.5000e-01
 set size 1.0000e+00, 1.5000e-01
 set mytics 2
@@ -1454,7 +1454,7 @@ plot \
 #-- rendering subhistograms '(LO|photontruncNNLO|photontruncTOT|photontruncNLO|photonNLL-msbLO|photonNLL-msbNNLO|photonNLL-msbTOT|photonNLL-msb)/(NLO|photontrunc central value) ratio'
 unset label
 unset format
-set yrange [-6.5758e-01:2.0023e+00]
+set yrange [-4.2628e+00:2.5838e+00]
 set origin 0.0000e+00, 2.0000e-01
 set size 1.0000e+00, 1.5000e-01
 set mytics 2
@@ -1548,7 +1548,7 @@ plot \
 #-- rendering subhistograms 'Relative scale and PDF uncertainty'
 unset label
 unset format
-set yrange [-1.8556e-02:1.7553e-02]
+set yrange [-1.5273e-02:1.4448e-02]
 set origin 0.0000e+00, 3.5000e-01
 set size 1.0000e+00, 1.5000e-01
 set mytics 2
@@ -1570,7 +1570,7 @@ plot \
 #-- rendering subhistograms '(LO|photontruncNNLO|photontruncTOT|photontruncNLO|photonNLL-msbLO|photonNLL-msbNNLO|photonNLL-msbTOT|photonNLL-msb)/(NLO|photontrunc central value) ratio'
 unset label
 unset format
-set yrange [-1.8388e+00:1.7449e+00]
+set yrange [-1.8383e+00:1.7455e+00]
 set origin 0.0000e+00, 2.0000e-01
 set size 1.0000e+00, 1.5000e-01
 set mytics 2
@@ -1664,7 +1664,7 @@ plot \
 #-- rendering subhistograms 'Relative scale and PDF uncertainty'
 unset label
 unset format
-set yrange [-3.6838e-02:3.4990e-02]
+set yrange [-3.5297e-02:3.3425e-02]
 set origin 0.0000e+00, 3.5000e-01
 set size 1.0000e+00, 1.5000e-01
 set mytics 2
@@ -1686,7 +1686,7 @@ plot \
 #-- rendering subhistograms '(LO|photontruncNNLO|photontruncTOT|photontruncNLO|photonNLL-msbLO|photonNLL-msbNNLO|photonNLL-msbTOT|photonNLL-msb)/(NLO|photontrunc central value) ratio'
 unset label
 unset format
-set yrange [-4.4915e+00:4.2738e+00]
+set yrange [-1.5913e+00:1.5362e+00]
 set origin 0.0000e+00, 2.0000e-01
 set size 1.0000e+00, 1.5000e-01
 set mytics 2
@@ -1780,7 +1780,7 @@ plot \
 #-- rendering subhistograms 'Relative scale and PDF uncertainty'
 unset label
 unset format
-set yrange [-8.1775e-03:7.7354e-03]
+set yrange [-5.7913e-03:5.4783e-03]
 set origin 0.0000e+00, 3.5000e-01
 set size 1.0000e+00, 1.5000e-01
 set mytics 2
