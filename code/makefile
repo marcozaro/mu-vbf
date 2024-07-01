@@ -6,15 +6,25 @@ LINKLIBS_ME =  -Llib/ -ldhelas -lmodel
 #LINKLIBS_ALL =  -L../lib/ -lmatrix -ldhelas -lmodel
 #LIBS = $(LIBDIR)libdhelas.$(libext) $(LIBDIR)libmodel.$(libext)
 
+emela = /home/mg_user/private_MG5/eMELA_muon_install/bin/eMELA-config
+lhapdf = lhapdf-config
+LIBEMELA = $(shell $(emela) --ldflags) $(shell $(lhapdf) --ldflags) -lstdc++
+ 
+
 
 
 MEFILES = $(patsubst %.f,%.o,$(wildcard */matrix_mod.f))
-FILES = ranmar.o boostwdir2.o pdf.o vegas.o cuts.o me_wrapper.o qprime.o HwU.o analysis_HwU_template.o driver.o $(MEFILES) 
+FILES = ranmar.o boostwdir2.o pdf.o vegas.o cuts.o me_wrapper.o qprime.o HwU.o analysis_HwU_template.o kinematics.o kinematics2.o integrands.o $(MEFILES) 
+DRIVER = driver.o $(FILES)
+CHECK1 = check_1coll.o $(FILES)
 
 
 
-driver: libs $(FILES)
-	$(FC) -o driver $(FILES) $(LINKLIBS_ME) 
+driver: libs $(DRIVER)
+	$(FC) -o driver $(DRIVER) $(LINKLIBS_ME) $(LIBEMELA) 
+
+check_1coll: libs $(CHECK1)
+	$(FC) -o check_1coll $(CHECK1) $(LINKLIBS_ME)  $(LIBEMELA) 
 
 cuts.o: input.inc
 driver.o: input.inc
@@ -22,6 +32,7 @@ pdf.o: input.inc
 qprime.o: input.inc
 analysis_HwU_template.o : input.inc
 me_wrapper.o : input.inc
+integrands.o : input.inc
 
 libs:
 	cd Source; make

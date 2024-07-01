@@ -19,4 +19,4 @@ sameflav = 1
 # techincal parameter for subtraction
 deltai = 2.
 deltaib = 2.
-tinycoll = 1e-4
+tinycoll = 1e-10

@@ -56,7 +56,7 @@ C (1-y1)*(1-y2), possibly approximated in the collinear limit(s)
       kp1(:) = (/0d0,cos(ph1),sin(ph1),0d0/)
       kp2(:) = (/0d0,cos(ph2),sin(ph2),0d0/)
 
-      if (1d0-y1.gt.tiny.and.1d0-y2.gt.tiny) then
+      if (omy1.gt.tiny.and.omy2.gt.tiny) then
           p_pass(:,3:6) = p(:,3:6,1)
           p_pass(:,1) = p(:,2,1)
           p_pass(:,2) = p(:,1,1)
@@ -64,7 +64,7 @@ C (1-y1)*(1-y2), possibly approximated in the collinear limit(s)
           call ME_ACCESSOR_HOOK_4(p_pass,-1,0.118d0,ANS_splitorders)
           ans = ans_splitorders(0)*omy1*omy2
           !
-      else if (1d0-y1.lt.tiny.and.1d0-y2.gt.tiny) then !collinear on leg 1 (mu+)
+      else if (omy1.lt.tiny.and.omy2.gt.tiny) then !collinear on leg 1 (mu+)
           p_pass(:,3:4) = p(:,3:4,2)
           p_pass(:,5) = p(:,6,2)
           p_pass(:,2) = p(:,2,2)
@@ -85,7 +85,7 @@ C (1-y1)*(1-y2), possibly approximated in the collinear limit(s)
           z1 = 1d0 - xi1(icoll)
           ans = alp8pi/-ksq1*(z1*ans+ansk1*4d0*(1d0-z1)/z1)/z1*omy2
           !
-      else if (1d0-y1.gt.tiny.and.1d0-y2.lt.tiny) then !collinear on leg 2 (mu-)
+      else if (omy1.gt.tiny.and.omy2.lt.tiny) then !collinear on leg 2 (mu-)
           p_pass(:,3:4) = p(:,3:4,3)
           p_pass(:,5) = p(:,5,3)
           p_pass(:,2) = p(:,1,3)
@@ -105,7 +105,7 @@ C (1-y1)*(1-y2), possibly approximated in the collinear limit(s)
           z2 = 1d0 - xi2(icoll)
           ans = alp8pi/-ksq2*(z2*ans+ansk2*4d0*(1d0-z2)/z2)/z2*omy1
           !
-      else if (1d0-y1.lt.tiny.and.1d0-y2.lt.tiny) then !collinear on legs 1/2
+      else if (omy1.lt.tiny.and.omy2.lt.tiny) then !collinear on legs 1/2
           p_pass(:,3:4) = p(:,3:4,4)
           p_pass(:,2) = p(:,2,4) * (1d0-xi2(4))
           p_pass(:,1) = p(:,1,4) * (1d0-xi1(4))
@@ -206,7 +206,7 @@ C (1-y1), possibly approximated in the collinear limit(s)
       kp1(:) = (/0d0,cos(ph1),sin(ph1),0d0/)
       !kp2(:) = (/0d0,cos(ph2),sin(ph2),0d0/)
 
-      if (1d0-y1.gt.tiny) then
+      if (omy1.gt.tiny) then
           p_pass(:,3:4) = p(:,3:4,3)
           p_pass(:,5) = p(:,5,3)
           p_pass(:,2) = p(:,1,3)
@@ -215,7 +215,7 @@ C (1-y1), possibly approximated in the collinear limit(s)
           call ME_ACCESSOR_HOOK_2(p_pass,-1,0.118d0,ANS_splitorders)
           ans = ans_splitorders(0)*omy1
           !
-      else if (1d0-y1.lt.tiny) then !collinear on leg 1 (mu+)
+      else if (omy1.lt.tiny) then !collinear on leg 1 (mu+)
           p_pass(:,3:4) = p(:,3:4,4)
           p_pass(:,2) = p(:,2,4)
           p_pass(:,1) = p(:,1,4) * (1d0-xi1(4))
@@ -249,8 +249,8 @@ C (1-y2), possibly approximated in the collinear limit(s)
       double precision p(0:3,6,4)
       ! the last index of the momenta array:
       ! 1-> doubly resolved collinear emissions
-      ! 2-> single resolved collinear emission (y1=1)
-      ! 3-> single resolved collinear emission (y2=1)<-
+      ! 2-> single resolved collinear emission (y1=1)<-
+      ! 3-> single resolved collinear emission (y2=1)
       ! 4-> no resolved collinear emission (y1=y2=1)<-
       !!! note that xi are different in the various kinematics
       double precision y1,y2,omy1,omy2,xi1(4),xi2(4),ph1,ph2 
@@ -291,13 +291,13 @@ C (1-y2), possibly approximated in the collinear limit(s)
       !kp1(:) = (/0d0,cos(ph1),sin(ph1),0d0/)
       kp2(:) = (/0d0,cos(ph2),sin(ph2),0d0/)
 
-      if (1d0-y2.gt.tiny) then
+      if (omy2.gt.tiny) then
           p_pass(:,1:5) = p(:,1:5,2)
           call check_momenta(p_pass,5)
           call ME_ACCESSOR_HOOK_3(p_pass,-1,0.118d0,ANS_splitorders)
           ans = ans_splitorders(0)*omy2
           !
-      else if (1d0-y2.lt.tiny) then !collinear on leg 2 (mu-)
+      else if (omy2.lt.tiny) then !collinear on leg 2 (mu-)
           p_pass(:,3:4) = p(:,3:4,4)
           p_pass(:,2) = p(:,2,4) * (1d0-xi2(4))
           p_pass(:,1) = p(:,1,4) 
@@ -325,11 +325,12 @@ C (1-y2), possibly approximated in the collinear limit(s)
 
 
 
-      subroutine compute_me_born_gaga(p,ans)
+      subroutine compute_me_born_gaga(p,ans,icoll)
 C returns the matrix element for the gamma-gamma born term
       implicit none
       include 'coupl.inc'
       double precision p(0:3,6,4)
+      integer icoll
       ! the last index of the momenta array:
       ! 1-> doubly resolved collinear emissions
       ! 2-> single resolved collinear emission (y1=1)
@@ -345,7 +346,7 @@ C returns the matrix element for the gamma-gamma born term
 
       p_pass(:,:) = 0d0
 
-      p_pass(:,1:4) = p(:,1:4,1)
+      p_pass(:,1:4) = p(:,1:4,icoll)
       call check_momenta(p_pass,4)
       call ME_ACCESSOR_HOOK_1(p_pass,-1,0.118d0,ANS_splitorders)
       ans = ans_splitorders(0)
@@ -410,7 +411,8 @@ C returns the matrix element for the gamma-gamma born term
       call boost_to_lab_frame(p0(0,1,icoll),p_an,ycm)
       !! MZ need to understand how to deal with cuts
       if (passcuts(p_an,pdgs,istatus)) then 
-        call compute_me_born_gaga(p0, me(icoll))
+        write(*,*) 'passcuts'
+        call compute_me_born_gaga(p0, me(icoll), icoll)
 
         if (fill_histos) then
             wgt_an(1) = jac0(icoll) * me(icoll) 
@@ -441,6 +443,7 @@ C returns the matrix element for the gamma-gamma born term
       double precision thresh
 
       double precision jac2(4), jac1a(4), jac1b(4), jac0(4), me(4)
+      double precision shat1a(4), shat1b(4), shat0(4)
       double precision y1(4), y2(4), omy1(4), omy2(4), xi1(4), xi2(4), ph1(4), ph2(4), phi(4), cth(4)
       integer icoll, isoft
       double precision mu2
@@ -474,17 +477,30 @@ C returns the matrix element for the gamma-gamma born term
         jac2(icoll) = jac
         jac1b(icoll) = 0d0
         jac0(icoll) = 0d0
+        if (iqp.eq.0) then
 
-        call generate_kinematics(x, shat, thresh, icoll, isoft, 
+          call generate_kinematics(x, shat, thresh, icoll, isoft, 
      &       y1(icoll), y2(icoll), omy1(icoll), omy2(icoll), xi1(icoll), xi2(icoll), 
      &       ph1(icoll), ph2(icoll), phi(icoll), cth(icoll),
      &       jac2(icoll), jac1a(icoll), jac1b(icoll), jac0(icoll))
-        call generate_momenta(shat, mfin, y1(icoll), y2(icoll), xi1(icoll), xi2(icoll), 
+          call generate_momenta(shat, mfin, y1(icoll), y2(icoll), xi1(icoll), xi2(icoll), 
      &                      ph1(icoll), ph2(icoll), cth(icoll), phi(icoll),
      &                      p2(0,1,icoll), p1a(0,1,icoll), p1b(0,1,icoll), p0(0,1,icoll))
+        else 
+          call generate_kinematics2(x, shat, thresh, icoll, 0, 
+     &       y1(icoll), y2(icoll), omy1(icoll), omy2(icoll), xi1(icoll), xi2(icoll), 
+     &       ph1(icoll), ph2(icoll), phi(icoll), cth(icoll),
+     &       jac2(icoll), jac1a(icoll), jac1b(icoll), jac0(icoll))
+          call generate_momenta2(shat, mfin, y1(icoll), y2(icoll), xi1(icoll), xi2(icoll), 
+     &                      ph1(icoll), ph2(icoll), cth(icoll),phi(icoll),icoll,
+     &                      jac2(icoll), jac1a(icoll), jac1b(icoll), jac0(icoll),
+     &                      shat1a(icoll), shat1b(icoll), shat0(icoll),
+     &                      p2(0,1,icoll), p1a(0,1,icoll), p1b(0,1,icoll), p0(0,1,icoll))
+        endif
       enddo
 
       do icoll = 3, 4
+        mu2 = getscale(scoll, shat) 
         me(icoll) = 0d0
         ! check y against deltaI for the counterterm
         if (y1(3).lt.1d0-delta_used.and.icoll.eq.4)then
@@ -500,6 +516,7 @@ C returns the matrix element for the gamma-gamma born term
           if (fill_histos) then
             wgt_an(1) = jac1a(icoll) * me(icoll) / omy1(3) 
      &           * vegas_wgt * lum
+            if (iqp.ne.0) wgt_an(1) = wgt_an(1) * qprime(1d0-xi2(icoll),shat,mu2) / (2*shat1a(icoll))
             if (icoll.eq.4) wgt_an(1) = - wgt_an(1) 
             call analysis_fill(p_an,istatus,pdgs,wgt_an,icoll)
           endif
@@ -515,9 +532,9 @@ C returns the matrix element for the gamma-gamma born term
         if (iqp.ne.2) write(*,*) 'ERROR, iqp-1a', iqp
         mu2 = getscale(scoll, shat)
         compute_subtracted_me_1a =  
-     &    (jac2(3) * me(3) * qprime(1-xi2(3),shat,mu2) / xi2(3) / (1-xi2(3)) -
-     &     jac2(4) * me(4) * qprime(1-xi2(4),shat,mu2) / xi2(4) / (1-xi2(4)))
-     &                         / omy1(3) * lum * (16*pi**2/shat)
+     &    (jac1a(3) * me(3) * qprime(1-xi2(3),shat,mu2)/ (2*shat1a(3))  -
+     &     jac1a(4) * me(4) * qprime(1-xi2(4),shat,mu2)/ (2*shat1a(4))) 
+     &                         / omy1(3) * lum 
       endif
       return
       end
@@ -541,6 +558,7 @@ C returns the matrix element for the gamma-gamma born term
       double precision thresh
 
       double precision jac2(4), jac1a(4), jac1b(4), jac0(4), me(4)
+      double precision shat1a(4), shat1b(4), shat0(4)
       double precision y1(4), y2(4), omy1(4), omy2(4), xi1(4), xi2(4), ph1(4), ph2(4), phi(4), cth(4)
       integer icoll, isoft
       double precision mu2
@@ -574,16 +592,30 @@ C returns the matrix element for the gamma-gamma born term
         jac1a(icoll) = 0d0
         jac0(icoll) = 0d0
 
-        call generate_kinematics(x, shat, thresh, icoll, isoft, 
+        if (iqp.eq.0) then
+
+          call generate_kinematics(x, shat, thresh, icoll, isoft, 
      &       y1(icoll), y2(icoll), omy1(icoll), omy2(icoll), xi1(icoll), xi2(icoll), 
      &       ph1(icoll), ph2(icoll), phi(icoll), cth(icoll),
      &       jac2(icoll), jac1a(icoll), jac1b(icoll), jac0(icoll))
-        call generate_momenta(shat, mfin, y1(icoll), y2(icoll), xi1(icoll), xi2(icoll), 
+          call generate_momenta(shat, mfin, y1(icoll), y2(icoll), xi1(icoll), xi2(icoll), 
      &                      ph1(icoll), ph2(icoll), cth(icoll), phi(icoll),
      &                      p2(0,1,icoll), p1a(0,1,icoll), p1b(0,1,icoll), p0(0,1,icoll))
+        else 
+          call generate_kinematics2(x, shat, thresh, icoll, 0, 
+     &       y1(icoll), y2(icoll), omy1(icoll), omy2(icoll), xi1(icoll), xi2(icoll), 
+     &       ph1(icoll), ph2(icoll), phi(icoll), cth(icoll),
+     &       jac2(icoll), jac1a(icoll), jac1b(icoll), jac0(icoll))
+          call generate_momenta2(shat, mfin, y1(icoll), y2(icoll), xi1(icoll), xi2(icoll), 
+     &                      ph1(icoll), ph2(icoll), cth(icoll),phi(icoll),icoll,
+     &                      jac2(icoll), jac1a(icoll), jac1b(icoll), jac0(icoll),
+     &                      shat1a(icoll), shat1b(icoll), shat0(icoll),
+     &                      p2(0,1,icoll), p1a(0,1,icoll), p1b(0,1,icoll), p0(0,1,icoll))
+        endif
       enddo
 
       do icoll = 2, 4, 2
+        mu2 = getscale(scoll, shat) 
         me(icoll) = 0d0
         ! check y against deltaI for the counterterm
         if (y2(2).lt.1d0-delta_used.and.icoll.eq.4) cycle
@@ -597,6 +629,7 @@ C returns the matrix element for the gamma-gamma born term
           if (fill_histos) then
             wgt_an(1) = jac1b(icoll) * me(icoll) / omy2(2) 
      &           * vegas_wgt * lum
+            if (iqp.ne.0) wgt_an(1) = wgt_an(1) * qprime(1d0-xi1(icoll),shat,mu2) / (2*shat1b(icoll))
             if (icoll.eq.4) wgt_an(1) = - wgt_an(1) 
             call analysis_fill(p_an,istatus,pdgs,wgt_an,icoll)
           endif
@@ -611,9 +644,9 @@ C returns the matrix element for the gamma-gamma born term
         if (iqp.ne.1) write(*,*) 'ERROR, iqp-1b', iqp
         mu2 = getscale(scoll, shat)
         compute_subtracted_me_1b =  
-     &    (jac2(2) * me(2) * qprime(1-xi1(2),shat,mu2) / xi1(2) / (1-xi1(2)) - 
-     &     jac2(4) * me(4) * qprime(1-xi1(4),shat,mu2) / xi1(4) / (1-xi1(4)))
-     &                         / omy2(2) * lum * (16*pi**2/shat)
+     &    (jac1b(2) * me(2) * qprime(1-xi1(2),shat,mu2) / (2*shat1b(2)) - 
+     &     jac1b(4) * me(4) * qprime(1-xi1(4),shat,mu2) / (2*shat1b(4)))
+     &                         / omy2(2) * lum
       endif
       return
       end
@@ -689,7 +722,7 @@ C   4-> no resolved collinear emission (y1=y2=1)
      &                             xi2,ph1(icoll),ph2(icoll),me(icoll))
 
           if (fill_histos) then
-            wgt_an(1) = jac2(icoll) * me(icoll) / (1d0-y1(1)) / (1d0-y2(1)) 
+            wgt_an(1) = jac2(icoll) * me(icoll) / (omy1(1)) / (omy2(1)) 
      &           * vegas_wgt * lum
             if (icoll.eq.2.or.icoll.eq.3) wgt_an(1) = - wgt_an(1) 
             call analysis_fill(p_an,istatus,pdgs,wgt_an,icoll)
@@ -705,3 +738,81 @@ C   4-> no resolved collinear emission (y1=y2=1)
 
       return
       end
+
+
+
+
+      double precision function compute_subtracted_me_0_qq(x,vegas_wgt,lum,tau,ycm,jac) 
+      ! the photon-photon (born-like) contribution
+      implicit none
+      double precision x(8),vegas_wgt,lum,tau,ycm,jac
+
+      double precision scoll
+      common /to_scoll/scoll
+      double precision shat
+      common /to_shat/shat
+      double precision mfin
+      common /to_mfin/mfin
+      double precision  mmin
+      common /to_mmin/mmin
+      double precision thresh
+
+      double precision jac2(4), jac1a(4), jac1b(4), jac0(4), me(4)
+      double precision y1(4), y2(4), omy1(4), omy2(4), xi1(4), xi2(4), ph1(4), ph2(4), phi(4), cth(4)
+      integer icoll
+      logical passcuts
+      external passcuts
+      double precision p2(0:3,6,4), p1a(0:3,6,4), p1b(0:3,6,4),p0(0:3,6,4)
+      double precision shat1a(4), shat1b(4), shat0(4)
+      ! stuff for the analysis
+      integer pdgs(6), istatus(6)
+      double precision p_an(0:3,6)
+      double precision wgt_an(1)
+      logical fill_histos
+      common /to_fill_histos/fill_histos
+      double precision getscale, qprime, mu2
+      external getscale, qprime
+
+      pdgs = (/22,22,6,-6,0,0/)
+      istatus = (/-1,-1,1,1,1,1/)
+
+      shat = tau * scoll
+      thresh = mmin**2/shat
+
+      icoll = 4
+
+      jac0(icoll) = jac
+      jac1a(icoll) = 0d0
+      jac1b(icoll) = 0d0
+      jac2(icoll) = 0d0
+      call generate_kinematics2(x, shat, thresh, icoll, 0, 
+     &       y1(icoll), y2(icoll), omy1(icoll), omy2(icoll), xi1(icoll), xi2(icoll), 
+     &       ph1(icoll), ph2(icoll), phi(icoll), cth(icoll),
+     &       jac2(icoll), jac1a(icoll), jac1b(icoll), jac0(icoll))
+      call generate_momenta2(shat, mfin, y1(icoll), y2(icoll), xi1(icoll), xi2(icoll), 
+     &                      ph1(icoll), ph2(icoll), cth(icoll),phi(icoll),icoll,
+     &                      jac2(icoll), jac1a(icoll), jac1b(icoll), jac0(icoll),
+     &                      shat1a(icoll), shat1b(icoll), shat0(icoll),
+     &                      p2(0,1,icoll), p1a(0,1,icoll), p1b(0,1,icoll), p0(0,1,icoll))
+      me(icoll) = 0d0
+      ! boost the momenta to the lab frame. This is needed
+      ! both for cuts and for the analysis
+      call boost_to_lab_frame(p0(0,1,icoll),p_an,ycm)
+      !! MZ need to understand how to deal with cuts
+      mu2 = getscale(scoll, shat) 
+      if (passcuts(p_an,pdgs,istatus)) then 
+        call compute_me_born_gaga(p0, me(icoll), icoll)
+
+        if (fill_histos) then
+            wgt_an(1) = jac0(icoll) * me(icoll) 
+     &           * vegas_wgt * lum / (2*shat0(icoll))
+     &         * qprime(1d0-xi1(icoll),shat,mu2) * qprime(1d0-xi2(icoll),shat,mu2)
+            call analysis_fill(p_an,istatus,pdgs,wgt_an,icoll)
+        endif
+      endif
+      compute_subtracted_me_0_qq = jac0(icoll) * me(icoll) * lum / (2*shat0(icoll))
+     &         * qprime(1d0-xi1(icoll),shat,mu2) * qprime(1d0-xi2(icoll),shat,mu2)
+
+      return
+      end
+
