@@ -32,7 +32,6 @@
       call print_run()
       !MZ leave this for now, to keep the RN sequence
       call fill_vegas_x(x)
-      write(*,*) 'X',x
 
       nprn = 0
       ! fill histogram only in the refine phase
@@ -66,21 +65,6 @@ C     fill the vegas x.
       enddo
 
       return 
-      end
-
-
-      double precision function Pgamu(z)
-      implicit none
-      double precision z
-      double precision pi
-      parameter (pi=3.14159265359d0)
-      include 'coupl.inc'
-
-      Pgamu = (1+(1-z)**2)/z
-      !include alpha/2pi
-      Pgamu = Pgamu * dble(gal(1))**2/8d0/pi**2
-
-      return
       end
 
 

@@ -141,7 +141,6 @@ C
                     wgt=xjac
                     do 17 j=1,ndim
                        xn=(kg(j)-ran2(idum))*dxg+1.d0
-                       write(*,*) 'XN', xn
                        ia(j)=max(min(int(xn),NDMX),1)
                        if(ia(j).gt.1)then
                           xo=xi(ia(j),j)-xi(ia(j)-1,j)

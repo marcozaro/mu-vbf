@@ -411,7 +411,6 @@ C returns the matrix element for the gamma-gamma born term
       call boost_to_lab_frame(p0(0,1,icoll),p_an,ycm)
       !! MZ need to understand how to deal with cuts
       if (passcuts(p_an,pdgs,istatus)) then 
-        write(*,*) 'passcuts'
         call compute_me_born_gaga(p0, me(icoll), icoll)
 
         if (fill_histos) then
@@ -462,6 +461,7 @@ C returns the matrix element for the gamma-gamma born term
       common/to_delta_used/delta_used
       double precision pi
       parameter (pi=3.14159265359d0)
+      include 'input.inc'
 
       pdgs = (/-13,22,6,-6,-13,0/)
       istatus = (/-1,-1,1,1,1,1/)
@@ -496,6 +496,8 @@ C returns the matrix element for the gamma-gamma born term
      &                      jac2(icoll), jac1a(icoll), jac1b(icoll), jac0(icoll),
      &                      shat1a(icoll), shat1b(icoll), shat0(icoll),
      &                      p2(0,1,icoll), p1a(0,1,icoll), p1b(0,1,icoll), p0(0,1,icoll))
+
+          jac1a(icoll) = jac1a(icoll)/2d0/shat1a(icoll)
         endif
       enddo
 
@@ -516,7 +518,7 @@ C returns the matrix element for the gamma-gamma born term
           if (fill_histos) then
             wgt_an(1) = jac1a(icoll) * me(icoll) / omy1(3) 
      &           * vegas_wgt * lum
-            if (iqp.ne.0) wgt_an(1) = wgt_an(1) * qprime(1d0-xi2(icoll),shat,mu2) / (2*shat1a(icoll))
+            if (iqp.ne.0) wgt_an(1) = wgt_an(1) * qprime(1d0-xi2(icoll),shat,mu2,deltaI)
             if (icoll.eq.4) wgt_an(1) = - wgt_an(1) 
             call analysis_fill(p_an,istatus,pdgs,wgt_an,icoll)
           endif
@@ -532,8 +534,8 @@ C returns the matrix element for the gamma-gamma born term
         if (iqp.ne.2) write(*,*) 'ERROR, iqp-1a', iqp
         mu2 = getscale(scoll, shat)
         compute_subtracted_me_1a =  
-     &    (jac1a(3) * me(3) * qprime(1-xi2(3),shat,mu2)/ (2*shat1a(3))  -
-     &     jac1a(4) * me(4) * qprime(1-xi2(4),shat,mu2)/ (2*shat1a(4))) 
+     &    (jac1a(3) * me(3) * qprime(1-xi2(3),shat,mu2,deltaI) -
+     &     jac1a(4) * me(4) * qprime(1-xi2(4),shat,mu2,deltaI)) 
      &                         / omy1(3) * lum 
       endif
       return
@@ -576,6 +578,7 @@ C returns the matrix element for the gamma-gamma born term
       common/to_delta_used/delta_used
       double precision pi
       parameter (pi=3.14159265359d0)
+      include 'input.inc'
 
       pdgs = (/22,13,6,-6,13,0/)
       istatus = (/-1,-1,1,1,1,1/)
@@ -611,6 +614,8 @@ C returns the matrix element for the gamma-gamma born term
      &                      jac2(icoll), jac1a(icoll), jac1b(icoll), jac0(icoll),
      &                      shat1a(icoll), shat1b(icoll), shat0(icoll),
      &                      p2(0,1,icoll), p1a(0,1,icoll), p1b(0,1,icoll), p0(0,1,icoll))
+
+          jac1b(icoll) = jac1b(icoll)/2d0/shat1b(icoll)
         endif
       enddo
 
@@ -629,7 +634,7 @@ C returns the matrix element for the gamma-gamma born term
           if (fill_histos) then
             wgt_an(1) = jac1b(icoll) * me(icoll) / omy2(2) 
      &           * vegas_wgt * lum
-            if (iqp.ne.0) wgt_an(1) = wgt_an(1) * qprime(1d0-xi1(icoll),shat,mu2) / (2*shat1b(icoll))
+            if (iqp.ne.0) wgt_an(1) = wgt_an(1) * qprime(1d0-xi1(icoll),shat,mu2,deltaI)
             if (icoll.eq.4) wgt_an(1) = - wgt_an(1) 
             call analysis_fill(p_an,istatus,pdgs,wgt_an,icoll)
           endif
@@ -644,9 +649,10 @@ C returns the matrix element for the gamma-gamma born term
         if (iqp.ne.1) write(*,*) 'ERROR, iqp-1b', iqp
         mu2 = getscale(scoll, shat)
         compute_subtracted_me_1b =  
-     &    (jac1b(2) * me(2) * qprime(1-xi1(2),shat,mu2) / (2*shat1b(2)) - 
-     &     jac1b(4) * me(4) * qprime(1-xi1(4),shat,mu2) / (2*shat1b(4)))
+     &    (jac1b(2) * me(2) * qprime(1-xi1(2),shat,mu2,deltaI) - 
+     &     jac1b(4) * me(4) * qprime(1-xi1(4),shat,mu2,deltaI))
      &                         / omy2(2) * lum
+
       endif
       return
       end
@@ -772,6 +778,7 @@ C   4-> no resolved collinear emission (y1=y2=1)
       common /to_fill_histos/fill_histos
       double precision getscale, qprime, mu2
       external getscale, qprime
+      include 'input.inc'
 
       pdgs = (/22,22,6,-6,0,0/)
       istatus = (/-1,-1,1,1,1,1/)
@@ -806,12 +813,12 @@ C   4-> no resolved collinear emission (y1=y2=1)
         if (fill_histos) then
             wgt_an(1) = jac0(icoll) * me(icoll) 
      &           * vegas_wgt * lum / (2*shat0(icoll))
-     &         * qprime(1d0-xi1(icoll),shat,mu2) * qprime(1d0-xi2(icoll),shat,mu2)
+     &         * qprime(1d0-xi1(icoll),shat,mu2,deltaI) * qprime(1d0-xi2(icoll),shat,mu2,deltaI)
             call analysis_fill(p_an,istatus,pdgs,wgt_an,icoll)
         endif
       endif
       compute_subtracted_me_0_qq = jac0(icoll) * me(icoll) * lum / (2*shat0(icoll))
-     &         * qprime(1d0-xi1(icoll),shat,mu2) * qprime(1d0-xi2(icoll),shat,mu2)
+     &         * qprime(1d0-xi1(icoll),shat,mu2,deltaI) * qprime(1d0-xi2(icoll),shat,mu2,deltaI)
 
       return
       end

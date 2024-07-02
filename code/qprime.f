@@ -1,20 +1,18 @@
-      double precision function qprime(z,shat,mu2)
+      double precision function qprime(z,shat,mu2,delta)
       ! the Qprime term of the note, including alpha/2pi
       implicit none 
-      double precision z,shat,mu2
+      double precision z,shat,mu2,delta
       double precision K
       double precision pi
       parameter (pi=3.14159265359d0)
       include 'coupl.inc'
-      double precision delta_used
-      common/to_delta_used/delta_used
 
       k=0d0 ! put here change of scheme
-      if (delta_used.gt.2d0.or.delta_used.le.0d0) then
-          write(*,*)'Error, deltaI must be in (0,2]', delta_used
+      if (delta.gt.2d0.or.delta.le.0d0) then
+          write(*,*)'Error, deltaI must be in (0,2]', delta
           stop 1
       endif
-      qprime = (1d0+(1d0-z)**2) / z * (dlog(shat*delta_used/mu2/2d0)  
+      qprime = (1d0+(1d0-z)**2) / z * (dlog(shat*delta/mu2/2d0)  
      $                                  +2d0*dlog(1d0-z)) + z - k
       !include alpha/2pi
       qprime = qprime * dble(gal(1))**2/8d0/pi**2
@@ -34,3 +32,17 @@
       return
       end
 
+
+      double precision function Pgamu(z)
+      implicit none
+      double precision z
+      double precision pi
+      parameter (pi=3.14159265359d0)
+      include 'coupl.inc'
+
+      Pgamu = (1+(1-z)**2)/z
+      !include alpha/2pi
+      Pgamu = Pgamu * dble(gal(1))**2/8d0/pi**2
+
+      return
+      end

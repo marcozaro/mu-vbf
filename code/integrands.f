@@ -11,32 +11,21 @@
       logical fill_histos
       common /to_fill_histos/fill_histos
 
-      integer npoints 
-      data npoints/0/
-      npoints = npoints+1
-
       mfin = mdl_mt
       mmin = 2d0*mfin
-      write(*,*) 'XX', x, vegas_wgt
 
       integrand = 0d0
 
-      write(*,*) 'zero', integrand
       ! mu-mu in initial state
-      !integrand = integrand + integrand_mumu(x,vegas_wgt) 
-      write(*,*) 'mumu', integrand
+      integrand = integrand + integrand_mumu(x,vegas_wgt) 
       ! gam-gam in initial state
       integrand = integrand + integrand_gaga(x,vegas_wgt) 
-      write(*,*) 'gaga', integrand
       ! mu-gam in initial state
       integrand = integrand + integrand_muga(x,vegas_wgt) 
-      write(*,*) 'muga', integrand
       ! gam-mu in initial state
       integrand = integrand + integrand_gamu(x,vegas_wgt) 
-      write(*,*) 'gamu', integrand
 
       if (fill_histos) call HwU_add_points()
-      if (npoints.eq.10) stop
 
       return
       end
@@ -76,6 +65,7 @@
       include 'input.inc'
 
       integrand_mumu = 0d0
+      orders_tag = 2
       !
       ! generate the mu mu luminosity
       jac_pdf = 1d0
@@ -86,7 +76,6 @@
       ! THE DOUBLE-REAL CONTRIBUTION FOR THE MUON PAIR
       if (.not.mumu_doublereal) goto 10
 
-      orders_tag = 2
       delta_used = deltaI
       integrand_mumu = integrand_mumu + compute_subtracted_me_2(x,vegas_wgt,lum,tau,ycm,jac_pdf)
 
@@ -190,7 +179,6 @@
       integrand_muga = integrand_muga +
      $ compute_subtracted_me_1a(x,vegas_wgt,lum,
      $               tau,ycm,jac_pdf,0)
-      write(*,*) 'SR', integrand_muga
 
  10   continue
 
@@ -200,11 +188,9 @@
       mu2 = getscale(scoll, x1bk*x2bk*scoll)
 
       orders_tag = 1
-       write(*,*) 'Z1',z1,x(11), tau_min/tau
       integrand_muga = integrand_muga +
-     $ compute_subtracted_me_0(x,vegas_wgt,lum*qprime(z1,scoll*tau,mu2),
+     $ compute_subtracted_me_0(x,vegas_wgt,lum*qprime(z1,scoll*tau,mu2,deltaI),
      $               tau*z1,ycm+0.5*dlog(z1),jac_pdf)
-      write(*,*) 'QQ', integrand_muga
 
       return
       end
@@ -262,7 +248,7 @@
 
       orders_tag = 1
       integrand_gamu = integrand_gamu +
-     $ compute_subtracted_me_0(x,vegas_wgt,lum*qprime(z2,scoll*tau,mu2),
+     $ compute_subtracted_me_0(x,vegas_wgt,lum*qprime(z2,scoll*tau,mu2,deltaI),
      $               tau*z2,ycm-0.5*dlog(z2),jac_pdf)
 
       return
