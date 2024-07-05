@@ -14,7 +14,8 @@ LIBEMELA = $(shell $(emela) --ldflags) $(shell $(lhapdf) --ldflags) -lstdc++
 
 
 MEFILES = $(patsubst %.f,%.o,$(wildcard */matrix_mod.f))
-FILES = ranmar.o boostwdir2.o pdf.o vegas.o cuts.o me_wrapper.o qprime.o HwU.o analysis_HwU_template.o kinematics.o kinematics2.o integrands.o $(MEFILES) 
+FILES = ranmar.o boostwdir2.o pdf.o vegas.o cuts.o me_wrapper.o qprime.o HwU.o analysis_HwU_template.o \
+	kinematics.o kinematics2.o kinematics3.o integrands.o $(MEFILES) 
 DRIVER = driver.o $(FILES)
 CHECK1 = check_1coll.o $(FILES)
 

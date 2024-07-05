@@ -453,6 +453,10 @@ C returns the matrix element for the gamma-gamma born term
       logical passcuts
       external passcuts
       double precision p2(0:3,6,4), p1a(0:3,6,4), p1b(0:3,6,4),p0(0:3,6,4)
+
+      double precision exi1b,exi2b,exi1a,exi2a,exi12,exi22
+      common/cexternal1/exi1b,exi2b,exi1a,exi2a,exi12,exi22
+
       ! stuff for the analysis
       integer pdgs(6), istatus(6)
       double precision p_an(0:3,6)
@@ -489,15 +493,18 @@ C returns the matrix element for the gamma-gamma born term
      &                      ph1(icoll), ph2(icoll), cth(icoll), phi(icoll),
      &                      p2(0,1,icoll), p1a(0,1,icoll), p1b(0,1,icoll), p0(0,1,icoll))
         else 
-          call generate_kinematics2(x, shat, thresh, icoll, 0, 
+          call generate_kinematics3(x, shat, thresh, icoll, 0, 
      &       y1(icoll), y2(icoll), omy1(icoll), omy2(icoll), xi1(icoll), xi2(icoll), 
      &       ph1(icoll), ph2(icoll), phi(icoll), cth(icoll),
      &       jac2(icoll), jac1a(icoll), jac1b(icoll), jac0(icoll))
-          call generate_momenta2(shat, mfin, y1(icoll), y2(icoll), xi1(icoll), xi2(icoll), 
+           call generate_momenta3(shat, mfin, y1(icoll), y2(icoll), xi1(icoll), xi2(icoll), 
      &                      ph1(icoll), ph2(icoll), cth(icoll),phi(icoll),icoll,
      &                      jac2(icoll), jac1a(icoll), jac1b(icoll), jac0(icoll),
      &                      shat1a(icoll), shat1b(icoll), shat0(icoll),
      &                      p2(0,1,icoll), p1a(0,1,icoll), p1b(0,1,icoll), p0(0,1,icoll))
+          ! overwrite xi1/2
+           xi1(icoll) = exi1a 
+           xi2(icoll) = exi2a 
 
           jac1a(icoll) = jac1a(icoll)/2d0/shat1a(icoll)
         endif
@@ -611,17 +618,18 @@ C returns the matrix element for the gamma-gamma born term
      &                      ph1(icoll), ph2(icoll), cth(icoll), phi(icoll),
      &                      p2(0,1,icoll), p1a(0,1,icoll), p1b(0,1,icoll), p0(0,1,icoll))
         else 
-      call generate_kinematics3(x, shat, thresh, icoll, 0, 
+          call generate_kinematics3(x, shat, thresh, icoll, 0, 
      &       y1(icoll), y2(icoll), omy1(icoll), omy2(icoll), xi1(icoll), xi2(icoll), 
      &       ph1(icoll), ph2(icoll), phi(icoll), cth(icoll),
      &       jac2(icoll), jac1a(icoll), jac1b(icoll), jac0(icoll))
-      ! overwrite xi1
-      xi1(icoll) = exi1b 
-      call generate_momenta3(shat, mfin, y1(icoll), y2(icoll), xi1(icoll), xi2(icoll), 
+           call generate_momenta3(shat, mfin, y1(icoll), y2(icoll), xi1(icoll), xi2(icoll), 
      &                      ph1(icoll), ph2(icoll), cth(icoll),phi(icoll),icoll,
      &                      jac2(icoll), jac1a(icoll), jac1b(icoll), jac0(icoll),
      &                      shat1a(icoll), shat1b(icoll), shat0(icoll),
      &                      p2(0,1,icoll), p1a(0,1,icoll), p1b(0,1,icoll), p0(0,1,icoll))
+          ! overwrite xi1/2
+           xi1(icoll) = exi1b 
+           xi2(icoll) = exi2b 
 
           jac1b(icoll) = jac1b(icoll)/2d0/shat1b(icoll)
         endif
@@ -808,14 +816,17 @@ C   4-> no resolved collinear emission (y1=y2=1)
      &       y1(icoll), y2(icoll), omy1(icoll), omy2(icoll), xi1(icoll), xi2(icoll), 
      &       ph1(icoll), ph2(icoll), phi(icoll), cth(icoll),
      &       jac2(icoll), jac1a(icoll), jac1b(icoll), jac0(icoll))
-      ! overwrite xi1 and xi2
-             xi1(icoll) = exi12 
-             xi2(icoll) = exi22 
+
       call generate_momenta3(shat, mfin, y1(icoll), y2(icoll), xi1(icoll), xi2(icoll), 
      &                      ph1(icoll), ph2(icoll), cth(icoll),phi(icoll),icoll,
      &                      jac2(icoll), jac1a(icoll), jac1b(icoll), jac0(icoll),
      &                      shat1a(icoll), shat1b(icoll), shat0(icoll),
      &                      p2(0,1,icoll), p1a(0,1,icoll), p1b(0,1,icoll), p0(0,1,icoll))
+
+      ! overwrite xi1 and xi2
+             xi1(icoll) = exi12 
+             xi2(icoll) = exi22 
+             
       me(icoll) = 0d0
       ! boost the momenta to the lab frame. This is needed
       ! both for cuts and for the analysis

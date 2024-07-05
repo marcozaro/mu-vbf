@@ -209,7 +209,7 @@ c A check on momentum conservation is performed if mcheck=.true.
 c The quantities relevant to the reduced system are computed if mboost=.true.
 c
       subroutine generate_momenta3(shat,xm,y1,y2,xi1,xi2,ph1,ph2,
-     #                             cth,phi,icoll,meas4,emeas3a,emeas3b,meas2,
+     #                             cth,phi,icoll,meas4,emeas3a,emeas3b,emeas2,
      #                             es3a,es3b,es2,xmom4,exmom3a,exmom3b,
      #                             exmom2)
       implicit none
@@ -268,8 +268,8 @@ c
         meas3a=meas3a*prefact*xi1
         meas3b=meas3b*prefact*xi2
         meas2=meas2
-        emeas3a=meas3a*prefact*exi1a
-        emeas3b=meas3b*prefact*exi2b
+        emeas3a=emeas3a*prefact*exi1a
+        emeas3b=emeas3b*prefact*exi2b
         emeas2=emeas2
       endif
       xmom4(0,1)=sqs/2
