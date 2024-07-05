@@ -156,7 +156,7 @@ C (1-y1)*(1-y2), possibly approximated in the collinear limit(s)
       end
 
 
-      subroutine compute_me_singlereal1a(p,y1,y2,omy1,omy2,xi1,xi2,ph1,ph2,ans)
+      subroutine compute_me_singlereal1a(p,icoll,y1,y2,omy1,omy2,xi1,xi2,ph1,ph2,ans)
 C returns the matrix element for the mu+gamma single real emission times
 C (1-y1), possibly approximated in the collinear limit(s)
       implicit none
@@ -169,6 +169,7 @@ C (1-y1), possibly approximated in the collinear limit(s)
       ! 4-> no resolved collinear emission (y1=y2=1)<-
       !!! note that xi are different in the various kinematics
       double precision y1,y2,omy1,omy2,xi1(4),xi2(4),ph1,ph2 
+      integer icoll
       double precision ans, ansk1, ansk2, ansk12
       double precision ans_splitorders(0:99)
       integer max_sc_vectors
@@ -230,8 +231,8 @@ C (1-y1), possibly approximated in the collinear limit(s)
           call SMATRIX_SPLITORDERS_1(p_pass,ANS_splitorders)
           ansk1 = ans_splitorders(0)
           call reset_spin_correlation_vectors_1()
-          ksq1 = -xi1(3)*shat/2d0
-          z1 = 1d0 - xi1(3)
+          ksq1 = -xi1(icoll)*shat/2d0
+          z1 = 1d0 - xi1(icoll)
           ans = alp8pi/-ksq1*(z1*ans+ansk1*4d0*(1d0-z1)/z1)/z1
           !
       endif
@@ -241,7 +242,7 @@ C (1-y1), possibly approximated in the collinear limit(s)
 
 
 
-      subroutine compute_me_singlereal1b(p,y1,y2,omy1,omy2,xi1,xi2,ph1,ph2,ans)
+      subroutine compute_me_singlereal1b(p,icoll,y1,y2,omy1,omy2,xi1,xi2,ph1,ph2,ans)
 C returns the matrix element for the gamma-mu- single real emission times
 C (1-y2), possibly approximated in the collinear limit(s)
       implicit none
@@ -254,6 +255,7 @@ C (1-y2), possibly approximated in the collinear limit(s)
       ! 4-> no resolved collinear emission (y1=y2=1)<-
       !!! note that xi are different in the various kinematics
       double precision y1,y2,omy1,omy2,xi1(4),xi2(4),ph1,ph2 
+      integer icoll
       double precision ans, ansk1, ansk2, ansk12
       double precision ans_splitorders(0:99)
       integer max_sc_vectors
@@ -312,8 +314,8 @@ C (1-y2), possibly approximated in the collinear limit(s)
           call SMATRIX_SPLITORDERS_1(p_pass,ANS_splitorders)
           ansk2 = ans_splitorders(0)
           call reset_spin_correlation_vectors_1()
-          ksq2 = -xi2(2)*shat/2d0
-          z2 = 1d0 - xi2(2)
+          ksq2 = -xi2(icoll)*shat/2d0
+          z2 = 1d0 - xi2(icoll)
           ans = alp8pi/-ksq2*(z2*ans+ansk2*4d0*(1d0-z2)/z2)/z2
           !
       endif
@@ -512,7 +514,7 @@ C returns the matrix element for the gamma-gamma born term
         ! both for cuts and for the analysis
         call boost_to_lab_frame(p1a(0,1,icoll),p_an,ycm)
         if (passcuts(p_an,pdgs,istatus)) then 
-          call compute_me_singlereal1a(p1a,y1(icoll),y2(icoll),omy1(icoll),omy2(icoll),xi1,
+          call compute_me_singlereal1a(p1a,icoll,y1(icoll),y2(icoll),omy1(icoll),omy2(icoll),xi1,
      &                             xi2,ph1(icoll),ph2(icoll),me(icoll))
 
           if (fill_histos) then
@@ -569,6 +571,10 @@ C returns the matrix element for the gamma-gamma born term
       logical passcuts
       external passcuts
       double precision p2(0:3,6,4), p1a(0:3,6,4), p1b(0:3,6,4),p0(0:3,6,4)
+
+      double precision exi1b,exi2b,exi1a,exi2a,exi12,exi22
+      common/cexternal1/exi1b,exi2b,exi1a,exi2a,exi12,exi22
+
       ! stuff for the analysis
       double precision p_an(0:3,6)
       double precision wgt_an(1)
@@ -605,11 +611,13 @@ C returns the matrix element for the gamma-gamma born term
      &                      ph1(icoll), ph2(icoll), cth(icoll), phi(icoll),
      &                      p2(0,1,icoll), p1a(0,1,icoll), p1b(0,1,icoll), p0(0,1,icoll))
         else 
-          call generate_kinematics2(x, shat, thresh, icoll, 0, 
+      call generate_kinematics3(x, shat, thresh, icoll, 0, 
      &       y1(icoll), y2(icoll), omy1(icoll), omy2(icoll), xi1(icoll), xi2(icoll), 
      &       ph1(icoll), ph2(icoll), phi(icoll), cth(icoll),
      &       jac2(icoll), jac1a(icoll), jac1b(icoll), jac0(icoll))
-          call generate_momenta2(shat, mfin, y1(icoll), y2(icoll), xi1(icoll), xi2(icoll), 
+      ! overwrite xi1
+      xi1(icoll) = exi1b 
+      call generate_momenta3(shat, mfin, y1(icoll), y2(icoll), xi1(icoll), xi2(icoll), 
      &                      ph1(icoll), ph2(icoll), cth(icoll),phi(icoll),icoll,
      &                      jac2(icoll), jac1a(icoll), jac1b(icoll), jac0(icoll),
      &                      shat1a(icoll), shat1b(icoll), shat0(icoll),
@@ -628,7 +636,7 @@ C returns the matrix element for the gamma-gamma born term
         ! both for cuts and for the analysis
         call boost_to_lab_frame(p1b(0,1,icoll),p_an,ycm)
         if (passcuts(p_an,pdgs,istatus)) then 
-          call compute_me_singlereal1b(p1b,y1(icoll),y2(icoll),omy1(icoll),omy2(icoll),xi1,
+          call compute_me_singlereal1b(p1b,icoll,y1(icoll),y2(icoll),omy1(icoll),omy2(icoll),xi1,
      &                             xi2,ph1(icoll),ph2(icoll),me(icoll))
 
           if (fill_histos) then
@@ -770,6 +778,10 @@ C   4-> no resolved collinear emission (y1=y2=1)
       external passcuts
       double precision p2(0:3,6,4), p1a(0:3,6,4), p1b(0:3,6,4),p0(0:3,6,4)
       double precision shat1a(4), shat1b(4), shat0(4)
+
+      double precision exi1b,exi2b,exi1a,exi2a,exi12,exi22
+      common/cexternal1/exi1b,exi2b,exi1a,exi2a,exi12,exi22
+
       ! stuff for the analysis
       integer pdgs(6), istatus(6)
       double precision p_an(0:3,6)
@@ -792,11 +804,14 @@ C   4-> no resolved collinear emission (y1=y2=1)
       jac1a(icoll) = 0d0
       jac1b(icoll) = 0d0
       jac2(icoll) = 0d0
-      call generate_kinematics2(x, shat, thresh, icoll, 0, 
+      call generate_kinematics3(x, shat, thresh, icoll, 0, 
      &       y1(icoll), y2(icoll), omy1(icoll), omy2(icoll), xi1(icoll), xi2(icoll), 
      &       ph1(icoll), ph2(icoll), phi(icoll), cth(icoll),
      &       jac2(icoll), jac1a(icoll), jac1b(icoll), jac0(icoll))
-      call generate_momenta2(shat, mfin, y1(icoll), y2(icoll), xi1(icoll), xi2(icoll), 
+      ! overwrite xi1 and xi2
+             xi1(icoll) = exi12 
+             xi2(icoll) = exi22 
+      call generate_momenta3(shat, mfin, y1(icoll), y2(icoll), xi1(icoll), xi2(icoll), 
      &                      ph1(icoll), ph2(icoll), cth(icoll),phi(icoll),icoll,
      &                      jac2(icoll), jac1a(icoll), jac1b(icoll), jac0(icoll),
      &                      shat1a(icoll), shat1b(icoll), shat0(icoll),
