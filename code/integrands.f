@@ -19,11 +19,11 @@
       ! mu-mu in initial state
       integrand = integrand + integrand_mumu(x,vegas_wgt) 
       ! gam-gam in initial state
-      integrand = integrand + integrand_gaga(x,vegas_wgt) 
+!      integrand = integrand + integrand_gaga(x,vegas_wgt) 
       ! mu-gam in initial state
-      integrand = integrand + integrand_muga(x,vegas_wgt) 
+!      integrand = integrand + integrand_muga(x,vegas_wgt) 
       ! gam-mu in initial state
-      integrand = integrand + integrand_gamu(x,vegas_wgt) 
+!      integrand = integrand + integrand_gamu(x,vegas_wgt) 
 
       if (fill_histos) call HwU_add_points()
 
@@ -77,7 +77,7 @@
       if (.not.mumu_doublereal) goto 10
 
       delta_used = deltaI
-      integrand_mumu = integrand_mumu + compute_subtracted_me_2(x,vegas_wgt,lum,tau,ycm,jac_pdf)
+C      integrand_mumu = integrand_mumu + compute_subtracted_me_2(x,vegas_wgt,lum,tau,ycm,jac_pdf)
 
  10   continue
 
@@ -87,14 +87,14 @@
      $               tau,ycm,jac_pdf,1)
 
       ! THE CONVOLUTION OF M MU GAM WITH Q'(Z2)
-      integrand_mumu = integrand_mumu +
-     $ compute_subtracted_me_1a(x,vegas_wgt,lum,
-     $               tau,ycm,jac_pdf,2)
+C      integrand_mumu = integrand_mumu +
+C     $ compute_subtracted_me_1a(x,vegas_wgt,lum,
+C     $               tau,ycm,jac_pdf,2)
 
       ! THE CONVOLUTION OF M GAM GAM WITH Q'(Z1) Q'(Z2)
-      integrand_mumu = integrand_mumu + 
-     $ compute_subtracted_me_0_qq(x,vegas_wgt,lum,
-     $               tau,ycm,jac_pdf)
+C      integrand_mumu = integrand_mumu + 
+C     $ compute_subtracted_me_0_qq(x,vegas_wgt,lum,
+C     $               tau,ycm,jac_pdf)
 
       return
       end

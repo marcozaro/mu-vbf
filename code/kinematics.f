@@ -19,7 +19,7 @@ C    check momentum conservation and on-shell relations
           write(*,*) 'ERROR1', etot, mass
           call write_momenta(pp,n)
           call backtrace()
-          stop
+          stop 1
       endif
 
       ptot(:) = 0d0
@@ -34,7 +34,7 @@ C    check momentum conservation and on-shell relations
             write(*,*) 'ERROR2', j, ptot
             call write_momenta(pp,n)
             call backtrace()
-            stop
+            stop 1
         endif
       enddo
 
@@ -45,7 +45,7 @@ C    check momentum conservation and on-shell relations
               write(*,*) 'ERROR3', i, dot(pp(0,i),pp(0,i)), etot
             call write_momenta(pp,n)
             call backtrace()
-            stop
+            stop 1
           endif
 
         else
@@ -53,7 +53,7 @@ C    check momentum conservation and on-shell relations
               write(*,*) 'ERROR4', i, dot(pp(0,i),pp(0,i)), etot
             call write_momenta(pp,n)
             call backtrace()
-            stop
+            stop 1
           endif
         endif
       enddo 

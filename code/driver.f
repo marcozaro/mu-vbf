@@ -36,7 +36,7 @@
       nprn = 0
       ! fill histogram only in the refine phase
       fill_histos = .false.
-      call vegas01(12,integrand,0,10000,
+      call vegas01(12,integrand,0,40000,
      1        10,nprn,integral,error,prob)
 
       ! for the analysis
@@ -44,7 +44,7 @@
       call set_error_estimation(1)
       call analysis_begin(1,"central value")
 
-      call vegas01(12,integrand,1,100000,
+      call vegas01(12,integrand,1,400000,
      1        4,nprn,integral,error,prob)
       call analysis_end(1d0)
 

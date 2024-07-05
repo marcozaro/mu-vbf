@@ -15,7 +15,7 @@ c the four body (jac4), three body (jac3a and jac3b), and two body (jac2)
 c phase spaces, TIMES the measure of the appropriate z variable(s) in the
 c cases of the reduced kinematic configurations, namely: for icoll=2, 
 c dz1 <-> jac3b; for icoll=3, dz2 <-> jac3a; and for icoll=4, dz1  <-> jac3b, 
-c dz2 <-> jac3a, and dz1dz2 <-> jac2
+c dz2 <-> jac3a, and dz1dz2 <-> jac2'
 c 
       subroutine generate_kinematics2(x,shat,thresh,icoll,isoft,
      #                                y1,y2,omy1,omy2,xi1,xi2,ph1,ph2,
@@ -39,10 +39,6 @@ c
         write(6,*)'Inconsistency in mass assignments:',xm,thresh
         stop
       endif
-      jac4 = 1.d0
-      jac3a = 1.d0
-      jac3b = 1.d0
-      jac2 = 1.d0
       cth = x(1)*2d0-1d0
       phi = x(2)*2d0*pi
       jac4 = jac4*4d0*pi
@@ -95,22 +91,22 @@ c
       else
         lamfun=(1-thresh)*(1-sqrt(1-2*tmp))/tmp
       endif
-      lam=x(8)*lamfun
+      lam=x(8)**2*lamfun
       xi1=lam*tvar
       xi2=lam*(1-tvar)
-      jac4 = jac4*lamfun*lam
+      jac4 = jac4*2*x(8)*lamfun*lam
       jac4 = jac4*conv
       if(icoll.eq.2)then
-        jac3b = jac3b*lamfun*lam
+        jac3b = jac3b*2*x(8)*lamfun*lam
       elseif(icoll.eq.3)then
-        jac3a = jac3a*lamfun*lam
+        jac3a = jac3a*2*x(8)*lamfun*lam
       elseif(icoll.eq.4)then
-        jac3a = jac3a*lamfun*lam
-        jac3b = jac3b*lamfun*lam
+        jac3a = jac3a*2*x(8)*lamfun*lam
+        jac3b = jac3b*2*x(8)*lamfun*lam
       endif
       jac3a = jac3a*conv
       jac3b = jac3b*conv
-      jac2 = jac2*lamfun*lam
+      jac2 = jac2*2*x(8)*lamfun*lam
       jac2 = jac2*conv
       return
       end
