@@ -1,0 +1,17 @@
+      SUBROUTINE DECAYBW_AMUM_WPWMMUM
+      IMPLICIT NONE
+      INCLUDE 'maxconfigs.inc'
+      INCLUDE 'genps.inc'
+      INTEGER GFORCEBW(-MAX_BRANCH:-1,LMAXCONFIGS)
+      COMMON/INC_BW/GFORCEBW
+      GFORCEBW(-1,1)=0
+      GFORCEBW(-2,1)=0
+      GFORCEBW(-1,2)=0
+      GFORCEBW(-2,2)=0
+      GFORCEBW(-1,3)=0
+      GFORCEBW(-2,3)=0
+      GFORCEBW(-1,13)=0
+      GFORCEBW(-1,15)=0
+      GFORCEBW(-1,16)=0
+      RETURN
+      END

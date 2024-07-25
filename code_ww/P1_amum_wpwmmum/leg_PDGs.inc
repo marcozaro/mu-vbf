@@ -1,0 +1,2 @@
+      INTEGER LEG_PDGS(5)
+      DATA LEG_PDGS/22,13,24,-24,13/

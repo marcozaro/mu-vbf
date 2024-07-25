@@ -1,0 +1,8 @@
+      SUBROUTINE DECAYBW_AA_WPWM
+      IMPLICIT NONE
+      INCLUDE 'maxconfigs.inc'
+      INCLUDE 'genps.inc'
+      INTEGER GFORCEBW(-MAX_BRANCH:-1,LMAXCONFIGS)
+      COMMON/INC_BW/GFORCEBW
+      RETURN
+      END
