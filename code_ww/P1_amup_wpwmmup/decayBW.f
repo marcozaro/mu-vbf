@@ -1,0 +1,17 @@
+      SUBROUTINE DECAYBW_BORN
+      IMPLICIT NONE
+      INCLUDE 'maxconfigs.inc'
+      INCLUDE 'genps.inc'
+      INTEGER GFORCEBW(-MAX_BRANCH:-1,LMAXCONFIGS)
+      COMMON/INC_BW/GFORCEBW
+      GFORCEBW(-1,1)=0
+      GFORCEBW(-1,2)=0
+      GFORCEBW(-1,4)=0
+      GFORCEBW(-1,14)=0
+      GFORCEBW(-2,14)=0
+      GFORCEBW(-1,15)=0
+      GFORCEBW(-2,15)=0
+      GFORCEBW(-1,16)=0
+      GFORCEBW(-2,16)=0
+      RETURN
+      END

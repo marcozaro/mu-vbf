@@ -1,0 +1,26 @@
+      SUBROUTINE PROPS_AA_WPWM
+      IMPLICIT NONE
+      INCLUDE 'nexternal.inc'
+      INCLUDE 'genps.inc'
+      INCLUDE 'maxconfigs.inc'
+      INCLUDE 'run.inc'
+      INCLUDE 'coupl.inc'
+      DOUBLE PRECISION PRMASS(-NEXTERNAL:0,LMAXCONFIGS)
+      DOUBLE PRECISION PRWIDTH(-NEXTERNAL:0,LMAXCONFIGS)
+      INTEGER POW(-NEXTERNAL:0,LMAXCONFIGS)
+      DOUBLE PRECISION, PARAMETER :: ZERO = 0D0
+      COMMON/PROPS/PRMASS,PRWIDTH,POW
+      PRMASS(-1,1)  = ABS(MDL_MW)
+      PRWIDTH(-1,1) = ABS(MDL_WW)
+      POW(-1,1) = 2
+      PRMASS(-1,2)  = ABS(MDL_MW)
+      PRWIDTH(-1,2) = ABS(MDL_WW)
+      POW(-1,2) = 2
+      PRMASS(-1,3)  = ABS(MDL_MW)
+      PRWIDTH(-1,3) = ABS(MDL_WW)
+      POW(-1,3) = 2
+      PRMASS(-1,4)  = ABS(MDL_MW)
+      PRWIDTH(-1,4) = ABS(MDL_WW)
+      POW(-1,4) = 2
+      RETURN
+      END

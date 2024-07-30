@@ -1,0 +1,23 @@
+# do not use 'd' (as in fortran) for decimal exponents
+# center of mass energy
+ecm = 1e4
+# minimum rapidity such that y(mu+) > ymin
+#   and y(mu-) < -ymin
+ymin = -1000
+# minimum invariant mass of mu+ mu-
+mllmin = 200e0
+# maximum abs(rap) for top/antitop
+ymaxtop = -1
+# 1 for muf=sqrt(shat), 0 for muf = ecm, -1 for fixed scale
+imuf = -1
+#fixed scale value
+fixscale = 50.
+# convolve muon PDF (0 muon PDF delta, 1 muon PDF as in mupdf)
+photonpdf = 0
+convolvemuon = 0 
+# include same-flavour contribution (only in mu+ mu- > t t~ mu+ mu- ME)
+sameflav = 1
+# techincal parameter for subtraction
+deltai = 2
+deltaib = 2
+tinycoll = 1e-8
