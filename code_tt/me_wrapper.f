@@ -170,7 +170,6 @@ C (1-y1), possibly approximated in the collinear limit(s)
       !!! note that xi are different in the various kinematics
       integer icoll
       double precision y1,y2,omy1,omy2,xi1(4),xi2(4),ph1,ph2 
-      integer icoll
       double precision ans, ansk1, ansk2, ansk12
       double precision ans_splitorders(0:99)
       integer max_sc_vectors
@@ -258,7 +257,6 @@ C (1-y2), possibly approximated in the collinear limit(s)
       !!! note that xi are different in the various kinematics
       integer icoll
       double precision y1,y2,omy1,omy2,xi1(4),xi2(4),ph1,ph2 
-      integer icoll
       double precision ans, ansk1, ansk2, ansk12
       double precision ans_splitorders(0:99)
       integer max_sc_vectors
