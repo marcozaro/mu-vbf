@@ -9,8 +9,9 @@ C    check momentum conservation and on-shell relations
       integer i, j
       double precision dot
       external dot
-      include 'coupl.inc'
-      mass = mdl_mt
+      double precision mfin
+      common /to_mfin/mfin
+      mass = mfin
 
       etot = pp(0,1) + pp(0,2)
 

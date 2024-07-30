@@ -198,7 +198,7 @@
 
       if (use_emela) then
         ps_expo = get_ee_expo()
-        call elpdfq2(0, 13, x, omx, dsqrt(q2), 1d0-ps_expo, mupdf)
+        !call elpdfq2(0, 13, x, omx, dsqrt(q2), 1d0-ps_expo, mupdf)
       else
         mupdf = eepdf_tilde(x,Q2,1,13,13)
         k_exp = eepdf_tilde_power(Q2,1,13,13)
@@ -243,7 +243,7 @@
         gampdf = dble(gal(1)**2)/8d0/pi**2*
      &           (2-2d0*x+x*x)*(dlog(q2/mdl_mm**2)-2d0*dlog(x)-1)
       else if (photonpdf.ge.10000.and.use_emela) then
-        call elpdfq2(0, 22, x, omx, q2, 1d0, gampdf)
+        !call elpdfq2(0, 22, x, omx, q2, 1d0, gampdf)
         gampdf = gampdf*x
       endif
 

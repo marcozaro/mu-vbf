@@ -11,7 +11,7 @@
       logical fill_histos
       common /to_fill_histos/fill_histos
 
-      mfin = mdl_mt
+      include 'mfin.inc'
       mmin = 2d0*mfin
 
       integrand = 0d0

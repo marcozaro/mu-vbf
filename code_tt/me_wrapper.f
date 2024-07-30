@@ -168,6 +168,7 @@ C (1-y1), possibly approximated in the collinear limit(s)
       ! 3-> single resolved collinear emission (y2=1)<-
       ! 4-> no resolved collinear emission (y1=y2=1)<-
       !!! note that xi are different in the various kinematics
+      integer icoll
       double precision y1,y2,omy1,omy2,xi1(4),xi2(4),ph1,ph2 
       integer icoll
       double precision ans, ansk1, ansk2, ansk12
@@ -255,6 +256,7 @@ C (1-y2), possibly approximated in the collinear limit(s)
       ! 3-> single resolved collinear emission (y2=1)
       ! 4-> no resolved collinear emission (y1=y2=1)<-
       !!! note that xi are different in the various kinematics
+      integer icoll
       double precision y1,y2,omy1,omy2,xi1(4),xi2(4),ph1,ph2 
       integer icoll
       double precision ans, ansk1, ansk2, ansk12
