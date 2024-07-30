@@ -64,8 +64,8 @@ Block yukawa
 ## INFORMATION FOR DECAY
 ###################################
 DECAY   6 0.000000e+00 # WT 
-DECAY  23 2.428230e+00 # WZ 
-DECAY  24 2.028440e+00 # WW 
+DECAY  23 0.000000e+00 # WZ 
+DECAY  24 0.000000e+00 # WW 
 DECAY  25 3.514960e-03 # WH 
 ## Dependent parameters, given by model restrictions.
 ## Those values should be edited following the 
