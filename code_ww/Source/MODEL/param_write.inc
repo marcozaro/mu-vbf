@@ -12,6 +12,7 @@ ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
       WRITE(*,*) 'mdl_ymt = ', MDL_YMT
       WRITE(*,*) 'mdl_MZ = ', MDL_MZ
       WRITE(*,*) 'mdl_MT = ', MDL_MT
+      WRITE(*,*) 'mdl_MM = ', MDL_MM
       WRITE(*,*) 'mdl_MH = ', MDL_MH
       WRITE(*,*) 'mdl_WZ = ', MDL_WZ
       WRITE(*,*) 'mdl_WW = ', MDL_WW

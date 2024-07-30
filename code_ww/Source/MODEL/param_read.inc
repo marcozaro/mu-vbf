@@ -9,6 +9,7 @@ ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
       CALL MP_LHA_GET_REAL(NPARA,PARAM,VALUE,'aEWM1',MP__AEWM1
      $ ,1.325070E+02_16)
       CALL LHA_GET_REAL(NPARA,PARAM,VALUE,'mdl_MW',MDL_MW,8.041900D+01)
+      CALL LHA_GET_REAL(NPARA,PARAM,VALUE,'mdl_MM',MDL_MM,0.105658d0)
       CALL MP_LHA_GET_REAL(NPARA,PARAM,VALUE,'mdl_MW',MP__MDL_MW
      $ ,8.041900E+01_16)
       CALL LHA_GET_REAL(NPARA,PARAM,VALUE,'aS',AS,1.180000D-01)
