@@ -11,6 +11,7 @@ else
   FFLAGS+= -ffixed-line-length-132
   FC=gfortran
 endif
+FFLAGS+= -fallow-argument-mismatch
 
 include makeinc.inc
 
