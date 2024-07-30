@@ -1,1 +1,1 @@
-../../code_tt/Source/coupl.inc
+MODEL/coupl.inc
