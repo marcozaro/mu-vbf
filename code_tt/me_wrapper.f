@@ -156,7 +156,7 @@ C (1-y1)*(1-y2), possibly approximated in the collinear limit(s)
       end
 
 
-      subroutine compute_me_singlereal1a(p,y1,y2,omy1,omy2,xi1,xi2,ph1,ph2,ans)
+      subroutine compute_me_singlereal1a(p,icoll,y1,y2,omy1,omy2,xi1,xi2,ph1,ph2,ans)
 C returns the matrix element for the mu+gamma single real emission times
 C (1-y1), possibly approximated in the collinear limit(s)
       implicit none
@@ -168,6 +168,7 @@ C (1-y1), possibly approximated in the collinear limit(s)
       ! 3-> single resolved collinear emission (y2=1)<-
       ! 4-> no resolved collinear emission (y1=y2=1)<-
       !!! note that xi are different in the various kinematics
+      integer icoll
       double precision y1,y2,omy1,omy2,xi1(4),xi2(4),ph1,ph2 
       double precision ans, ansk1, ansk2, ansk12
       double precision ans_splitorders(0:99)
@@ -230,8 +231,8 @@ C (1-y1), possibly approximated in the collinear limit(s)
           call SMATRIX_SPLITORDERS_1(p_pass,ANS_splitorders)
           ansk1 = ans_splitorders(0)
           call reset_spin_correlation_vectors_1()
-          ksq1 = -xi1(3)*shat/2d0
-          z1 = 1d0 - xi1(3)
+          ksq1 = -xi1(icoll)*shat/2d0
+          z1 = 1d0 - xi1(icoll)
           ans = alp8pi/-ksq1*(z1*ans+ansk1*4d0*(1d0-z1)/z1)/z1
           !ans = alp8pi/-ksq1*((1+(1-z1)**2)/z1*ans)/z1
           !
@@ -242,7 +243,7 @@ C (1-y1), possibly approximated in the collinear limit(s)
 
 
 
-      subroutine compute_me_singlereal1b(p,y1,y2,omy1,omy2,xi1,xi2,ph1,ph2,ans)
+      subroutine compute_me_singlereal1b(p,icoll,y1,y2,omy1,omy2,xi1,xi2,ph1,ph2,ans)
 C returns the matrix element for the gamma-mu- single real emission times
 C (1-y2), possibly approximated in the collinear limit(s)
       implicit none
@@ -254,6 +255,7 @@ C (1-y2), possibly approximated in the collinear limit(s)
       ! 3-> single resolved collinear emission (y2=1)<-
       ! 4-> no resolved collinear emission (y1=y2=1)<-
       !!! note that xi are different in the various kinematics
+      integer icoll
       double precision y1,y2,omy1,omy2,xi1(4),xi2(4),ph1,ph2 
       double precision ans, ansk1, ansk2, ansk12
       double precision ans_splitorders(0:99)
@@ -313,8 +315,8 @@ C (1-y2), possibly approximated in the collinear limit(s)
           call SMATRIX_SPLITORDERS_1(p_pass,ANS_splitorders)
           ansk2 = ans_splitorders(0)
           call reset_spin_correlation_vectors_1()
-          ksq2 = -xi2(2)*shat/2d0
-          z2 = 1d0 - xi2(2)
+          ksq2 = -xi2(icoll)*shat/2d0
+          z2 = 1d0 - xi2(icoll)
           ans = alp8pi/-ksq2*(z2*ans+ansk2*4d0*(1d0-z2)/z2)/z2
           !
       endif
@@ -481,7 +483,7 @@ C returns the matrix element for the gamma-gamma born term
         ! both for cuts and for the analysis
         call boost_to_lab_frame(p1a(0,1,icoll),p_an,ycm)
         if (passcuts(p_an,pdgs,istatus)) then 
-          call compute_me_singlereal1a(p1a,y1(icoll),y2(icoll),omy1(icoll),omy2(icoll),xi1,
+          call compute_me_singlereal1a(p1a,icoll,y1(icoll),y2(icoll),omy1(icoll),omy2(icoll),xi1,
      &                             xi2,ph1(icoll),ph2(icoll),me(icoll))
 
           if (fill_histos) then
@@ -557,7 +559,7 @@ C returns the matrix element for the gamma-gamma born term
         ! both for cuts and for the analysis
         call boost_to_lab_frame(p1b(0,1,icoll),p_an,ycm)
         if (passcuts(p_an,pdgs,istatus)) then 
-          call compute_me_singlereal1b(p1b,y1(icoll),y2(icoll),omy1(icoll),omy2(icoll),xi1,
+          call compute_me_singlereal1b(p1b,icoll,y1(icoll),y2(icoll),omy1(icoll),omy2(icoll),xi1,
      &                             xi2,ph1(icoll),ph2(icoll),me(icoll))
 
           if (fill_histos) then
