@@ -1,6 +1,6 @@
 # do not use 'd' (as in fortran) for decimal exponents
 # center of mass energy
-ecm = 1e4
+ecm = 1e3
 # minimum rapidity such that y(mu+) > ymin
 #   and y(mu-) < -ymin
 ymin = -1000
