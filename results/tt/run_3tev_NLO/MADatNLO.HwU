@@ -1,4 +1,4 @@
-##& xmin & xmax & central value & dy & delta_mu_cen 10 @aux & delta_mu_min 10 @aux & delta_mu_max 10 @aux & dyn=10 muR= 1.000 muF= 1.000 & dyn=10 muR= 2.000 muF= 1.000 & dyn=10 muR= 0.500 muF= 1.000 & dyn=10 muR= 1.000 muF= 2.000 & dyn=10 muR= 2.000 muF= 2.000 & dyn=10 muR= 0.500 muF= 2.000 & dyn=10 muR= 1.000 muF= 0.500 & dyn=10 muR= 2.000 muF= 0.500 & dyn=10 muR= 0.500 muF= 0.500
+#& xmin & xmax & central value & dy & delta_mu_cen 10 @aux & delta_mu_min 10 @aux & delta_mu_max 10 @aux & dyn=10 muR= 1.000 muF= 1.000 & dyn=10 muR= 2.000 muF= 1.000 & dyn=10 muR= 0.500 muF= 1.000 & dyn=10 muR= 1.000 muF= 2.000 & dyn=10 muR= 2.000 muF= 2.000 & dyn=10 muR= 0.500 muF= 2.000 & dyn=10 muR= 1.000 muF= 0.500 & dyn=10 muR= 2.000 muF= 0.500 & dyn=10 muR= 0.500 muF= 0.500
 
 <histogram> 5 "total rate |X_AXIS@LIN |Y_AXIS@LOG |TYPE@NLO|#1"
   +5.0000000e-01   +1.5000000e+00   -3.2439249e-03   +8.1278664e-06  -3.2439249e-03   -4.4875307e-03   -2.1538859e-03   -3.2439249e-03   -3.2439249e-03   -3.2439249e-03   -4.4875307e-03   -4.4875307e-03   -4.4875307e-03   -2.1538859e-03   -2.1538859e-03   -2.1538859e-03
