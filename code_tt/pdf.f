@@ -183,7 +183,8 @@
         if (x.lt.1d0+tolerance) then
           x=1d0
         else
-          write(*,*) 'ERROR in generate_x_ee', rnd, x
+          write(*,*) 'ERROR in generate_x_gam', rnd, x
+          call backtrace()
           stop 1
         endif
       endif

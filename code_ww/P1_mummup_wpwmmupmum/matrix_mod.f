@@ -572,14 +572,14 @@ C     Amplitude(s) for diagram number 4
 C     Amplitude(s) for diagram number 5
       CALL FFV2_0(W(1,7),W(1,12),W(1,11),GC_80,AMP(5))
       CALL FFV1P0_3(W(1,5),W(1,6),GC_3,ZERO,ZERO,W(1,13))
-      if (.not.sameflav_diags) w(:,13) = dcmplx(0d0,0d0)
+      if (.not.sameflav_diags) w(3:,13) = dcmplx(0d0,0d0)
 C     Amplitude(s) for diagram number 6
       CALL FFV1_0(W(1,9),W(1,2),W(1,13),GC_3,AMP(6))
       CALL FFV2P0_3(W(1,7),W(1,2),GC_67,MDL_MW,MDL_WW,W(1,14))
 C     Amplitude(s) for diagram number 7
       CALL VVV1_0(W(1,13),W(1,14),W(1,3),GC_4,AMP(7))
       CALL FFV2_4P0_3(W(1,5),W(1,6),GC_68,GC_77,MDL_MZ,MDL_WZ,W(1,15))
-      if (.not.sameflav_diags) w(:,15) = dcmplx(0d0,0d0)
+      if (.not.sameflav_diags) w(3:,15) = dcmplx(0d0,0d0)
 C     Amplitude(s) for diagram number 8
       CALL FFV2_4_0(W(1,9),W(1,2),W(1,15),GC_68,GC_77,AMP(8))
 C     Amplitude(s) for diagram number 9
@@ -592,7 +592,7 @@ C     Amplitude(s) for diagram number 11
 C     Amplitude(s) for diagram number 12
       CALL FFV2_0(W(1,5),W(1,12),W(1,14),GC_67,AMP(12))
       CALL FFV1P0_3(W(1,1),W(1,2),GC_3,ZERO,ZERO,W(1,14))
-      if (.not.sameflav_diags) w(:,14) = dcmplx(0d0,0d0)
+      if (.not.sameflav_diags) w(3:,14) = dcmplx(0d0,0d0)
       CALL FFV2_2(W(1,5),W(1,4),GC_67,ZERO,ZERO,W(1,10))
       CALL VVV1P0_2(W(1,14),W(1,3),GC_4,MDL_MW,MDL_WW,W(1,7))
 C     Amplitude(s) for diagram number 13
@@ -601,7 +601,7 @@ C     Amplitude(s) for diagram number 13
 C     Amplitude(s) for diagram number 14
       CALL FFV2_0(W(1,10),W(1,16),W(1,3),GC_67,AMP(14))
       CALL FFV2_4P0_3(W(1,1),W(1,2),GC_68,GC_77,MDL_MZ,MDL_WZ,W(1,17))
-      if (.not.sameflav_diags) w(:,17) = dcmplx(0d0,0d0)
+      if (.not.sameflav_diags) w(3:,17) = dcmplx(0d0,0d0)
       CALL VVV1P0_1(W(1,3),W(1,17),GC_71,MDL_MW,MDL_WW,W(1,18))
 C     Amplitude(s) for diagram number 15
       CALL FFV2_0(W(1,10),W(1,6),W(1,18),GC_67,AMP(15))
