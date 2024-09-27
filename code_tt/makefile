@@ -8,7 +8,7 @@ LINKLIBS_ME =  -Llib/ -ldhelas -lmodel
 
 emela = /home/mg_user/private_MG5/eMELA_muon_install/bin/eMELA-config
 lhapdf = lhapdf-config
-#LIBEMELA = $(shell $(emela) --ldflags) $(shell $(lhapdf) --ldflags) -lstdc++
+LIBEMELA = $(shell $(emela) --ldflags) $(shell $(lhapdf) --ldflags) -lstdc++
  
 
 
