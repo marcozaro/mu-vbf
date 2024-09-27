@@ -838,6 +838,10 @@ C     Amplitude(s) for diagram number 113
 C     Amplitude(s) for diagram number 114
       CALL VVV1_0(W(1,4),W(1,23),W(1,15),GC_71,AMP(114))
 
+      ! amplitudes with t-channel neutrino
+      if (.not.sameflav_diags) amp(12) = dcmplx(0d0,0d0)
+      if (.not.sameflav_diags) amp(89) = dcmplx(0d0,0d0)
+
 C     JAMPs contributing to orders QCD=3 QED=1
       JAMP(1,1)=+AMP(39)+AMP(40)-AMP(77)-AMP(78)-AMP(91)-AMP(92)+AMP
      $ (103)+AMP(104)
