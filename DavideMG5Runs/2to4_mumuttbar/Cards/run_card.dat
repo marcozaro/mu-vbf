@@ -18,7 +18,7 @@
 #*********************************************************************
 # Tag name for the run (one word)                                    *
 #*********************************************************************
-  tag_1	= run_tag ! name of the run 
+  tag_2	= run_tag ! name of the run 
 #*********************************************************************
 # Number of events and rnd seed                                      *
 # Warning: Do not generate more than 1M events in a single run       *
@@ -52,8 +52,8 @@
 #          chff=ChFF in gamma-UPC            [eq.(13) in 2207.03012] *
 #          none=No PDF, same as lhapdf with lppx=0                   *
 #*********************************************************************
-     none    = pdlabel1     ! PDF type for beam #1
-     none    = pdlabel2     ! PDF type for beam #2
+  none	= pdlabel1 ! PDF type for beam #1
+  none	= pdlabel2 ! PDF type for beam #2
   230000	= lhaid ! if pdlabel=lhapdf, this is the lhapdf number
 # To see heavy ion options: type "update ion_pdf"
 #*********************************************************************
