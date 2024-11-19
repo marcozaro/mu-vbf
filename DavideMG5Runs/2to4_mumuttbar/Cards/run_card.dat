@@ -52,8 +52,8 @@
 #          chff=ChFF in gamma-UPC            [eq.(13) in 2207.03012] *
 #          none=No PDF, same as lhapdf with lppx=0                   *
 #*********************************************************************
-  none	= pdlabel1 ! PDF type for beam #1
-  none	= pdlabel2 ! PDF type for beam #2
+     none    = pdlabel1     ! PDF type for beam #1
+     none    = pdlabel2     ! PDF type for beam #2
   230000	= lhaid ! if pdlabel=lhapdf, this is the lhapdf number
 # To see heavy ion options: type "update ion_pdf"
 #*********************************************************************
@@ -86,7 +86,22 @@
   1	= sde_strategy ! default integration strategy (hep-ph/2021.00773)
                              ! 1 is old strategy (using amp square)
 			     ! 2 is new strategy (using only the denominator)
-# To see advanced option for Phase-Space optimization: type "update psoptim"			     
+#*********************************************************************
+# Phase-Space Optim (advanced)
+#*********************************************************************
+   0 = job_strategy ! see appendix of 1507.00020 (page 26)
+   3 =  hard_survey ! force to have better estimate of the integral at survey for difficult mode like interference
+   -1.0 = tmin_for_channel ! limit the non-singular reach of --some-- channel of integration related to T-channel diagram (value between -1 and 0), -1 is no impact
+   -1 = survey_splitting ! for loop-induced control how many core are used at survey for the computation of a single iteration.
+   2 = survey_nchannel_per_job ! control how many Channel are integrated inside a single job on cluster/multicore
+   -1 = refine_evt_by_job ! control the maximal number of events for the first iteration of the refine (larger means less jobs)
+#*********************************************************************
+# Compilation flag. No automatic re-compilation (need manual "make clean" in Source)
+#*********************************************************************   
+   -O = global_flag ! fortran optimization flag use for the all code.
+     = aloha_flag ! fortran optimization flag for aloha function. Suggestions: '-ffast-math'
+    = matrix_flag ! fortran optimization flag for matrix.f function. Suggestions: '-O3'
+			     
 #*********************************************************************
 # Customization (custom cuts/scale/bias/...)                         *
 # list of files containing fortran function that overwrite default   *
