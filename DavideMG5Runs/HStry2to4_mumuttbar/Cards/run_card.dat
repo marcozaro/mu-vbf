@@ -90,7 +90,7 @@
 # Phase-Space Optim (advanced)
 #*********************************************************************
    0 = job_strategy ! see appendix of 1507.00020 (page 26)
-   9 =  hard_survey ! force to have better estimate of the integral at survey for difficult mode like interference
+   1 =  hard_survey ! force to have better estimate of the integral at survey for difficult mode like interference
    -1.0 = tmin_for_channel ! limit the non-singular reach of --some-- channel of integration related to T-channel diagram (value between -1 and 0), -1 is no impact
    -1 = survey_splitting ! for loop-induced control how many core are used at survey for the computation of a single iteration.
    2 = survey_nchannel_per_job ! control how many Channel are integrated inside a single job on cluster/multicore
