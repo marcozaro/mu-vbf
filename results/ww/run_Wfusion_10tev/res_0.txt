@@ -1,0 +1,31 @@
+
+
+Cross section per integration channel:
+ P0_mupmum_wpwmvmvmx                2   3.32473526e-01    2.4360e-03       0.7327%  
+ P0_mupmum_wpwmvmvmx                3   2.72592006e-02    5.9574e-04       2.1855%  
+ P0_mupmum_wpwmvevex                2   1.26008056e-03    3.4444e-05       2.7335%  
+ P0_mupmum_wpwmvmvmx                1   1.42533458e-04    1.1918e-06       0.8361%  
+ P0_mupmum_wpwmvevex                1   1.25801345e-04    1.0199e-06       0.8107%  
+
+
+ABS cross section per integration channel:
+ P0_mupmum_wpwmvmvmx                2   3.32473526e-01    2.4360e-03       0.7327%  
+ P0_mupmum_wpwmvmvmx                3   2.72592006e-02    5.9574e-04       2.1855%  
+ P0_mupmum_wpwmvevex                2   1.26008056e-03    3.4444e-05       2.7335%  
+ P0_mupmum_wpwmvmvmx                1   1.42533458e-04    1.1918e-06       0.8361%  
+ P0_mupmum_wpwmvevex                1   1.25801345e-04    1.0199e-06       0.8107%  
+
+
+ABS cross section per dir
+ P0_mupmum_wpwmvmvmx   3.59875261e-01    2.5078e-03 
+ P0_mupmum_wpwmvevex   1.38588191e-03    3.4459e-05 
+
+
+Cross section per dir
+ P0_mupmum_wpwmvmvmx   3.59875261e-01    2.5078e-03 
+ P0_mupmum_wpwmvevex   1.38588191e-03    3.4459e-05 
+
+Total ABS and 
+Total: 
+                      3.61261142e-01 +- 2.5081e-03  (6.9425e-01%)
+                      3.61261142e-01 +- 2.5081e-03  (6.9425e-01%) 
