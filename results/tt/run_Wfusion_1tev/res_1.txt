@@ -1,0 +1,165 @@
+
+
+Cross section per integration channel:
+  P0_mupmum_ttxvmvmx                1   2.12312173e-05    1.0442e-06       4.9183%  
+  P0_mupmum_ttxvmvmx                1   2.03577763e-05    6.9920e-07       3.4346%  
+  P0_mupmum_ttxvmvmx                1   2.03282092e-05    4.4365e-07       2.1825%  
+  P0_mupmum_ttxvmvmx                1   1.93359095e-05    4.0793e-07       2.1097%  
+  P0_mupmum_ttxvmvmx                1   1.97069502e-05    3.7698e-07       1.9129%  
+  P0_mupmum_ttxvmvmx                1   2.02254397e-05    3.6238e-07       1.7917%  
+  P0_mupmum_ttxvmvmx                1   2.03668753e-05    3.3382e-07       1.6390%  
+  P0_mupmum_ttxvmvmx                1   1.99890518e-05    3.2488e-07       1.6253%  
+  P0_mupmum_ttxvmvmx                1   1.95505835e-05    2.7975e-07       1.4309%  
+  P0_mupmum_ttxvmvmx                1   1.98503785e-05    2.7598e-07       1.3903%  
+  P0_mupmum_ttxvmvmx                1   1.95563414e-05    2.7338e-07       1.3979%  
+  P0_mupmum_ttxvmvmx                1   1.95159445e-05    2.6650e-07       1.3656%  
+  P0_mupmum_ttxvmvmx                1   1.96358275e-05    2.6277e-07       1.3382%  
+  P0_mupmum_ttxvmvmx                1   1.97860365e-05    2.5867e-07       1.3073%  
+  P0_mupmum_ttxvmvmx                1   1.99664344e-05    2.5238e-07       1.2640%  
+  P0_mupmum_ttxvmvmx                1   1.97291465e-05    2.4469e-07       1.2402%  
+  P0_mupmum_ttxvmvmx                1   1.94445545e-05    2.3735e-07       1.2207%  
+  P0_mupmum_ttxvmvmx                1   1.96376711e-05    2.3724e-07       1.2081%  
+  P0_mupmum_ttxvmvmx                1   1.95296107e-05    2.3691e-07       1.2131%  
+  P0_mupmum_ttxvmvmx                1   1.97003488e-05    2.2648e-07       1.1496%  
+  P0_mupmum_ttxvmvmx                1   1.96985789e-05    2.2455e-07       1.1399%  
+  P0_mupmum_ttxvmvmx                1   1.94843820e-05    2.1592e-07       1.1082%  
+  P0_mupmum_ttxvmvmx                1   1.95494354e-05    2.1291e-07       1.0891%  
+  P0_mupmum_ttxvmvmx                1   1.94815598e-05    2.1042e-07       1.0801%  
+  P0_mupmum_ttxvmvmx                2   9.11890219e-06    1.2222e-07       1.3403%  
+  P0_mupmum_ttxvmvmx                2   9.08502439e-06    1.1831e-07       1.3022%  
+  P0_mupmum_ttxvevex                1   2.52930788e-05    1.1202e-07       0.4429%  
+  P0_mupmum_ttxvevex                1   2.49543448e-05    1.1087e-07       0.4443%  
+  P0_mupmum_ttxvevex                1   2.50296832e-05    1.1047e-07       0.4413%  
+  P0_mupmum_ttxvevex                1   2.47871873e-05    1.0925e-07       0.4408%  
+  P0_mupmum_ttxvevex                1   2.48918142e-05    1.0910e-07       0.4383%  
+  P0_mupmum_ttxvevex                1   2.49055979e-05    1.0894e-07       0.4374%  
+  P0_mupmum_ttxvevex                1   2.50809139e-05    1.0887e-07       0.4341%  
+  P0_mupmum_ttxvevex                1   2.49518845e-05    1.0885e-07       0.4363%  
+  P0_mupmum_ttxvevex                1   2.50300990e-05    1.0881e-07       0.4347%  
+  P0_mupmum_ttxvevex                1   2.49437119e-05    1.0859e-07       0.4353%  
+  P0_mupmum_ttxvevex                1   2.50687470e-05    1.0849e-07       0.4328%  
+  P0_mupmum_ttxvevex                1   2.51609263e-05    1.0820e-07       0.4300%  
+  P0_mupmum_ttxvevex                1   2.50106287e-05    1.0818e-07       0.4325%  
+  P0_mupmum_ttxvevex                1   2.49667534e-05    1.0794e-07       0.4324%  
+  P0_mupmum_ttxvevex                1   2.50604626e-05    1.0789e-07       0.4305%  
+  P0_mupmum_ttxvevex                1   2.49047785e-05    1.0758e-07       0.4320%  
+  P0_mupmum_ttxvevex                1   2.47481263e-05    1.0723e-07       0.4333%  
+  P0_mupmum_ttxvevex                1   2.49636445e-05    1.0696e-07       0.4285%  
+  P0_mupmum_ttxvevex                1   2.49859707e-05    1.0692e-07       0.4279%  
+  P0_mupmum_ttxvevex                1   2.50116674e-05    1.0687e-07       0.4273%  
+  P0_mupmum_ttxvevex                1   2.49492315e-05    1.0649e-07       0.4268%  
+  P0_mupmum_ttxvevex                1   2.48836429e-05    1.0575e-07       0.4250%  
+  P0_mupmum_ttxvevex                1   2.48560613e-05    1.0521e-07       0.4233%  
+  P0_mupmum_ttxvevex                1   2.47034847e-05    1.0515e-07       0.4257%  
+  P0_mupmum_ttxvmvmx                2   9.07586625e-06    1.0336e-07       1.1389%  
+  P0_mupmum_ttxvmvmx                2   9.07970657e-06    9.4129e-08       1.0367%  
+  P0_mupmum_ttxvmvmx                2   9.02530354e-06    8.9334e-08       0.9898%  
+  P0_mupmum_ttxvmvmx                2   9.08946963e-06    8.9199e-08       0.9813%  
+  P0_mupmum_ttxvmvmx                2   9.05695478e-06    8.5245e-08       0.9412%  
+  P0_mupmum_ttxvmvmx                2   9.03366828e-06    6.7001e-08       0.7417%  
+  P0_mupmum_ttxvmvmx                2   8.96943616e-06    6.6913e-08       0.7460%  
+  P0_mupmum_ttxvmvmx                2   9.03376488e-06    6.0811e-08       0.6732%  
+  P0_mupmum_ttxvmvmx                2   9.02852919e-06    5.9023e-08       0.6537%  
+  P0_mupmum_ttxvmvmx                2   9.03894782e-06    5.7509e-08       0.6362%  
+  P0_mupmum_ttxvmvmx                2   9.01374147e-06    5.7079e-08       0.6332%  
+  P0_mupmum_ttxvmvmx                2   8.96941470e-06    5.5470e-08       0.6184%  
+  P0_mupmum_ttxvmvmx                2   8.91455932e-06    5.1700e-08       0.5800%  
+  P0_mupmum_ttxvmvmx                2   8.98002236e-06    5.0914e-08       0.5670%  
+  P0_mupmum_ttxvmvmx                2   8.99195443e-06    5.0104e-08       0.5572%  
+  P0_mupmum_ttxvmvmx                2   8.92733326e-06    4.9834e-08       0.5582%  
+  P0_mupmum_ttxvmvmx                2   8.96862145e-06    4.8414e-08       0.5398%  
+  P0_mupmum_ttxvmvmx                2   8.93031177e-06    4.7373e-08       0.5305%  
+  P0_mupmum_ttxvmvmx                2   8.94710145e-06    4.6175e-08       0.5161%  
+  P0_mupmum_ttxvmvmx                2   8.99288952e-06    4.6095e-08       0.5126%  
+  P0_mupmum_ttxvmvmx                2   8.97447657e-06    4.4532e-08       0.4962%  
+  P0_mupmum_ttxvmvmx                2   8.88053699e-06    4.1594e-08       0.4684%  
+
+
+ABS cross section per integration channel:
+  P0_mupmum_ttxvmvmx                1   2.12312173e-05    1.0442e-06       4.9183%  
+  P0_mupmum_ttxvmvmx                1   2.03577763e-05    6.9920e-07       3.4346%  
+  P0_mupmum_ttxvmvmx                1   2.03282092e-05    4.4365e-07       2.1825%  
+  P0_mupmum_ttxvmvmx                1   1.93359095e-05    4.0793e-07       2.1097%  
+  P0_mupmum_ttxvmvmx                1   1.97069502e-05    3.7698e-07       1.9129%  
+  P0_mupmum_ttxvmvmx                1   2.02254397e-05    3.6238e-07       1.7917%  
+  P0_mupmum_ttxvmvmx                1   2.03668753e-05    3.3382e-07       1.6390%  
+  P0_mupmum_ttxvmvmx                1   1.99890518e-05    3.2488e-07       1.6253%  
+  P0_mupmum_ttxvmvmx                1   1.95505835e-05    2.7975e-07       1.4309%  
+  P0_mupmum_ttxvmvmx                1   1.98503785e-05    2.7598e-07       1.3903%  
+  P0_mupmum_ttxvmvmx                1   1.95563414e-05    2.7338e-07       1.3979%  
+  P0_mupmum_ttxvmvmx                1   1.95159445e-05    2.6650e-07       1.3656%  
+  P0_mupmum_ttxvmvmx                1   1.96358275e-05    2.6277e-07       1.3382%  
+  P0_mupmum_ttxvmvmx                1   1.97860365e-05    2.5867e-07       1.3073%  
+  P0_mupmum_ttxvmvmx                1   1.99664344e-05    2.5238e-07       1.2640%  
+  P0_mupmum_ttxvmvmx                1   1.97291465e-05    2.4469e-07       1.2402%  
+  P0_mupmum_ttxvmvmx                1   1.94445545e-05    2.3735e-07       1.2207%  
+  P0_mupmum_ttxvmvmx                1   1.96376711e-05    2.3724e-07       1.2081%  
+  P0_mupmum_ttxvmvmx                1   1.95296107e-05    2.3691e-07       1.2131%  
+  P0_mupmum_ttxvmvmx                1   1.97003488e-05    2.2648e-07       1.1496%  
+  P0_mupmum_ttxvmvmx                1   1.96985789e-05    2.2455e-07       1.1399%  
+  P0_mupmum_ttxvmvmx                1   1.94843820e-05    2.1592e-07       1.1082%  
+  P0_mupmum_ttxvmvmx                1   1.95494354e-05    2.1291e-07       1.0891%  
+  P0_mupmum_ttxvmvmx                1   1.94815598e-05    2.1042e-07       1.0801%  
+  P0_mupmum_ttxvmvmx                2   9.11890219e-06    1.2222e-07       1.3403%  
+  P0_mupmum_ttxvmvmx                2   9.08502439e-06    1.1831e-07       1.3022%  
+  P0_mupmum_ttxvevex                1   2.52930788e-05    1.1202e-07       0.4429%  
+  P0_mupmum_ttxvevex                1   2.49543448e-05    1.1087e-07       0.4443%  
+  P0_mupmum_ttxvevex                1   2.50296832e-05    1.1047e-07       0.4413%  
+  P0_mupmum_ttxvevex                1   2.47871873e-05    1.0925e-07       0.4408%  
+  P0_mupmum_ttxvevex                1   2.48918142e-05    1.0910e-07       0.4383%  
+  P0_mupmum_ttxvevex                1   2.49055979e-05    1.0894e-07       0.4374%  
+  P0_mupmum_ttxvevex                1   2.50809139e-05    1.0887e-07       0.4341%  
+  P0_mupmum_ttxvevex                1   2.49518845e-05    1.0885e-07       0.4363%  
+  P0_mupmum_ttxvevex                1   2.50300990e-05    1.0881e-07       0.4347%  
+  P0_mupmum_ttxvevex                1   2.49437119e-05    1.0859e-07       0.4353%  
+  P0_mupmum_ttxvevex                1   2.50687470e-05    1.0849e-07       0.4328%  
+  P0_mupmum_ttxvevex                1   2.51609263e-05    1.0820e-07       0.4300%  
+  P0_mupmum_ttxvevex                1   2.50106287e-05    1.0818e-07       0.4325%  
+  P0_mupmum_ttxvevex                1   2.49667534e-05    1.0794e-07       0.4324%  
+  P0_mupmum_ttxvevex                1   2.50604626e-05    1.0789e-07       0.4305%  
+  P0_mupmum_ttxvevex                1   2.49047785e-05    1.0758e-07       0.4320%  
+  P0_mupmum_ttxvevex                1   2.47481263e-05    1.0723e-07       0.4333%  
+  P0_mupmum_ttxvevex                1   2.49636445e-05    1.0696e-07       0.4285%  
+  P0_mupmum_ttxvevex                1   2.49859707e-05    1.0692e-07       0.4279%  
+  P0_mupmum_ttxvevex                1   2.50116674e-05    1.0687e-07       0.4273%  
+  P0_mupmum_ttxvevex                1   2.49492315e-05    1.0649e-07       0.4268%  
+  P0_mupmum_ttxvevex                1   2.48836429e-05    1.0575e-07       0.4250%  
+  P0_mupmum_ttxvevex                1   2.48560613e-05    1.0521e-07       0.4233%  
+  P0_mupmum_ttxvevex                1   2.47034847e-05    1.0515e-07       0.4257%  
+  P0_mupmum_ttxvmvmx                2   9.07586625e-06    1.0336e-07       1.1389%  
+  P0_mupmum_ttxvmvmx                2   9.07970657e-06    9.4129e-08       1.0367%  
+  P0_mupmum_ttxvmvmx                2   9.02530354e-06    8.9334e-08       0.9898%  
+  P0_mupmum_ttxvmvmx                2   9.08946963e-06    8.9199e-08       0.9813%  
+  P0_mupmum_ttxvmvmx                2   9.05695478e-06    8.5245e-08       0.9412%  
+  P0_mupmum_ttxvmvmx                2   9.03366828e-06    6.7001e-08       0.7417%  
+  P0_mupmum_ttxvmvmx                2   8.96943616e-06    6.6913e-08       0.7460%  
+  P0_mupmum_ttxvmvmx                2   9.03376488e-06    6.0811e-08       0.6732%  
+  P0_mupmum_ttxvmvmx                2   9.02852919e-06    5.9023e-08       0.6537%  
+  P0_mupmum_ttxvmvmx                2   9.03894782e-06    5.7509e-08       0.6362%  
+  P0_mupmum_ttxvmvmx                2   9.01374147e-06    5.7079e-08       0.6332%  
+  P0_mupmum_ttxvmvmx                2   8.96941470e-06    5.5470e-08       0.6184%  
+  P0_mupmum_ttxvmvmx                2   8.91455932e-06    5.1700e-08       0.5800%  
+  P0_mupmum_ttxvmvmx                2   8.98002236e-06    5.0914e-08       0.5670%  
+  P0_mupmum_ttxvmvmx                2   8.99195443e-06    5.0104e-08       0.5572%  
+  P0_mupmum_ttxvmvmx                2   8.92733326e-06    4.9834e-08       0.5582%  
+  P0_mupmum_ttxvmvmx                2   8.96862145e-06    4.8414e-08       0.5398%  
+  P0_mupmum_ttxvmvmx                2   8.93031177e-06    4.7373e-08       0.5305%  
+  P0_mupmum_ttxvmvmx                2   8.94710145e-06    4.6175e-08       0.5161%  
+  P0_mupmum_ttxvmvmx                2   8.99288952e-06    4.6095e-08       0.5126%  
+  P0_mupmum_ttxvmvmx                2   8.97447657e-06    4.4532e-08       0.4962%  
+  P0_mupmum_ttxvmvmx                2   8.88053699e-06    4.1594e-08       0.4684%  
+
+
+ABS cross section per dir
+  P0_mupmum_ttxvmvmx   6.91784800e-04    1.8761e-06 
+  P0_mupmum_ttxvevex   5.99142441e-04    5.2969e-07 
+
+
+Cross section per dir
+  P0_mupmum_ttxvmvmx   6.91784800e-04    1.8761e-06 
+  P0_mupmum_ttxvevex   5.99142441e-04    5.2969e-07 
+
+Total ABS and 
+Total: 
+                      1.29092724e-03 +- 1.9494e-06  (1.5101e-01%)
+                      1.29092724e-03 +- 1.9494e-06  (1.5101e-01%) 

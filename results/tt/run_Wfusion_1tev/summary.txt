@@ -1,0 +1,11 @@
+
+   --------------------------------------------------------------
+      Final results and run summary:
+      Process mu+ mu- > t t~ vl vl~ [LOonly=QED]
+      Run at mu+-mu- collider (500.0 + 500.0 GeV)
+      Total cross section: 1.290e-03 +- 3.0e-07 pb
+   --------------------------------------------------------------
+      Scale variation (computed from histogram information):
+          Dynamical_scale_choice 10 (envelope of 9 values): 
+              1.290e-03 pb  +0.3% -0.0%
+   --------------------------------------------------------------

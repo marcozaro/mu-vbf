@@ -1,0 +1,69 @@
+
+   --------------------------------------------------------------
+      Final results and run summary:
+      Process mu+ mu- > w+ w- vl vl~ [LOonly=QED]
+      Run at mu+-mu- collider (1500.0 + 1500.0 GeV)
+      Total cross section: 1.265e-01 +- 1.2e-05 pb
+   --------------------------------------------------------------
+      Scale variation (computed from histogram information):
+          Dynamical_scale_choice 10 (envelope of 9 values): 
+              1.265e-01 pb  +1.0% -0.4%
+   --------------------------------------------------------------
+
+
+
+  Statistics on virtual integration optimization : 
+  Could not find statistics on the integration optimization. 
+
+  Inclusive timing profile :
+    Overall slowest channel          9:29:11 (P0_mupmum_wpwmvmvmx/all_G2_160 [step 3])
+    Average channel running time     4:38:42
+    Aggregated total running time    140 days, 12:17:06
+  Timing profile for <Nbody_prefactor> :
+    Overall fraction of time         64.447 %
+    Largest fraction of time         78.406 % (P0_mupmum_wpwmvmvmx/all_G1 [step 0])
+    Smallest fraction of time        56.679 % (P0_mupmum_wpwmvevex/all_G1_3 [step 1])
+  Timing profile for <Reweight_scale> :
+    Overall fraction of time         14.480 %
+    Largest fraction of time         20.262 % (P0_mupmum_wpwmvevex/all_G1_1 [step 1])
+    Smallest fraction of time        0.000 % (P0_mupmum_wpwmvevex/all_G1 [step 0])
+  Timing profile for <Adding_alphas_pdf> :
+    Overall fraction of time         5.594 %
+    Largest fraction of time         10.103 % (P0_mupmum_wpwmvevex/all_G1 [step 0])
+    Smallest fraction of time        5.374 % (P0_mupmum_wpwmvmvmx/all_G2_58 [step 3])
+  Timing profile for <Other_tasks> :
+    Overall fraction of time         4.880 %
+    Largest fraction of time         6.554 % (P0_mupmum_wpwmvmvmx/all_G2_171 [step 3])
+    Smallest fraction of time        4.072 % (P0_mupmum_wpwmvmvmx/all_G1 [step 0])
+  Timing profile for <Born> :
+    Overall fraction of time         4.517 %
+    Largest fraction of time         5.499 % (P0_mupmum_wpwmvmvmx/all_G3 [step 0])
+    Smallest fraction of time        4.024 % (P0_mupmum_wpwmvmvmx/all_G2_161 [step 3])
+  Timing profile for <Filling_plots> :
+    Overall fraction of time         2.798 %
+    Largest fraction of time         3.041 % (P0_mupmum_wpwmvmvmx/all_G2_163 [step 3])
+    Smallest fraction of time        1.406 % (P0_mupmum_wpwmvevex/all_G2_22 [step 1])
+  Timing profile for <PS_Generation> :
+    Overall fraction of time         2.340 %
+    Largest fraction of time         3.870 % (P0_mupmum_wpwmvevex/all_G2 [step 0])
+    Smallest fraction of time        2.223 % (P0_mupmum_wpwmvmvmx/all_G2_385 [step 3])
+  Timing profile for <Applying_cuts> :
+    Overall fraction of time         0.557 %
+    Largest fraction of time         0.949 % (P0_mupmum_wpwmvevex/all_G2 [step 0])
+    Smallest fraction of time        0.507 % (P0_mupmum_wpwmvmvmx/all_G2_53 [step 2])
+  Timing profile for <AlphaS_dependencies> :
+    Overall fraction of time         0.387 %
+    Largest fraction of time         0.673 % (P0_mupmum_wpwmvevex/all_G2 [step 0])
+    Smallest fraction of time        0.342 % (P0_mupmum_wpwmvmvmx/all_G3_4 [step 1])
+  Zero time record for Reals_evaluation.
+  Zero time record for MCsubtraction.
+  Zero time record for Counter_terms.
+  Zero time record for Integrated_CT.
+  Zero time record for Virtuals.
+  Zero time record for FxFx_cluster.
+  Zero time record for N1body_prefactor.
+  Zero time record for Reweight_pdf.
+  Zero time record for Sum_ident_contr.
+  Zero time record for Pick_unwgt.
+  Zero time record for Write_events.
+  Zero time record for EW_sudakov.
