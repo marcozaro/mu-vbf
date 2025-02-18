@@ -112,8 +112,8 @@
   0.0	= misset ! minimum missing Et (sum of neutrino's momenta)
   -1.0	= ptlmax ! maximum pt for the charged leptons
   -1.0	= missetmax ! maximum missing Et (sum of neutrino's momenta)
-#  {16:150}	= pt_min_pdg ! pt cut for other particles (use pdg code). Applied on particle and anti-particle
-  {'16': 0.0}	= pt_min_pdg ! pt cut for other particles (use pdg code). Applied on particle and anti-particle
+#  {24:150}	= pt_min_pdg ! pt cut for other particles (use pdg code). Applied on particle and anti-particle
+  {'24': 150.0}	= pt_min_pdg ! pt cut for other particles (use pdg code). Applied on particle and anti-particle
   {}	= pt_max_pdg ! pt cut for other particles (syntax e.g. {6: 100, 25: 50}) 
 #
 # For display option for energy cut in the partonic center of mass frame type 'update ecut'
@@ -124,8 +124,8 @@
   -1.0	= etal ! max rap for the charged leptons 
   0.0	= etalmin ! main rap for the charged leptons
   {}	= eta_min_pdg ! rap cut for other particles (use pdg code). Applied on particle and anti-particle
-#  {16:2.5}	= eta_max_pdg ! rap cut for other particles (syntax e.g. {6: 2.5, 23: 5})
-  {'16': -1.0}	= eta_max_pdg ! rap cut for other particles (syntax e.g. {6: 2.5, 23: 5})
+#  {24:2.5}	= eta_max_pdg ! rap cut for other particles (syntax e.g. {6: 2.5, 23: 5})
+  {'24': -1.0}	= eta_max_pdg ! rap cut for other particles (syntax e.g. {6: 2.5, 23: 5})
 #*********************************************************************
 # Minimum and maximum DeltaR distance                                *
 #*********************************************************************
@@ -136,7 +136,8 @@
 #*********************************************************************
   0.0	= mmll ! min invariant mass of l+l- (same flavour) lepton pair
   -1.0	= mmllmax ! max invariant mass of l+l- (same flavour) lepton pair
-  {'16': 200.0}	= mxx_min_pdg ! min invariant mass of a pair of particles X/X~ (e.g. {6:250})
+#  {'24': 0.0}        = mxx_min_pdg ! min invariant mass of a pair of particles X/X~ (e.g. {6:250})
+  {'24': 0.0}	= mxx_min_pdg ! min invariant mass of a pair of particles X/X~ (e.g. {6:250})
   {'default': False}	= mxx_only_part_antipart ! if True the invariant mass is applied only 
                        ! to pairs of particle/antiparticle and not to pairs of the same pdg codes.  
  #*********************************************************************

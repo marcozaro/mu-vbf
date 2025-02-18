@@ -66,11 +66,11 @@ Block yukawa
 ###################################
 ## INFORMATION FOR DECAY
 ###################################
-DECAY   6 0e+00 # 1.508336e+00 # WT 
-DECAY  15 0e+00 # 2.270000e-12 # WTau 
-DECAY  23 0e+00 # 2.441404e+00 # WZ 
-DECAY  24 0e+00 # 2.047600e+00 # WW 
-DECAY  25 0e+00 # 6.382339e-03 # WH 
+DECAY   6 1.508336e+00 # WT 
+DECAY  15 2.270000e-12 # WTau 
+DECAY  23 2.441404e+00 # WZ 
+DECAY  24 2.047600e+00 # WW 
+DECAY  25 6.382339e-03 # WH 
 ## Dependent parameters, given by model restrictions.
 ## Those values should be edited following the 
 ## analytical expression. MG5 ignores those values 
