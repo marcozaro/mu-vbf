@@ -1,86 +1,110 @@
-      subroutine get_lum(ilum,rnd,scoll,smin,jac,lum,tau,ycm,x1,x2)
+      subroutine get_xbk(ilum,rnd,scoll,smin,jac,tau,ycm,xbk,omxbk)
       ! ilum = 1 -> mu+ mu-
       ! ilum = 2 -> gamma mu-
       ! ilum = 3 -> mu+ gamma
       ! ilum = 4 -> gamma gamma
       implicit none
       integer ilum
-      double precision rnd(2), scoll, smin, jac, lum, tau, ycm
-
-      double precision x1, omx1, x2, omx2, jac_ee, mu2
+      double precision rnd(2), scoll, smin, jac, tau, ycm
+      double precision xbk(2), omxbk(2), jac_ee
 
       double precision tolerance
       parameter (tolerance=1e-3)
       double precision lx1, lx2
 
-      double precision mupdf, gampdf, getscale
-      external mupdf, gampdf, getscale
-
       ! generate the bjorken x's
       if (ilum.eq.1) then 
         ! mu mu scattering
-        call generate_x_ee(rnd(1), smin/scoll, x1, omx1, jac_ee)
+        call generate_x_ee(rnd(1), smin/scoll, xbk(1), omxbk(1), jac_ee)
         jac = jac * jac_ee
-        call generate_x_ee(rnd(2), smin/scoll/x1, x2, omx2, jac_ee)
+        call generate_x_ee(rnd(2), smin/scoll/xbk(1), xbk(2), omxbk(2), jac_ee)
         jac = jac * jac_ee
-        mu2 = getscale(scoll, x1, x2)
-
-        lum = mupdf(x1, omx1, mu2)
-        lum = lum*mupdf(x2, omx2, mu2)
 
       else if (ilum.eq.2) then
         ! gamma mu scattering
-        call generate_x_gam(rnd(1), smin/scoll, x1, omx1, jac_ee)
+        call generate_x_gam(rnd(1), smin/scoll, xbk(1), omxbk(1), jac_ee)
         jac = jac * jac_ee
-        call generate_x_ee(rnd(2), smin/scoll/x1, x2, omx2, jac_ee)
+        call generate_x_ee(rnd(2), smin/scoll/xbk(1), xbk(2), omxbk(2), jac_ee)
         jac = jac * jac_ee
-        mu2 = getscale(scoll, x1, x2)
-
-        lum = gampdf(x1, omx1, mu2)
-        lum = lum*mupdf(x2, omx2, mu2)
 
       else if (ilum.eq.3) then
         ! mu gamma scattering
-        call generate_x_ee(rnd(1), smin/scoll, x1, omx1, jac_ee)
+        call generate_x_ee(rnd(1), smin/scoll, xbk(1), omxbk(1), jac_ee)
         jac = jac * jac_ee
-        call generate_x_gam(rnd(2), smin/scoll/x1, x2, omx2, jac_ee)
+        call generate_x_gam(rnd(2), smin/scoll/xbk(1), xbk(2), omxbk(2), jac_ee)
         jac = jac * jac_ee
-        mu2 = getscale(scoll, x1, x2)
-
-        lum = mupdf(x1, omx1, mu2)
-        lum = lum*gampdf(x2, omx2, mu2)
 
       else if (ilum.eq.4) then
         ! gamma gamma scattering
-        call generate_x_gam(rnd(1), smin/scoll, x1, omx1, jac_ee)
+        call generate_x_gam(rnd(1), smin/scoll, xbk(1), omxbk(1), jac_ee)
         jac = jac * jac_ee
-        call generate_x_gam(rnd(2), smin/scoll/x1, x2, omx2, jac_ee)
+        call generate_x_gam(rnd(2), smin/scoll/xbk(1), xbk(2), omxbk(2), jac_ee)
         jac = jac * jac_ee
-        mu2 = getscale(scoll, x1, x2)
-
-        lum = gampdf(x1, omx1, mu2)
-        lum = lum*gampdf(x2, omx2, mu2)
       else
         write(*,*) 'ERROR: wrong ilum', ilum
         stop 1
       endif
 
       ! compute tau and y
-      tau = x1*x2
+      tau = xbk(1)*xbk(2)
 
-      if (omx1.gt.tolerance) then
-        lx1 = dlog(x1)
+      if (omxbk(1).gt.tolerance) then
+        lx1 = dlog(xbk(1))
       else
-        lx1 = -omx1-omx1**2/2d0-omx1**3/3d0-omx1**4/4d0-omx1**5/5d0
+        lx1 = -omxbk(1)-omxbk(1)**2/2d0-omxbk(1)**3/3d0-omxbk(1)**4/4d0-omxbk(1)**5/5d0
       endif
       ycm = 0.5d0*lx1
 
-      if (omx2.gt.tolerance) then
-        lx2 = dlog(x2)
+      if (omxbk(2).gt.tolerance) then
+        lx2 = dlog(xbk(2))
       else
-        lx2 = -omx2-omx2**2/2d0-omx2**3/3d0-omx2**4/4d0-omx2**5/5d0
+        lx2 = -omxbk(2)-omxbk(2)**2/2d0-omxbk(2)**3/3d0-omxbk(2)**4/4d0-omxbk(2)**5/5d0
       endif
       ycm = ycm-0.5d0*lx2
+
+      return
+      end
+
+
+
+
+      subroutine get_lum(ilum,mu2,xbk,omxbk,lum)
+      ! ilum = 1 -> mu+ mu-
+      ! ilum = 2 -> gamma mu-
+      ! ilum = 3 -> mu+ gamma
+      ! ilum = 4 -> gamma gamma
+      implicit none
+      integer ilum
+
+      double precision mu2, xbk(2), omxbk(2), lum
+
+      double precision mupdf, gampdf
+      external mupdf, gampdf
+
+      ! generate the bjorken x's
+      if (ilum.eq.1) then 
+        ! mu mu scattering
+        lum = mupdf(xbk(1), omxbk(1), mu2)
+        lum = lum*mupdf(xbk(2), omxbk(2), mu2)
+
+      else if (ilum.eq.2) then
+        ! gamma mu scattering
+        lum = gampdf(xbk(1), omxbk(1), mu2)
+        lum = lum*mupdf(xbk(2), omxbk(2), mu2)
+
+      else if (ilum.eq.3) then
+        ! mu gamma scattering
+        lum = mupdf(xbk(1), omxbk(1), mu2)
+        lum = lum*gampdf(xbk(2), omxbk(2), mu2)
+
+      else if (ilum.eq.4) then
+        ! gamma gamma scattering
+        lum = gampdf(xbk(1), omxbk(1), mu2)
+        lum = lum*gampdf(xbk(2), omxbk(2), mu2)
+      else
+        write(*,*) 'ERROR: wrong ilum', ilum
+        stop 1
+      endif
 
       return
       end
@@ -101,15 +125,22 @@
       end
 
 
-      double precision function getscale(scoll,x1,x2)
+      double precision function getscale(scoll,xbk,p)
       implicit none
-      double precision scoll, x1, x2
+      double precision scoll, xbk(2), p(0:3,6)
+      double precision ptot(0:3)
       include 'input.inc'
 
       if (imuf.eq.0) then
         getscale = scoll
       else if (imuf.eq.1) then
-        getscale = scoll*x1*x2
+          ! shat
+        ptot(:) = p(:,3)+p(:,4)+p(:,5)+p(:,6)
+        getscale = ptot(0)**2-ptot(1)**2-ptot(2)**2-ptot(3)**2 
+      else if (imuf.eq.2) then
+          ! mtt
+        ptot(:) = p(:,3)+p(:,4)
+        getscale = ptot(0)**2-ptot(1)**2-ptot(2)**2-ptot(3)**2 
       else if (imuf.eq.-1) then
         getscale = fixscale**2 
       endif

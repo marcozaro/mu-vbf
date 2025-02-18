@@ -112,11 +112,12 @@ try:
 except IndexError:
     run_name = 'tmprun'
 
-input_dict = parse_input(os.path.join('Cards','run_card.dat'))
-write_input('input.inc', input_dict)
-write_printout('printout.inc', input_dict)
-compile()
-run(run_name, input_dict)
+if __name__ == '__main__':
+    input_dict = parse_input(os.path.join('Cards','run_card.dat'))
+    write_input('input.inc', input_dict)
+    write_printout('printout.inc', input_dict)
+    compile()
+    run(run_name, input_dict)
 
 
 
