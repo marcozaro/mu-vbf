@@ -38,12 +38,13 @@
       ! THE MUON-MUON CONTRIBUTION
       !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       double precision x(12), vegas_wgt
-      double precision jac_pdf, lum, tau, ycm, x1bk, x2bk
+      double precision jac_pdf, lum, tau, ycm, xbk(2), omxbk(2)
+      integer ilum
       double precision scoll
       common /to_scoll/scoll
       double precision mmin
       common /to_mmin/mmin
-      double precision tau_min, z1, z2, jac_pdf_save
+      double precision tau_min, zq(2), jac_pdf_save
 
       double precision compute_subtracted_me_2, compute_subtracted_me_1b,
      $ compute_subtracted_me_1a, compute_subtracted_me_0, qprime, getscale
@@ -71,7 +72,8 @@
       ! generate the mu mu luminosity
       jac_pdf = 1d0
       tau_min = mmin**2/scoll
-      call get_lum(1,x(9:10),scoll,mmin**2,jac_pdf,lum,tau,ycm,x1bk,x2bk)
+      ilum = 1
+      call get_xbk(ilum,x(9:10),scoll,mmin**2,jac_pdf,tau,ycm,xbk,omxbk)
 
       ! THE DOUBLE-REAL CONTRIBUTION FOR THE MUON PAIR
       if (.not.mumu_doublereal) goto 10
@@ -79,51 +81,51 @@
       orders_tag = 2
       delta_used = deltaI
       tiny_used = tinycoll
-      integrand_mumu = integrand_mumu + compute_subtracted_me_2(x,vegas_wgt,lum,tau,ycm,jac_pdf)
+      integrand_mumu = integrand_mumu + compute_subtracted_me_2(x,vegas_wgt,xbk,omxbk,tau,ycm,jac_pdf,ilum)
 
  10   continue
 
       ! THE CONVOLUTION OF M_GAM MU WITH Q'(Z1)
       jac_pdf_save = jac_pdf
-      call generate_qp_z(x(11),tau_min/tau,z1,jac_pdf)
-
-      mu2 = getscale(scoll, x1bk, x2bk)
+      zq(2) = -1d0
+      call generate_qp_z(x(11),tau_min/tau,zq(1),jac_pdf)
 
       orders_tag = 2
       delta_used = deltaIb
-      tiny_used = tinycoll*2/(2*z1+tinycoll*(1-z1))
+      tiny_used = tinycoll*2/(2*zq(1)+tinycoll*(1-zq(1)))
+      !lum*qprime(z1,scoll*tau,mu2,deltaI)
       integrand_mumu = integrand_mumu +
-     $ compute_subtracted_me_1b(x,vegas_wgt,lum*qprime(z1,scoll*tau,mu2,deltaI),
-     $               tau*z1,ycm+0.5*dlog(z1),jac_pdf)
+     $ compute_subtracted_me_1b(x,vegas_wgt,xbk,omxbk,zq,
+     $               tau*zq(1),ycm+0.5*dlog(zq(1)),jac_pdf,ilum)
 
       ! THE CONVOLUTION OF M MU GAM WITH Q'(Z2)
       jac_pdf = jac_pdf_save
-      call generate_qp_z(x(11),tau_min/tau,z2,jac_pdf)
-
-      mu2 = getscale(scoll, x1bk, x2bk)
+      zq(1) = -1d0
+      call generate_qp_z(x(11),tau_min/tau,zq(2),jac_pdf)
 
       orders_tag = 2
       delta_used = deltaIb
-      tiny_used = tinycoll*2/(2*z2+tinycoll*(1-z2))
+      tiny_used = tinycoll*2/(2*zq(2)+tinycoll*(1-zq(2)))
       integrand_mumu = integrand_mumu +
-     $ compute_subtracted_me_1a(x,vegas_wgt,lum*qprime(z2,scoll*tau,mu2,deltaI),
-     $               tau*z2,ycm-0.5*dlog(z2),jac_pdf)
+     $ compute_subtracted_me_1a(x,vegas_wgt,xbk,omxbk,zq,
+     $               tau*zq(2),ycm-0.5*dlog(zq(2)),jac_pdf,ilum)
 
       ! THE CONVOLUTION OF M GAM GAM WITH Q'(Z1) Q'(Z2)
       jac_pdf = jac_pdf_save
-      call generate_qp_z(x(11),tau_min/tau,z1,jac_pdf)
-      call generate_qp_z(x(12),tau_min/tau/z1,z2,jac_pdf)
+      call generate_qp_z(x(11),tau_min/tau,zq(1),jac_pdf)
+      call generate_qp_z(x(12),tau_min/tau/zq(1),zq(2),jac_pdf)
       orders_tag = 2
       !! caareful here with the scale that enters in the logs inside q'
       ! it is the only non-trivial place. In Q'(z_i), the com energy
       ! that enters is z_1 * z_2 * tau * shat / z_i
 
-      qq = qprime(z1,scoll*tau*z2,mu2,deltaIb)*qprime(z2,scoll*tau*z1,mu2,deltaIb)
-      pploglog = Pgamu(z1)*Pgamu(z2)*dlog(z1*deltaIb/deltaI)*dlog(z2*deltaIb/deltaI)
+      !qq = qprime(z1,scoll*tau*z2,mu2,deltaIb)*qprime(z2,scoll*tau*z1,mu2,deltaIb)
+      !pploglog = Pgamu(z1)*Pgamu(z2)*dlog(z1*deltaIb/deltaI)*dlog(z2*deltaIb/deltaI)
+        !lum*(qq-pploglog)
 
       integrand_mumu = integrand_mumu + 
-     $ compute_subtracted_me_0(x,vegas_wgt,lum*(qq-pploglog),
-     $               tau*z1*z2,ycm+0.5*dlog(z1)-0.5*dlog(z2),jac_pdf)
+     $ compute_subtracted_me_0(x,vegas_wgt,xbk,omxbk,zq,
+     $  tau*zq(1)*zq(2),ycm+0.5*dlog(zq(1))-0.5*dlog(zq(2)),jac_pdf,ilum)
 
       return
       end
@@ -135,7 +137,8 @@
       ! THE GAMMA-GAMMA CONTRIBUTION
       !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       double precision x(12), vegas_wgt
-      double precision jac_pdf, lum, tau, ycm, x1bk, x2bk
+      double precision jac_pdf, lum, tau, ycm, xbk(2), omxbk(2), zq(2)
+      integer ilum
       double precision scoll
       common /to_scoll/scoll
       double precision mmin
@@ -154,12 +157,14 @@
 
       ! generate the gamma-gamma luminosity
       jac_pdf = 1d0
-      call get_lum(4,x(9:10),scoll,mmin**2,jac_pdf,lum,tau,ycm,x1bk,x2bk)
+      ilum = 4
+      call get_xbk(ilum,x(9:10),scoll,mmin**2,jac_pdf,tau,ycm,xbk,omxbk)
 
       ! THE BORN CONTRIBUTION FOR THE PHOTON PAIR
       if (.not.gaga_born) goto 10
       orders_tag = 0
-      integrand_gaga = integrand_gaga + compute_subtracted_me_0(x,vegas_wgt,lum,tau,ycm,jac_pdf)
+      zq(:)=-1d0
+      integrand_gaga = integrand_gaga + compute_subtracted_me_0(x,vegas_wgt,xbk,omxbk,zq,tau,ycm,jac_pdf,ilum)
 
  10   continue
 
@@ -174,12 +179,13 @@
       ! THE MUON-GAMMA CONTRIBUTION
       !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       double precision x(12), vegas_wgt
-      double precision jac_pdf, lum, tau, ycm, x1bk,x2bk
+      double precision jac_pdf, lum, tau, ycm, xbk(2), omxbk(2)
+      integer ilum
       double precision scoll
       common /to_scoll/scoll
       double precision mmin
       common /to_mmin/mmin
-      double precision tau_min, z1, z2
+      double precision tau_min, zq(2)
 
       logical muga_singlereal
       parameter (muga_singlereal=.true.)
@@ -201,28 +207,31 @@
       ! generate the mu gam luminosity
       jac_pdf = 1d0
       tau_min = mmin**2/scoll
-      call get_lum(3,x(9:10),scoll,mmin**2,jac_pdf,lum,tau,ycm,x1bk,x2bk)
+      ilum = 3
+      call get_xbk(ilum,x(9:10),scoll,mmin**2,jac_pdf,tau,ycm,xbk,omxbk)
 
       ! THE SINGLE-REAL CONTRIBUTION 
       if (.not.muga_singlereal) goto 10
       orders_tag = 1
       delta_used = deltaI
       tiny_used = tinycoll
+      zq(:) = -1d0
       integrand_muga = integrand_muga +
-     $ compute_subtracted_me_1a(x,vegas_wgt,lum,
-     $               tau,ycm,jac_pdf)
+     $ compute_subtracted_me_1a(x,vegas_wgt,xbk,omxbk,zq,
+     $               tau,ycm,jac_pdf,ilum)
 
  10   continue
 
       ! THE CONVOLUTION OF M_GAM GAM WITH Q'(Z1)
-      call generate_qp_z(x(11),tau_min/tau,z1,jac_pdf)
+      call generate_qp_z(x(11),tau_min/tau,zq(1),jac_pdf)
 
-      mu2 = getscale(scoll, x1bk, x2bk)
+      !!mu2 = getscale(scoll, x1bk, x2bk)
+      !lum*qprime(z1,scoll*tau,mu2,deltaI)
 
       orders_tag = 1
       integrand_muga = integrand_muga +
-     $ compute_subtracted_me_0(x,vegas_wgt,lum*qprime(z1,scoll*tau,mu2,deltaI),
-     $               tau*z1,ycm+0.5*dlog(z1),jac_pdf)
+     $ compute_subtracted_me_0(x,vegas_wgt,xbk,omxbk,zq,
+     $               tau*zq(1),ycm+0.5*dlog(zq(1)),jac_pdf,ilum)
 
       return
       end
@@ -234,12 +243,13 @@
       ! THE GAMMA-MUON CONTRIBUTION
       !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       double precision x(12), vegas_wgt
-      double precision jac_pdf, lum, tau, ycm, x1bk, x2bk
+      double precision jac_pdf, lum, tau, ycm, xbk(2), omxbk(2)
+      integer ilum
       double precision scoll
       common /to_scoll/scoll
       double precision mmin
       common /to_mmin/mmin
-      double precision tau_min, z1, z2
+      double precision tau_min, zq(2)
 
       logical gamu_singlereal
       parameter (gamu_singlereal=.true.)
@@ -261,7 +271,8 @@
       ! generate the gam mu luminosity
       jac_pdf = 1d0
       tau_min = mmin**2/scoll
-      call get_lum(2,x(9:10),scoll,mmin**2,jac_pdf,lum,tau,ycm,x1bk,x2bk)
+      ilum = 2
+      call get_xbk(ilum,x(9:10),scoll,mmin**2,jac_pdf,tau,ycm,xbk,omxbk)
 
       ! THE SINGLE-REAL CONTRIBUTION 
       if (.not.gamu_singlereal) goto 10
@@ -269,22 +280,23 @@
       orders_tag = 1
       delta_used = deltaI
       tiny_used = tinycoll
+      zq(:) = -1d0
       integrand_gamu = integrand_gamu +
-     $ compute_subtracted_me_1b(x,vegas_wgt,lum,
-     $               tau,ycm,jac_pdf)
+     $ compute_subtracted_me_1b(x,vegas_wgt,xbk,omxbk,zq,
+     $               tau,ycm,jac_pdf,ilum)
 
  10   continue
 
       ! THE CONVOLUTION OF M_GAM GAM WITH Q'(Z2)
       !We use jac0, since we convolve with the born-like matrix element
-      call generate_qp_z(x(11),tau_min/tau,z2,jac_pdf)
+      call generate_qp_z(x(11),tau_min/tau,zq(2),jac_pdf)
 
-      mu2 = getscale(scoll, x1bk, x2bk)
-
+      !mu2 = getscale(scoll, x1bk, x2bk)
+      !lum*qprime(z2,scoll*tau,mu2,deltaI)
       orders_tag = 1
       integrand_gamu = integrand_gamu +
-     $ compute_subtracted_me_0(x,vegas_wgt,lum*qprime(z2,scoll*tau,mu2,deltaI),
-     $               tau*z2,ycm-0.5*dlog(z2),jac_pdf)
+     $ compute_subtracted_me_0(x,vegas_wgt,xbk,omxbk,zq,
+     $               tau*zq(2),ycm-0.5*dlog(zq(2)),jac_pdf,ilum)
 
       return
       end

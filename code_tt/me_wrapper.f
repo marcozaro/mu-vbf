@@ -360,10 +360,11 @@ C returns the matrix element for the gamma-gamma born term
 ! now we have functions for the subtracted contributions. 
 ! they also fill the analysis etc
 
-      double precision function compute_subtracted_me_0(x,vegas_wgt,lum,tau,ycm,jac) 
+      double precision function compute_subtracted_me_0(x,vegas_wgt,xbk,omxbk,zq,tau,ycm,jac,ilum) 
       ! the photon-photon (born-like) contribution
       implicit none
-      double precision x(8),vegas_wgt,lum,tau,ycm,jac
+      double precision x(8),vegas_wgt,xbk(2),omxbk(2),zq(2),tau,ycm,jac
+      integer ilum
 
       double precision scoll
       common /to_scoll/scoll
@@ -380,13 +381,17 @@ C returns the matrix element for the gamma-gamma born term
       integer icoll
       logical passcuts
       external passcuts
+      double precision lum(4), mu2(4)
       double precision p2(0:3,6,4), p1a(0:3,6,4), p1b(0:3,6,4),p0(0:3,6,4)
+      double precision getscale, qprime, pgamu
+      external getscale, qprime, pgamu
       ! stuff for the analysis
       integer pdgs(6), istatus(6)
       double precision p_an(0:3,6)
       double precision wgt_an(1)
       logical fill_histos
       common /to_fill_histos/fill_histos
+      include 'input.inc'
 
       pdgs = (/22,22,6,-6,0,0/)
       istatus = (/-1,-1,1,1,1,1/)
@@ -404,6 +409,19 @@ C returns the matrix element for the gamma-gamma born term
       call generate_momenta(shat, mfin, y1(icoll), y2(icoll), xi1(icoll), xi2(icoll), 
      &                      ph1(icoll), ph2(icoll), cth(icoll), phi(icoll),
      &                      p2(0,1,icoll), p1a(0,1,icoll), p1b(0,1,icoll), p0(0,1,icoll))
+      mu2(icoll) = getscale(scoll,xbk,p0(0,1,icoll))
+      call get_lum(ilum,mu2(icoll),xbk,omxbk,lum(icoll))
+      if (zq(2).ge.0d0.and.zq(1).lt.0d0) then
+        lum(icoll) = lum(icoll) * qprime(zq(2),scoll*tau/zq(2),mu2(icoll),deltaI) 
+      elseif (zq(1).ge.0d0.and.zq(2).lt.0d0) then
+        lum(icoll) = lum(icoll) * qprime(zq(1),scoll*tau/zq(1),mu2(icoll),deltaI) 
+      ! add (subtract) the piece proportional to the product of splitting functions when both Q's are included
+      elseif (zq(1).ge.0d0.and.zq(2).ge.0d0) then
+        lum(icoll) = lum(icoll) * (
+     &     qprime(zq(1),scoll*tau/zq(1),mu2(icoll),deltaIb)*qprime(zq(2),scoll*tau/zq(2),mu2(icoll),deltaIb)
+     &     - Pgamu(zq(1))*Pgamu(zq(2))*dlog(zq(1)*deltaIb/deltaI)*dlog(zq(2)*deltaIb/deltaI))
+      endif
+
       me(icoll) = 0d0
       ! boost the momenta to the lab frame. This is needed
       ! both for cuts and for the analysis
@@ -414,20 +432,21 @@ C returns the matrix element for the gamma-gamma born term
 
         if (fill_histos) then
             wgt_an(1) = jac0(icoll) * me(icoll) 
-     &           * vegas_wgt * lum
+     &           * vegas_wgt * lum(icoll)
             call analysis_fill(p_an,istatus,pdgs,wgt_an,icoll)
         endif
       endif
-      compute_subtracted_me_0 = jac0(1) * me(1) * lum
+      compute_subtracted_me_0 = jac0(1) * me(1) * lum(1)
 
       return
       end
 
 
-      double precision function compute_subtracted_me_1a(x,vegas_wgt,lum,tau,ycm,jac) 
+      double precision function compute_subtracted_me_1a(x,vegas_wgt,xbk,omxbk,zq,tau,ycm,jac,ilum) 
       ! the muon-gamma (single-real) contribution
       implicit none
-      double precision x(8),vegas_wgt,lum,tau,ycm,jac
+      double precision x(8),vegas_wgt,xbk(2),omxbk(2),zq(2),tau,ycm,jac
+      integer ilum
 
       double precision scoll
       common /to_scoll/scoll
@@ -444,7 +463,10 @@ C returns the matrix element for the gamma-gamma born term
       integer icoll
       logical passcuts
       external passcuts
+      double precision lum(4), mu2(4)
       double precision p2(0:3,6,4), p1a(0:3,6,4), p1b(0:3,6,4),p0(0:3,6,4)
+      double precision getscale, qprime
+      external getscale, qprime
       ! stuff for the analysis
       integer pdgs(6), istatus(6)
       double precision p_an(0:3,6)
@@ -453,6 +475,7 @@ C returns the matrix element for the gamma-gamma born term
       common /to_fill_histos/fill_histos
       double precision delta_used
       common/to_delta_used/delta_used
+      include 'input.inc'
 
       pdgs = (/-13,22,6,-6,-13,0/)
       istatus = (/-1,-1,1,1,1,1/)
@@ -471,6 +494,11 @@ C returns the matrix element for the gamma-gamma born term
         call generate_momenta(shat, mfin, y1(icoll), y2(icoll), xi1(icoll), xi2(icoll), 
      &                      ph1(icoll), ph2(icoll), cth(icoll), phi(icoll),
      &                      p2(0,1,icoll), p1a(0,1,icoll), p1b(0,1,icoll), p0(0,1,icoll))
+        mu2(icoll) = getscale(scoll,xbk,p1a(0,1,icoll))
+        call get_lum(ilum,mu2(icoll),xbk,omxbk,lum(icoll))
+        if (zq(2).ge.0d0) then
+          lum(icoll) = lum(icoll) * qprime(zq(2),scoll*tau/zq(2),mu2(icoll),deltaI) 
+        endif
       enddo
 
       do icoll = 3, 4
@@ -488,7 +516,7 @@ C returns the matrix element for the gamma-gamma born term
 
           if (fill_histos) then
             wgt_an(1) = jac1a(icoll) * me(icoll) / omy1(3) 
-     &           * vegas_wgt * lum
+     &           * vegas_wgt * lum(icoll)
             if (icoll.eq.4) wgt_an(1) = - wgt_an(1) 
             call analysis_fill(p_an,istatus,pdgs,wgt_an,icoll)
           endif
@@ -496,16 +524,17 @@ C returns the matrix element for the gamma-gamma born term
       enddo
 
       compute_subtracted_me_1a =  
-     &  (jac1a(3) * me(3) - jac1a(4) * me(4))
-     &                       / omy1(3) * lum 
+     &  (jac1a(3) * me(3) * lum(3) - jac1a(4) * me(4) * lum(4))
+     &                       / omy1(3) 
       return
       end
 
 
-      double precision function compute_subtracted_me_1b(x,vegas_wgt,lum,tau,ycm,jac) 
+      double precision function compute_subtracted_me_1b(x,vegas_wgt,xbk,omxbk,zq,tau,ycm,jac,ilum) 
       ! the gamma-muon (single-real) contribution
       implicit none
-      double precision x(8),vegas_wgt,lum,tau,ycm,jac
+      double precision x(8),vegas_wgt,xbk(2),omxbk(2),zq(2),tau,ycm,jac
+      integer ilum
       integer pdgs(6), istatus(6)
 
       double precision scoll
@@ -523,7 +552,10 @@ C returns the matrix element for the gamma-gamma born term
       integer icoll
       logical passcuts
       external passcuts
+      double precision lum(4),mu2(4)
       double precision p2(0:3,6,4), p1a(0:3,6,4), p1b(0:3,6,4),p0(0:3,6,4)
+      double precision getscale, qprime
+      external getscale, qprime
       ! stuff for the analysis
       double precision p_an(0:3,6)
       double precision wgt_an(1)
@@ -531,6 +563,7 @@ C returns the matrix element for the gamma-gamma born term
       common /to_fill_histos/fill_histos
       double precision delta_used
       common/to_delta_used/delta_used
+      include 'input.inc'
 
       pdgs = (/22,13,6,-6,13,0/)
       istatus = (/-1,-1,1,1,1,1/)
@@ -549,6 +582,9 @@ C returns the matrix element for the gamma-gamma born term
         call generate_momenta(shat, mfin, y1(icoll), y2(icoll), xi1(icoll), xi2(icoll), 
      &                      ph1(icoll), ph2(icoll), cth(icoll), phi(icoll),
      &                      p2(0,1,icoll), p1a(0,1,icoll), p1b(0,1,icoll), p0(0,1,icoll))
+        mu2(icoll) = getscale(scoll,xbk,p1b(0,1,icoll))
+        call get_lum(ilum,mu2(icoll),xbk,omxbk,lum(icoll))
+        if (zq(1).ge.0d0) lum(icoll) = lum(icoll) * qprime(zq(1),scoll*tau/zq(1),mu2(icoll),deltaI) 
       enddo
 
       do icoll = 2, 4, 2
@@ -564,7 +600,7 @@ C returns the matrix element for the gamma-gamma born term
 
           if (fill_histos) then
             wgt_an(1) = jac1b(icoll) * me(icoll) / omy2(2) 
-     &           * vegas_wgt * lum
+     &           * vegas_wgt * lum(icoll)
             if (icoll.eq.4) wgt_an(1) = - wgt_an(1) 
             call analysis_fill(p_an,istatus,pdgs,wgt_an,icoll)
           endif
@@ -572,16 +608,17 @@ C returns the matrix element for the gamma-gamma born term
       enddo
 
       compute_subtracted_me_1b =  
-     &  (jac1b(2) * me(2) - jac1b(4) * me(4))
-     &                       / omy2(2) * lum 
+     &  (jac1b(2) * me(2) * lum(2) - jac1b(4) * me(4) * lum(4))
+     &                       / omy2(2) 
       return
       end
 
 
-      double precision function compute_subtracted_me_2(x,vegas_wgt,lum,tau,ycm,jac) 
+      double precision function compute_subtracted_me_2(x,vegas_wgt,xbk,omxbk,tau,ycm,jac,ilum) 
       ! the muon-muon (single-real) contribution
       implicit none
-      double precision x(8),vegas_wgt,lum,tau,ycm,jac
+      double precision x(8),vegas_wgt,xbk(2),omxbk(2),tau,ycm,jac
+      integer ilum
       integer pdgs(6), istatus(6)
 
       double precision scoll
@@ -599,7 +636,10 @@ C returns the matrix element for the gamma-gamma born term
       integer icoll
       logical passcuts
       external passcuts
+      double precision lum(4),mu2(4)
       double precision p2(0:3,6,4), p1a(0:3,6,4), p1b(0:3,6,4),p0(0:3,6,4)
+      double precision getscale, qprime
+      external getscale, qprime
       ! stuff for the analysis
       double precision p_an(0:3,6)
       double precision wgt_an(1)
@@ -607,6 +647,7 @@ C returns the matrix element for the gamma-gamma born term
       common /to_fill_histos/fill_histos
       double precision delta_used
       common/to_delta_used/delta_used
+      include 'input.inc'
 
       pdgs = (/-13,13,6,-6,-13,13/)
       istatus = (/-1,-1,1,1,1,1/)
@@ -624,6 +665,8 @@ C returns the matrix element for the gamma-gamma born term
         call generate_momenta(shat, mfin, y1(icoll), y2(icoll), xi1(icoll), xi2(icoll), 
      &                      ph1(icoll), ph2(icoll), cth(icoll), phi(icoll),
      &                      p2(0,1,icoll), p1a(0,1,icoll), p1b(0,1,icoll), p0(0,1,icoll))
+        mu2(icoll) = getscale(scoll,xbk,p2(0,1,icoll))
+        call get_lum(ilum,mu2(icoll),xbk,omxbk,lum(icoll))
       enddo
 
 C   icoll:
@@ -646,7 +689,7 @@ C   4-> no resolved collinear emission (y1=y2=1)
 
           if (fill_histos) then
             wgt_an(1) = jac2(icoll) * me(icoll) / omy1(1) / omy2(1) 
-     &           * vegas_wgt * lum
+     &           * vegas_wgt * lum(icoll)
             if (icoll.eq.2.or.icoll.eq.3) wgt_an(1) = - wgt_an(1) 
             call analysis_fill(p_an,istatus,pdgs,wgt_an,icoll)
           endif
@@ -655,8 +698,8 @@ C   4-> no resolved collinear emission (y1=y2=1)
 
       !write(*,*) 'YY', y1(1), y2(1), me, jac2
       compute_subtracted_me_2 = 
-     &  (jac2(1) * me(1) - jac2(2) * me(2) - jac2(3) * me(3) + jac2(4) * me(4))
-     &                       / omy1(1) / omy2(1) * lum
+     &  (jac2(1)*me(1)*lum(1) - jac2(2)*me(2)*lum(2) - jac2(3)*me(3)*lum(3) + jac2(4)*me(4)*lum(4))
+     &                       / omy1(1) / omy2(1) 
 
 
       return
