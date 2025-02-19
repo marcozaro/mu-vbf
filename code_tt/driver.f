@@ -31,7 +31,7 @@
 
       scoll = ecm**2
 
-      call setpara('Cards/param_card.dat')
+      call setpara('param_card.dat')
       call printout()
       call print_run()
       use_emela=photonpdf.ge.10000
