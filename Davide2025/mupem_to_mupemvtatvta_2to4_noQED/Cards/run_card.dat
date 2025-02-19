@@ -18,7 +18,7 @@
 #*********************************************************************
 # Tag name for the run (one word)                                    *
 #*********************************************************************
-  tag_3	= run_tag ! name of the run 
+  tag_1	= run_tag ! name of the run 
 #*********************************************************************
 # Number of events and rnd seed                                      *
 # Warning: Do not generate more than 1M events in a single run       *
@@ -113,7 +113,7 @@
   -1.0	= ptlmax ! maximum pt for the charged leptons
   -1.0	= missetmax ! maximum missing Et (sum of neutrino's momenta)
 #  {16:150}	= pt_min_pdg ! pt cut for other particles (use pdg code). Applied on particle and anti-particle
-  {16:0.0}     = pt_min_pdg ! pt cut for other particles (use pdg code). Applied on particle and anti-particle
+  {'16': 0.0}	= pt_min_pdg ! pt cut for other particles (use pdg code). Applied on particle and anti-particle
   {}	= pt_max_pdg ! pt cut for other particles (syntax e.g. {6: 100, 25: 50}) 
 #
 # For display option for energy cut in the partonic center of mass frame type 'update ecut'
@@ -125,7 +125,7 @@
   0.0	= etalmin ! main rap for the charged leptons
   {}	= eta_min_pdg ! rap cut for other particles (use pdg code). Applied on particle and anti-particle
 #  {16:2.5}	= eta_max_pdg ! rap cut for other particles (syntax e.g. {6: 2.5, 23: 5})
-  {16:-1.0}      = eta_max_pdg ! rap cut for other particles (syntax e.g. {6: 2.5, 23: 5})
+  {'16': -1.0}	= eta_max_pdg ! rap cut for other particles (syntax e.g. {6: 2.5, 23: 5})
 #*********************************************************************
 # Minimum and maximum DeltaR distance                                *
 #*********************************************************************
