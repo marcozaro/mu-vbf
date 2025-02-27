@@ -117,7 +117,7 @@
       if (pdfscheme.eq.0) then ! MSbar
         kscheme = 0d0
       else if (pdfscheme.eq.1) then ! Delta
-        kscheme = (1d0+(1d0-z)**2)*(2d0*dlog(z)+1d0)
+        kscheme = (1d0+(1d0-z)**2)/z*(2d0*dlog(z)+1d0)
       else
          write(*,*) 'ERROR kscheme',pdfscheme
       endif

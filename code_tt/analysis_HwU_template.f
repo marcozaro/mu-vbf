@@ -61,6 +61,11 @@ c declare (i.e. book) the histograms
         call HwU_book(l+13,'2mu2top invm'//orders(i), 50, 0d0, ecm)
         call HwU_book(l+14,'2mu2top rap'//orders(i), 50,-3d0,3d0)
         call HwU_book(l+15,'2mu2top pt'//orders(i), 50, 0d0, ecm)
+        call HwU_book(l+16,'top rap'//orders(i), 48,-12d0,12d0)
+        call HwU_book(l+17,'atop rap'//orders(i), 48,-12d0,12d0)
+        call HwU_book(l+18,'mup rap'//orders(i), 48,-12d0,12d0)
+        call HwU_book(l+19,'mum rap'//orders(i), 48,-12d0,12d0)
+        call HwU_book(l+20,'tt rap'//orders(i), 48,-12d0,12d0)
       enddo
       return
       end
@@ -132,6 +137,9 @@ c local variable
       double precision th_mp, th_mm, m_mm
       double precision y_ttmm, m_ttmm, pt_ttmm
       double precision pt_mp, pt_mm, pt_t, pt_tx
+      double precision y_t, y_tx, y_tt, y_mp, y_mm
+      double precision rap2
+      external rap2
 
       integer orders_tag ! 0->LO,1->NLO,2->NNLO
       common/to_orderstag/orders_tag
@@ -170,10 +178,20 @@ c phase-space point.
       pt_tx = dsqrt(p_tx(1)**2 + p_tx(2)**2)
       pt_mp = dsqrt(p_mup(1)**2 + p_mup(2)**2)
       pt_mm = dsqrt(p_mum(1)**2 + p_mum(2)**2)
+
+      y_mm = -99d0
+      y_mp = -99d0
+      y_t = rap2(p_t)
+      y_tx= rap2(p_tx)
+      y_mp= rap2(p_mup)
+      y_mm= rap2(p_mum)
+      y_tt= rap2(p_tt)
+
       th_mp= -99d0
       th_mm= -99d0
       if (p_mup(0).gt.0d0) th_mp = datan2(pt_mp, p_mup(3))
       if (p_mum(0).gt.0d0) th_mm = datan2(pt_mm, p_mum(3))
+
 
       do i = 0,3
         l=i*20
@@ -195,6 +213,11 @@ c always fill the total rate
         call HwU_fill(l+13,m_ttmm,wgts)
         call HwU_fill(l+14,y_ttmm,wgts)
         call HwU_fill(l+15,pt_ttmm,wgts)
+        call HwU_fill(l+16,y_t,wgts)
+        call HwU_fill(l+17,y_tx,wgts)
+        call HwU_fill(l+18,y_mp,wgts)
+        call HwU_fill(l+19,y_mm,wgts)
+        call HwU_fill(l+20,y_tt,wgts)
       enddo
       return
       end
