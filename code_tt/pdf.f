@@ -117,7 +117,7 @@
       if (pdfscheme.eq.0) then ! MSbar
         kscheme = 0d0
       else if (pdfscheme.eq.1) then ! Delta
-        kscheme = (1d0+(1d0-z)**2)*(2d0*dlog(z)+1d0)
+        kscheme = (1d0+(1d0-z)**2)/z*(2d0*dlog(z)+1d0)
       else
          write(*,*) 'ERROR kscheme',pdfscheme
       endif
@@ -287,8 +287,13 @@
         endif
       else if (photonpdf.eq.0) then
       ! MZ, this is eq 28
-        gampdf = dble(gal(1)**2)/8d0/pi**2*
+        if(pdfscheme.eq.0) then
+          gampdf = dble(gal(1)**2)/8d0/pi**2*
      &           (2-2d0*x+x*x)*(dlog(q2/mdl_mm**2)-2d0*dlog(x)-1)
+        else if(pdfscheme.eq.1) then
+          gampdf = dble(gal(1)**2)/8d0/pi**2*
+     &           (2-2d0*x+x*x)*dlog(q2/mdl_mm**2)
+        endif
       else if (photonpdf.ge.10000.and.use_emela) then
         call elpdfq2(0, 22, x, omx, q2, 1d0, gampdf)
         gampdf = gampdf*x
