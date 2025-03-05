@@ -1,0 +1,13 @@
+ecm = 3000.000000
+ymin = -2.500000
+mllmin = 120.000000
+ymaxtop = -1.000000
+imuf = -1.000000
+fixscale = 10.000000
+photonpdf = 0.000000
+convolvemuon = 0.000000
+pdfscheme = 0.000000
+sameflav = 1.000000
+deltai = 2.000000
+deltaib = 2.000000
+tinycoll = 0.000000
