@@ -137,7 +137,7 @@ c the same number of weights.
       double precision x, wgts(*)
 
 c     If central weight is zero do not add this point.
-      if (wgts(1).eq.0d0) return
+      if (wgts(1).eq.0d0.or.isnan(wgts(1))) return
 c     Check if point is within plotting range
       if (x.lt.histxl(label,1) .or.
      $     x.gt.histxm(label,nbin(label))) return

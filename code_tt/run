@@ -10,6 +10,7 @@ types = {'ecm':float,
          'mllmin':float, 
          'imuf':int, 
          'fixscale':float, 
+         'scalefact':float,
          'convolvemuon': int, 
          'pdfscheme': int, 
          'photonpdf': int, 
@@ -103,6 +104,7 @@ def run(run_name, input_dict, prepareonly = False):
         infile.writelines("%s = %f\n" % (k,v))
     infile.close()
     shutil.copy('driver', run_name)
+    shutil.copy('moffset.dat', run_name)
     shutil.copy(os.path.join('Cards', 'param_card.dat'), run_name)
     # if prepareonly return
     if prepareonly:

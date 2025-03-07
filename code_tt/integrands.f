@@ -24,6 +24,10 @@
       integrand = integrand + integrand_muga(x,vegas_wgt) 
       ! gam-mu in initial state
       integrand = integrand + integrand_gamu(x,vegas_wgt) 
+      if(isnan(integrand)) then
+        write(*,*) 'WARNING NAN'
+        integrand = 0d0
+      endif
 
       if (fill_histos) call HwU_add_points()
 
@@ -74,6 +78,11 @@
       tau_min = mmin**2/scoll
       ilum = 1
       call get_xbk(ilum,x(9:10),scoll,mmin**2,jac_pdf,tau,ycm,xbk,omxbk)
+      ! check
+      if (xbk(1).lt.0d0.or.xbk(2).lt.0d0.or.omxbk(1).lt.0d0.or.omxbk(2).lt.0d0) then
+         write(*,*) 'WARNING INTEGRAND_MUMU, returning 0'
+         return
+      endif
 
       ! THE DOUBLE-REAL CONTRIBUTION FOR THE MUON PAIR
       if (.not.mumu_doublereal) goto 10
@@ -159,6 +168,11 @@
       jac_pdf = 1d0
       ilum = 4
       call get_xbk(ilum,x(9:10),scoll,mmin**2,jac_pdf,tau,ycm,xbk,omxbk)
+      ! check
+      if (xbk(1).lt.0d0.or.xbk(2).lt.0d0.or.omxbk(1).lt.0d0.or.omxbk(2).lt.0d0) then
+         write(*,*) 'WARNING INTEGRAND_GAGA, returning 0'
+         return
+      endif
 
       ! THE BORN CONTRIBUTION FOR THE PHOTON PAIR
       if (.not.gaga_born) goto 10
@@ -209,6 +223,11 @@
       tau_min = mmin**2/scoll
       ilum = 3
       call get_xbk(ilum,x(9:10),scoll,mmin**2,jac_pdf,tau,ycm,xbk,omxbk)
+      ! check
+      if (xbk(1).lt.0d0.or.xbk(2).lt.0d0.or.omxbk(1).lt.0d0.or.omxbk(2).lt.0d0) then
+         write(*,*) 'WARNING INTEGRAND_MUGA, returning 0'
+         return
+      endif
 
       ! THE SINGLE-REAL CONTRIBUTION 
       if (.not.muga_singlereal) goto 10
@@ -273,6 +292,11 @@
       tau_min = mmin**2/scoll
       ilum = 2
       call get_xbk(ilum,x(9:10),scoll,mmin**2,jac_pdf,tau,ycm,xbk,omxbk)
+      ! check
+      if (xbk(1).lt.0d0.or.xbk(2).lt.0d0.or.omxbk(1).lt.0d0.or.omxbk(2).lt.0d0) then
+         write(*,*) 'WARNING INTEGRAND_GAMU, returning 0'
+         return
+      endif
 
       ! THE SINGLE-REAL CONTRIBUTION 
       if (.not.gamu_singlereal) goto 10

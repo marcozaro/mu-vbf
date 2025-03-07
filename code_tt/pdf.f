@@ -81,6 +81,13 @@
       double precision mupdf, gampdf
       external mupdf, gampdf
 
+      ! check
+      if (xbk(1).lt.0d0.or.xbk(2).lt.0d0.or.omxbk(1).lt.0d0.or.omxbk(2).lt.0d0) then
+         write(*,*) 'WARNING LUM, returning 0'
+         lum=0d0
+         return
+      endif
+
       ! generate the bjorken x's
       if (ilum.eq.1) then 
         ! mu mu scattering
@@ -144,6 +151,7 @@
       else if (imuf.eq.-1) then
         getscale = fixscale**2 
       endif
+      getscale = getscale*scalefact**2
 
       return
       end
@@ -183,6 +191,17 @@
           stop 1
         endif
       endif
+      if (isnan(x).or.isnan(omx)) then
+         write(*,*) rnd, xmin, expo
+         write(*,*) 'WARNING1, NAN', x,omx
+         call backtrace()
+         stop
+         x=-1d0
+         omx=-1d0
+         jac=0d0
+         return
+      endif
+
       jac = 1d0/(1d0-expo) 
       ! then rescale it between xmin and 1
       x = x * (1d0 - xmin) + xmin
@@ -210,6 +229,17 @@
       x = exp(rnd*dlog(xmin))
       omx = 1d0-x 
       jac = abs(log(xmin))
+
+      if (isnan(x).or.isnan(omx)) then
+         write(*,*) rnd, xmin
+         write(*,*) 'WARNING2, NAN', x,omx
+         call backtrace()
+         stop
+         x=-1d0
+         omx=-1d0
+         jac=0d0
+         return
+      endif
       if (x.ge.1d0) then
         if (x.lt.1d0+tolerance) then
           x=1d0
