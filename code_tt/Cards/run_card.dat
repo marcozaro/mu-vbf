@@ -10,13 +10,14 @@ mllmin = 200e0
 ymaxtop = -1
 # 1 for muf=sqrt(shat), 2 for muf=m(tt), 0 for muf = ecm, -1 for fixed scale
 imuf = 1
+scalefact = 1.
 #fixed scale value
 fixscale = 10.
 # convolve muon PDF (0 muon PDF delta, 1 muon PDF as in mupdf)
-photonpdf = 0 
-convolvemuon = 0 
+photonpdf = 10002
+convolvemuon = 1 
 # PDF scheme: 0 NLL, 1 Delta
-pdfscheme = 0
+pdfscheme = 1
 # include same-flavour contribution (only in mu+ mu- > t t~ mu+ mu- ME)
 sameflav = 1
 # techincal parameter for subtraction
