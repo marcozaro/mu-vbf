@@ -31,7 +31,7 @@
 \maxdeadcycles=2000
 \extrafloats{100}
 
-\title{The story with less plots}
+\title{The story with less, but still many, plots}
 
 \author[a]{John}
 \author[a]{Paul}
@@ -53,7 +53,7 @@
 \abstract{
 Showing that myths are false.  All the plots are improvable, both in layout and precision. Many more plots are available in the other document. For luminosities and PDFs I consider only the 10 TeV case here: 1, 3 and 30 TeV are in the other. 
 \\
-{{\color{red}} Please pay attention that in some plots (Longitudinal=0, Right=R, Left=L) in some others (Longitudinal=L, Right=+ or p, Left=- or m) }
+{Please pay attention that in some plots (Longitudinal=0, Right=R, Left=L) in some others (Longitudinal=L, Right=+ or p, Left=- or m) }
 }
 
 \keywords{NLO Computations, Monte Carlo, Collider Physics, BDSM}
@@ -115,7 +115,7 @@ The other EVA parameterisation  according to Ref.~\cite{Ruiz:2021tdt}, assuming 
 \tilde{f}_{V_0/f_R}(\xi,\mu_f^2) 	&= \left(\frac{g_R}{g_L}\right)^2 \times \tilde{f}_{V_0/f_L}(\xi,\mu_f^2). 
 \end{align}
 \end{subequations}
-
+%
 with couplings defined in Table~\ref{tab:ewa_coup}.
 
 Here we report on purpose the two definitions using the two different notations in order to check their consistency.
@@ -126,12 +126,12 @@ polarized EVA for \textit{unpolarized} muon beams, denoted by $\tilde{f}_{V_\lam
  \cfrac{\tilde{f}_{V_\lambda/\mu^\pm_L}(\xi,\mu_f) + \tilde{f}_{V_\lambda/\mu^\pm_R}(\xi,\mu_f)}{2}
 \label{eq:pdfDef_unpolarizedMuon}
 \end{equation}
-
-and 
-
+%
+and instead 
+%
 \begin{equation}
  \tilde{f}_{V_T/\mu^\pm}(\xi,\mu_f) =
-\tilde{f}_{V_+/\mu^\pm_L}(\xi,\mu_f) + \tilde{f}_{V_-/\mu^\pm_R}(\xi,\mu_f).
+\tilde{f}_{V_+/\mu^\pm}(\xi,\mu_f) + \tilde{f}_{V_-/\mu^\pm}(\xi,\mu_f).
 \label{eq:pdfDef_unpolarizedMuon}
 \end{equation}
 
@@ -163,7 +163,7 @@ EW chiral couplings and coupling strength normalizations used in the EVA for fer
 \pnote{TEXT TO BE WRITTEN FOR THE CASE OF THE ANTIMUON}
 
 
-After having compared ME vs EVA predictions for some representative distribution and cuts set-ups, which are mostly the same considered in the pheno paper, we will discuss than the second step: moving from the EVA to the PDFs, and we use the {\small \sc LePDF} parameterisation.
+After having compared ME vs EVA predictions for some representative distribution and cuts set-ups, which are mostly the same considered in the pheno paper, we will discuss then the second step: moving from the EVA to the PDFs, and we use the {\small \sc LePDF} parameterisation.
 We will compare individual PDFs and luminosities against their EVA counterparts.
 
 For reference purpose we put here the PDFs at 10 TeV for the $W$, $Z$ and photon in {\small \sc LePDF}, T and L are transverse and longitudinal here.
@@ -479,24 +479,28 @@ Here we show for the individual PDFs, with different polarisation the difference
 \includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/10TeV/Z_0_Q.pdf}
 \includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/10TeV/Z_0_Qsqrtx.pdf}
 \includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/10TeV/Z_0_Qx.pdf}
+\caption{$Z$ longitudinal}
 \end{figure}
 
 \begin{figure}[!b]
 \includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/10TeV/Z_L-_Q.pdf}
 \includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/10TeV/Z_L-_Qsqrtx.pdf}
 \includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/10TeV/Z_L-_Qx.pdf}
+\caption{$Z$ left}
 \end{figure}
 
 \begin{figure}[!b]
 \includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/10TeV/Z_R_Q.pdf}
 \includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/10TeV/Z_R_Qsqrtx.pdf}
 \includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/10TeV/Z_R_Qx.pdf}
+\caption{$Z$ right}
 \end{figure}
 
 \begin{figure}[!b]
 \includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/10TeV/Z_T_Q.pdf}
 \includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/10TeV/Z_T_Qsqrtx.pdf}
 \includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/10TeV/Z_T_Qx.pdf}
+\caption{$Z$ transverse}
 \end{figure}
 
 
@@ -514,24 +518,28 @@ Same as the $Z$, but for the $W$.
 \includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/10TeV/W-_0_Q.pdf}
 \includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/10TeV/W-_0_Qsqrtx.pdf}
 \includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/10TeV/W-_0_Qx.pdf}
+\caption{$W^-$ longitudinal}
 \end{figure}
 
 \begin{figure}[!b]
 \includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/10TeV/W-_L_Q.pdf}
 \includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/10TeV/W-_L_Qsqrtx.pdf}
 \includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/10TeV/W-_L_Qx.pdf}
+\caption{$W^-$ left}
 \end{figure}
 
 \begin{figure}[!b]
 \includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/10TeV/W-_R_Q.pdf}
 \includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/10TeV/W-_R_Qsqrtx.pdf}
 \includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/10TeV/W-_R_Qx.pdf}
+\caption{$W^-$ right}
 \end{figure}
 
 \begin{figure}[!b]
 \includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/10TeV/W-_T_Q.pdf}
 \includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/10TeV/W-_T_Qsqrtx.pdf}
 \includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/10TeV/W-_T_Qx.pdf}
+\caption{$W^-$ transverse}
 \end{figure}
 
 
