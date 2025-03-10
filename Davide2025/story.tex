@@ -51,7 +51,7 @@
 }
 
 \abstract{
-Showing that myths are false.  All the plots are improvable, both in layout and precision.
+Showing that myths are false.  All the plots are improvable, both in layout and precision. Many more plots are available in the other document. For luminosities and PDFs I consider only the 10 TeV case here: 1, 3 and 30 TeV are in the other. 
 }
 
 \keywords{NLO Computations, Monte Carlo, Collider Physics, BDSM}
@@ -161,10 +161,64 @@ EW chiral couplings and coupling strength normalizations used in the EVA for fer
 \pnote{TEXT TO BE WRITTEN FOR THE CASE OF THE ANTIMUON}
 
 
-After having compared ME vs EVA predictions for some representative distribution and cuts set-ups, which are mostly the same considered in the pheno paper, we discuss than the second step: moving from the EVA to the PDFs, and we use the {\small \sc LePDF} parameterisation.
-We compare individual PDFs and luminosities against their EVA counterparts.
- 
+After having compared ME vs EVA predictions for some representative distribution and cuts set-ups, which are mostly the same considered in the pheno paper, we will discuss than the second step: moving from the EVA to the PDFs, and we use the {\small \sc LePDF} parameterisation.
+We will compare individual PDFs and luminosities against their EVA counterparts.
 
+For reference purpose we put here the PDFs at 10 TeV for the $W$, $Z$ and photon in {\small \sc LePDF}, T and L are transverse and longitudinal here.
+
+\begin{figure}[ht]
+\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/alltogether/10TeV_mu-scaleQ.pdf}
+\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/alltogether/10TeV_mu-scaleQsqrtx.pdf}
+\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/alltogether/10TeV_mu-scaleQx.pdf}
+\caption{PDF of the $\mu^-$ with different scale choices. \label{fig:allmum}}
+\end{figure}
+
+
+\begin{figure}[ht]
+\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/alltogether/10TeV_mu+scaleQ.pdf}
+\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/alltogether/10TeV_mu+scaleQsqrtx.pdf}
+\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/alltogether/10TeV_mu+scaleQx.pdf}
+\caption{PDF of the $\mu^{\color{red} +}$ with different scale choices, for the same partons. \label{fig:allmup}}
+\end{figure}
+
+
+We also show representative luminosities using the same PDFs, where the luminosity for producing a system of mass $M$ in a collider with squared energy $s$ (so $\tau=M^2/s$) is defined as
+
+\begin{equation}
+\mathcal L(M,s,Q)=\int_{M^2/s}^1 \frac{1}{x} f_1(x,Q) f_2(M^2/(x s),Q) dx\, ,
+\end{equation}
+where $Q$ is the factorisation scale chosen.
+
+A physically motivated choice for $Q$ is precisely $M$ or a variation by a factor of 2 around it. In fact, as we will see later the case $M/2$ seems to better reproduce results from ME. Nevertheless, plugging Q=M in the definition before we recover the more common
+
+\begin{equation}
+\mathcal L(M,s,Q=M)=\int_{\tau}^1 \frac{1}{x} f_1(x,M) f_2(\tau/x,M) dx\, , \label{eq:lumicommon}
+\end{equation}
+
+The three choices of scale in Figs.~\ref{fig:allmum} and \ref{fig:allmup} correspond therefore to 
+
+\begin{itemize}
+\item $Q=\sqrt{s}$, which is not very well suited for the small-$x$ region where PDFs of $Z$ and $W$ are relevant. If $Q=M$ as in Eq.~\eqref{eq:lumicommon} this case is equivalent only for $x\to 1$.
+\item$Q=\sqrt{x} \sqrt{s}$: If $Q=M$ as in Eq.~\eqref{eq:lumicommon} this case is equivalent in the region $x\to \sqrt{\tau}$. For luminosities as $WW$ or $ZZ$ this is the best case to look at, in my opinion. Take $M$ and $S$, look at $\sqrt{\tau}$ and one can have a comparison for the bulk of the contribution of the different PDFs
+\item $Q=x \sqrt{s}$: If $Q=M$ as in Eq.~\eqref{eq:lumicommon} this case is equivalent in the region $x \to \tau$. It is the opposite of the region $x\to 1$ and indeed, for $M=\mw$, where EW PDFs collapses, $\tau \simeq 0.008$, which we see in the plot.    
+\end{itemize}
+
+
+In Fig.~\ref{fig:lumicomparison} we show the comparison of representative luminosities with {\small \sc LePDF}, with the scale set at $Q=M/2$.
+Comparisons for same luminosities with different polarisation are shown in the corresponding section later.
+
+
+%NIntegrate[ 1/x \[Mu]EVApartv2[part1, m\[Mu]\[Mu]*muoverm\[Mu]\[Mu], 
+%   x] \[Mu]bEVApartv2[part2, m\[Mu]\[Mu]*muoverm\[Mu]\[Mu], 
+%   m\[Mu]\[Mu]^2/(x sqrts0^2)], {x, m\[Mu]\[Mu]^2/sqrts0^2, 1}  
+
+\begin{figure}
+\includegraphics[width=0.9\linewidth]{Notebooks/PlotLumi/10TeV/lumis/plotgammaWZ.pdf} 
+\caption{Comparison of luminosities \label{fig:lumicomparison}}
+\end{figure}
+
+ 
+\clearpage
 
 \section{$ZZ$ initiated $t \bar t$ production}
 
