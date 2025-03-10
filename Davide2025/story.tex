@@ -52,6 +52,8 @@
 
 \abstract{
 Showing that myths are false.  All the plots are improvable, both in layout and precision. Many more plots are available in the other document. For luminosities and PDFs I consider only the 10 TeV case here: 1, 3 and 30 TeV are in the other. 
+\\
+{{\color{red}} Please pay attention that in some plots (Longitudinal=0, Right=R, Left=L) in some others (Longitudinal=L, Right=+ or p, Left=- or m) }
 }
 
 \keywords{NLO Computations, Monte Carlo, Collider Physics, BDSM}
@@ -166,7 +168,7 @@ We will compare individual PDFs and luminosities against their EVA counterparts.
 
 For reference purpose we put here the PDFs at 10 TeV for the $W$, $Z$ and photon in {\small \sc LePDF}, T and L are transverse and longitudinal here.
 
-\begin{figure}[ht]
+\begin{figure}[!t]
 \includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/alltogether/10TeV_mu-scaleQ.pdf}
 \includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/alltogether/10TeV_mu-scaleQsqrtx.pdf}
 \includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/alltogether/10TeV_mu-scaleQx.pdf}
@@ -174,7 +176,7 @@ For reference purpose we put here the PDFs at 10 TeV for the $W$, $Z$ and photon
 \end{figure}
 
 
-\begin{figure}[ht]
+\begin{figure}[!t]
 \includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/alltogether/10TeV_mu+scaleQ.pdf}
 \includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/alltogether/10TeV_mu+scaleQsqrtx.pdf}
 \includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/alltogether/10TeV_mu+scaleQx.pdf}
@@ -222,7 +224,24 @@ Comparisons for same luminosities with different polarisation are shown in the c
 
 \section{$ZZ$ initiated $t \bar t$ production}
 
-We start analysing the $ZZ\to t \bar t$ process, which is a VBF subcomponent of the complete process (ME) $\mu^+\mu^-\to\mu^+\mu^- t \bar t$. As it is clear, this process involves also the VBF process $\gamma \gamma \to t \bar t$, which is dominant. This can be guessed from Fig.~\ref{fig:lumicomparison} and by the fact that $\log(m(t\bar t)/m_\mu)\gg \log(m(t\bar t)/m_Z)$. Moreover, this process features also a $\mu^+\mu^-\to- t \bar t \gamma (\gamma\to t \bar t )$ topology, which in a massless computation would be removed at NNLO. \footnote{Still, we have verified this contribution to be negligible w.r.t.~our NNLO total phenomenological prediction when a cut on $m(\mu^+ \mu-)$ is applied }Luckily, for such process the purely QED and purely weak component of the $\mu^+\mu^-\to\mu^+\mu^- t \bar t$ amplitude can be separated in a gauge invariant way, therefore we veto the photons in the amplitude. In order to be as close as possible to the $VBF$ configuration we avoid also the process $\mu^+\mu^-\to- t \bar t Z (Z \to t \bar t )$, by actually generating the ME as $\mu^+e^-\to\mu^+e^- t \bar t$ and setting the mass and the Yukawa of the electron equal to the one of the muon. We denote in the plots such prediction as ME no-QED.
+\begin{figure}[!t]
+\includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/ZZ_tt/10TeVcuts/plotmtt.pdf}
+\includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/ZZ_tt/10TeVcuts/plotmttratio1.pdf}
+\includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/ZZ_tt/10TeVcuts/plotmttratio2.pdf}
+\caption{With cuts, $m(t \bar t)$ distributions. \label{fig:cutsZZtt}}
+\end{figure}
+
+
+\begin{figure}[!t]
+\includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/ZZ_tt/10TeVcuts/plotetat.pdf}
+\includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/ZZ_tt/10TeVcuts/plotetatratio1.pdf}
+\includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/ZZ_tt/10TeVcuts/plotetatratio2.pdf}
+\caption{With cuts, $\eta(t)$ distributions. \label{fig:cutsZZtt2}}
+\end{figure}
+
+
+
+We start analysing the $ZZ\to t \bar t$ process, which is a VBF subcomponent of the complete process (ME) $\mu^+\mu^-\to\mu^+\mu^- t \bar t$. As it is clear, this process involves also the VBF process $\gamma \gamma \to t \bar t$, which is dominant. This can be guessed from Fig.~\ref{fig:lumicomparison} and by the fact that $\log(m(t\bar t)/m_\mu)\gg \log(m(t\bar t)/m_Z)$. Moreover, this process features also a $\mu^+\mu^-\to- t \bar t \gamma (\gamma\mu^+\mu^-)$ topology, which in a massless computation would be removed at NNLO. \footnote{Still, we have verified this contribution to be negligible w.r.t.~our NNLO total phenomenological prediction when a cut on $m(\mu^+ \mu-)$ is applied }Luckily, for such process the purely QED and purely weak component of the $\mu^+\mu^-\to\mu^+\mu^- t \bar t$ amplitude can be separated in a gauge invariant way, therefore we veto the photons in the amplitude. In order to be as close as possible to the VBF configuration we avoid also the process $\mu^+\mu^-\to- t \bar t Z (Z \mu^+\mu^- )$, by actually generating the ME as $\mu^+e^-\to\mu^+e^- t \bar t$ and setting the mass and the Yukawa of the electron equal to the one of the muon. We denote in the plots such prediction as ME no-QED.
 
 We start with a set of cuts defined as follows
 %
@@ -235,43 +254,52 @@ We also explicitly  show the ratio of the EVA predictions with the ME-noQED one.
 
 For both EVA definitions we observe a good agreement within the scale uncertainty band with the EVA-noQED. The case $\mu=m(t \bar t)/2$ is actually at the a few percents from the  EVA-noQED, and at 10\% for the case  ``EVA only Log[mu/MV]''. Still the scale uncertainty band is at the $\pm40\%$ level.
 
-This good agreement deteriorates if the $\eta(t)$ distribution is considered. \pnote{I fear there is a bug here, and EVA results could be in the partonic res frame. The same applies in all the other eta plots. The bug is not present for the invariant mass because it is Lrentz-invariant. To be checked!} 
+This good agreement deteriorates if the $\eta(t)$ distribution is considered, see Fig.~\ref{fig:cutsZZtt2} . \pnote{I fear there is a bug here, and EVA results could be in the partonic res frame. The same applies in all the other eta plots. The bug is not present for sure for the invariant mass because it is Lorentz-invariant. To be checked!} 
+The agreement deteriorates also if we remove the cuts and we consider the full-inclusive levels. Corresponding plots are present in Figs.~\ref{fig:nocutsZZtt} and \ref{fig:nocutsZZtt2}. 
+
+It is worth to remind the reader that the process we are discussing is a very small fraction of the entire $\mu^+\mu^-\to\mu^+\mu^- t \bar t$ process, where photon-initiated contributions dominate, expecially at small $m(t \bar t)$. Nevertheless it is interesting to check if the contribution of the PDFs may be relevant here, {\it i.e.} if the difference w.r.t.~the EVA predictions are larger than their uncertainty and their difference w.r.t the ME-noQED. For the case of $ZZ\to t \bar t$ we have just seen that uncertainty are larger and differences with   ME-noQED are vey small, for $\mu=m(t \bar t) /2$ and not using the ``EVA only Log[mu/MV]''.
+
+
 
  
 
 
-\begin{figure}[ht]
-\includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/ZZ_tt/10TeVcuts/plotmtt.pdf}
-\includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/ZZ_tt/10TeVcuts/plotmttratio1.pdf}
-\includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/ZZ_tt/10TeVcuts/plotmttratio2.pdf}
-\label{fig:cutsZZtt}
-\end{figure}
 
 
-\begin{figure}[ht]
-\includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/ZZ_tt/10TeVcuts/plotetat.pdf}
-\includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/ZZ_tt/10TeVcuts/plotetatratio1.pdf}
-\includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/ZZ_tt/10TeVcuts/plotetatratio2.pdf}
-\end{figure}
-
-
-\begin{figure}[ht]
+\begin{figure}[!t]
 \includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/ZZ_tt/10TeVnocuts/plotmtt.pdf}
 \includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/ZZ_tt/10TeVnocuts/plotmttratio1.pdf}
 \includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/ZZ_tt/10TeVnocuts/plotmttratio2.pdf}
+\caption{No cuts, $m(t \bar t)$ distributions. \label{fig:nocutsZZtt}}
 \end{figure}
 
 
-\begin{figure}[ht]
+
+\begin{figure}[!t]
 \includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/ZZ_tt/10TeVnocuts/plotetat.pdf}
 \includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/ZZ_tt/10TeVnocuts/plotetatratio1.pdf}
 \includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/ZZ_tt/10TeVnocuts/plotetatratio2.pdf}
+\caption{No cuts, $\eta(t)$ distributions. \label{fig:nocutsZZtt2}}
 \end{figure}
 
 
 
 
-%\begin{figure}[ht]
+We start by showing in Fig.~\ref{fig:lumiZZpol}, the luminosities for different combinations of polarisations for the $Z$ bosons, both using the PDFs (solid) and the EVA (dashed). For some of them also we show in Figs.~\ref{fig:lumiratioZZpol} and \ref{fig:lumiratioZZpol2} the ratio of PDFs (black), EVA (red) and ``EVA only Log[mu/MV]'' over the PDFs prediction at the scale $\mu=m(t \bar t) /2$. We do it also taking only in the numerator of the ratio  $\mu=m(t \bar t) /2 \time 2$ (dashed) and $\mu=m(t \bar t) /2 / 2$ (dot-dashed). In other words, when the solid-red line is outside the band between the black-dashed and black-dot-dashed lines it means that the difference between the EVA and the PDFs is larger than the scale uncertainties of the PDFs.
+
+As can be seen, the situation is completely different when transverse $Z$, both left handed and right handed  are considered w.r.t. the case of longitudinal $Z$. While at large invariant masses the longitudinal boson are negligible, at the threshold and still in the region where EVA and ME-noQED agrees they are the dominant contribution, we have verified it explicitly for the cut employed here. For the case of the individual PDFs rather than luminosities this can be better seen directly in Appendix \ref{app:PDFsEVA_Z}.
+
+
+\pnote{I am not sure what conclude here. Seems like PDFs effects, i.e.~resummation is important.}
+
+
+
+ 
+
+
+
+
+%\begin{figure}[!t]
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/10TeV/ratios/WmL-WpL.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/10TeV/ratios/WmL-WpT.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/10TeV/ratios/WmT-WpL.pdf}
@@ -280,36 +308,125 @@ This good agreement deteriorates if the $\eta(t)$ distribution is considered. \p
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/10TeV/ratios/Wmm-Wpp.pdf}
 %\end{figure}
 %
-%\begin{figure}[ht]
+%\begin{figure}[!t]
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/10TeV/ratios/Wmp-Wpm.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/10TeV/ratios/Wmp-Wpp.pdf}
 
-\begin{figure}[ht]
+\begin{figure}[!t]
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/10TeV/lumis/plotWWpolRandL.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/10TeV/lumis/plotWWpolTand0.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/10TeV/lumis/plotWmWpandWpWm.pdf}
 \includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/10TeV/lumis/plotZZpolRandL.pdf}
 \includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/10TeV/lumis/plotZZpolTand0.pdf}
+\caption{Different luminosities depending on the polarization of Z \label{fig:lumiZZpol}}
 \end{figure}
 
 
 
 
 
-\begin{figure}[ht]
+\begin{figure}[!t]
 \includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/10TeV/ratios/ZL-ZL.pdf}
 \includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/10TeV/ratios/ZL-ZT.pdf}
 \includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/10TeV/ratios/ZT-ZL.pdf}
 \includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/10TeV/ratios/ZT-ZT.pdf}
+\caption{Different luminosities ratio over PDFs at central scale depending on the polarization of Z \label{fig:lumiratioZZpol}. In this sets of plot L=longitudinal, p=right, l=left.}
 \end{figure}
 
-\begin{figure}[ht]
+\begin{figure}[!t]
 \includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/10TeV/ratios/Zm-Zm.pdf}
 \includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/10TeV/ratios/Zp-Zm.pdf}
 \includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/10TeV/ratios/Zp-Zp.pdf}
+\caption{Others like Fig.~\ref{fig:lumiratioZZpol}. \label{fig:lumiratioZZpol2}}
+\end{figure}
+
+\clearpage
+
+\section{$WW$ initiated $t \bar t$ production}
+
+We move now to the case of $WW$ initiated $t \bar t$ production. Here we repeat the exercise done in the previous section, but comparing ME given by $\mu^+e^-\to\bar \nu_mu \nu_e t \bar t$ (setting the mass and the Yukawa of the electron) and $WW\to t \bar t~$ with the EVA. Unlike the previous case, besides avoiding the contribution from $\mu^+\mu^-\to- t \bar t Z (Z \nu_\mu \bar \nu_\mu )$ using the electron, we do not veto neither photons not other particles.
+
+The equivalent plots of Figs.~\ref{fig:cutsZZtt} and \ref{fig:cutsZZtt2}, with the cuts applied  are shown in Figs.~\ref{fig:cutsWWtt} and \ref{fig:cutsWWtt2}, while the  equivalent plots of Figs.~\ref{fig:nocutsZZtt} and \ref{fig:nocutsZZtt2}, with no cuts applied,  are shown in Figs.~\ref{fig:nocutsWWtt} and \ref{fig:nocutsWWtt2}. 
+
+
+\begin{figure}[!t]
+\includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/WW_tt/10TeVcuts/plotmtt.pdf}
+\includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/WW_tt/10TeVcuts/plotmttratio1.pdf}
+\includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/WW_tt/10TeVcuts/plotmttratio2.pdf}
+\caption{With cuts, $m(t \bar t)$ distributions. \label{fig:cutsWWtt}}
 \end{figure}
 
 
+\begin{figure}[!t]
+\includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/WW_tt/10TeVcuts/plotetat.pdf}
+\includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/WW_tt/10TeVcuts/plotetatratio1.pdf}
+\includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/WW_tt/10TeVcuts/plotetatratio2.pdf}
+\caption{With cuts, $\eta(t)$ distributions. \label{fig:cutsWWtt2}}
+\end{figure}
+ 
+ 
+ \begin{figure}[!t]
+\includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/WW_tt/10TeVnocuts/plotmtt.pdf}
+\includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/WW_tt/10TeVnocuts/plotmttratio1.pdf}
+\includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/WW_tt/10TeVnocuts/plotmttratio2.pdf}
+\caption{No cuts, $m(t \bar t)$ distributions. \label{fig:nocutsWWtt}}
+\end{figure}
+
+
+
+\begin{figure}[!t]
+\includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/WW_tt/10TeVnocuts/plotetat.pdf}
+\includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/WW_tt/10TeVnocuts/plotetatratio1.pdf}
+\includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/WW_tt/10TeVnocuts/plotetatratio2.pdf}
+\caption{No cuts, $\eta(t)$ distributions. \label{fig:nocutsWWtt2}}
+\end{figure}
+
+
+Again we observe a good agreement for the invariant mass distribution when the cuts are applied and the scale is set in the EVA at $\mu=m(t \bar t)$, however now only for $m(t \bar t) \gtrsim 1 TeV$. Also, in general the agreement is much worse than in the $ZZ$-initiated case and the contribution of the $WW$-initiated process is instead much larger. 
+
+
+
+\begin{figure}[!t]
+\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/10TeV/lumis/plotWWpolRandL.pdf}
+\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/10TeV/lumis/plotWWpolTand0.pdf}
+%\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/10TeV/lumis/plotWmWpandWpWm.pdf}
+%\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/10TeV/lumis/plotZZpolRandL.pdf}
+%\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/10TeV/lumis/plotZZpolTand0.pdf}
+\caption{Different luminosities depending on the polarization of W \label{fig:lumiWWpol}}
+\end{figure}
+ 
+ 
+ \begin{figure}[!t]
+\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/10TeV/ratios/WmL-WpL.pdf}
+\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/10TeV/ratios/WmL-WpT.pdf}
+\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/10TeV/ratios/WmT-WpL.pdf}
+\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/10TeV/ratios/WmT-WpT.pdf}
+\caption{Different luminosities ratio over PDFs at central scale depending on the polarization of Z \label{fig:lumiratioWWpol}. In this sets of plot L=longitudinal, p=right, l=left.}
+\end{figure}
+
+\begin{figure}[!t]
+\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/10TeV/ratios/Wmm-Wpm.pdf}
+\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/10TeV/ratios/Wmm-Wpp.pdf}
+\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/10TeV/ratios/Wmp-Wpm.pdf}
+\caption{Others like Fig.~\ref{fig:lumiratioWWpol}. \label{fig:lumiratioWWpol2}}
+\end{figure}
+
+
+%
+%\begin{figure}[!t]
+%\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/10TeV/ratios/ZL-ZL.pdf}
+%\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/10TeV/ratios/ZL-ZT.pdf}
+%\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/10TeV/ratios/ZT-ZL.pdf}
+%\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/10TeV/ratios/ZT-ZT.pdf}
+%\caption{Different luminosities ratio over PDFs at central scale depending on the polarization of Z \label{fig:lumiratioZZpol}. In this sets of plot L=longitudinal, p=right, l=left.}
+%\end{figure}
+%
+%\begin{figure}[!t]
+%\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/10TeV/ratios/Zm-Zm.pdf}
+%\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/10TeV/ratios/Zp-Zm.pdf}
+%\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/10TeV/ratios/Zp-Zp.pdf}
+%\caption{Others like Fig.~\ref{fig:lumiratioZZpol}. \label{fig:lumiratioZZpol2}}
+%\end{figure}
 
 
 \clearpage
@@ -344,42 +461,112 @@ This good agreement deteriorates if the $\eta(t)$ distribution is considered. \p
 
 \appendix
 
+\clearpage
+
+\section{PDF vs EVA}
+\label{app:PDFsEVA}
+
+\subsection{Z PDF}
+\label{app:PDFsEVA_Z}
+
+
+Here we show for the individual PDFs, with different polarisation the differences with EVA. In each Figure we show for three different scale choices ($Q=\sqrt{s}, \sqrt{s} \sqrt{x}$ and $\sqrt{s} x$) the ratio with the PDF at the reference scale, minus 1, for the EVA (orange) and the ``EVA only Log[mu/MV]'' (blue). We also show in black the ratio, minus 1, for the PDFs itself varying only in the numerator by a factor of two the scale
+
+
+
+\begin{figure}[!t]
+\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/10TeV/Z_0_Q.pdf}
+\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/10TeV/Z_0_Qsqrtx.pdf}
+\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/10TeV/Z_0_Qx.pdf}
+\end{figure}
+
+\begin{figure}[!t]
+\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/10TeV/Z_L-_Q.pdf}
+\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/10TeV/Z_L-_Qsqrtx.pdf}
+\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/10TeV/Z_L-_Qx.pdf}
+\end{figure}
+
+\begin{figure}[!t]
+\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/10TeV/Z_R_Q.pdf}
+\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/10TeV/Z_R_Qsqrtx.pdf}
+\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/10TeV/Z_R_Qx.pdf}
+\end{figure}
+
+\begin{figure}[!t]
+\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/10TeV/Z_T_Q.pdf}
+\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/10TeV/Z_T_Qsqrtx.pdf}
+\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/10TeV/Z_T_Qx.pdf}
+\end{figure}
+
+\begin{figure}[!t]
+\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/1TeV/W-_0_Q.pdf}
+\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/1TeV/W-_0_Qsqrtx.pdf}
+\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/1TeV/W-_0_Qx.pdf}
+\end{figure}
+
+\clearpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
 \section{ME vs EVA}
 
 \subsection{$WW$ into $WW$}
 
 
-%\begin{figure}[ht]
+%\begin{figure}[!t]
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/WW_WW/100TeVcuts/plotetaW.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/WW_WW/100TeVcuts/plotetaWratio1.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/WW_WW/100TeVcuts/plotetaWratio2.pdf}
 %\end{figure}
 
-%\begin{figure}[ht]
+%\begin{figure}[!t]
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/WW_WW/100TeVcuts/plotmWW.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/WW_WW/100TeVcuts/plotmWWratio1.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/WW_WW/100TeVcuts/plotmWWratio2.pdf}
 %\end{figure}
 
-%\begin{figure}[ht]
+%\begin{figure}[!t]
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/WW_WW/10TeVcuts/plotetaW.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/WW_WW/10TeVcuts/plotetaWratio1.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/WW_WW/10TeVcuts/plotetaWratio2.pdf}
 %\end{figure}
 
-%\begin{figure}[ht]
+%\begin{figure}[!t]
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/WW_WW/10TeVcuts/plotmWW.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/WW_WW/10TeVcuts/plotmWWratio1.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/WW_WW/10TeVcuts/plotmWWratio2.pdf}
 %\end{figure}
 
-%\begin{figure}[ht]
+%\begin{figure}[!t]
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/WW_WW/10TeVolnlyptcut/plotetaW.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/WW_WW/10TeVolnlyptcut/plotetaWratio1.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/WW_WW/10TeVolnlyptcut/plotetaWratio2.pdf}
 %\end{figure}
 
-%\begin{figure}[ht]
+%\begin{figure}[!t]
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/WW_WW/10TeVolnlyptcut/plotmWW.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/WW_WW/10TeVolnlyptcut/plotmWWratio1.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/WW_WW/10TeVolnlyptcut/plotmWWratio2.pdf}
@@ -388,25 +575,25 @@ This good agreement deteriorates if the $\eta(t)$ distribution is considered. \p
 \clearpage
 \subsection{$WW$ into $t \bar t$}
 
-%\begin{figure}[ht]
+%\begin{figure}[!t]
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/WW_tt/10TeVcuts/plotetat.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/WW_tt/10TeVcuts/plotetatratio1.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/WW_tt/10TeVcuts/plotetatratio2.pdf}
 %\end{figure}
 
-%\begin{figure}[ht]
+%\begin{figure}[!t]
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/WW_tt/10TeVcuts/plotmtt.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/WW_tt/10TeVcuts/plotmttratio1.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/WW_tt/10TeVcuts/plotmttratio2.pdf}
 %\end{figure}
 
-%\begin{figure}[ht]
+%\begin{figure}[!t]
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/WW_tt/10TeVnocuts/plotetat.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/WW_tt/10TeVnocuts/plotetatratio1.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/WW_tt/10TeVnocuts/plotetatratio2.pdf}
 %\end{figure}
 
-%\begin{figure}[ht]
+%\begin{figure}[!t]
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/WW_tt/10TeVnocuts/plotmtt.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/WW_tt/10TeVnocuts/plotmttratio1.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/WW_tt/10TeVnocuts/plotmttratio2.pdf}
@@ -415,31 +602,31 @@ This good agreement deteriorates if the $\eta(t)$ distribution is considered. \p
 \clearpage
 \subsection{$ZZ$ into $t \bar t$}
 
-%\begin{figure}[ht]
+%\begin{figure}[!t]
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/ZZ_tt/10TeVcuts/plotetat.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/ZZ_tt/10TeVcuts/plotetatratio1.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/ZZ_tt/10TeVcuts/plotetatratio2.pdf}
 %\end{figure}
 
-%\begin{figure}[ht]
+%\begin{figure}[!t]
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/ZZ_tt/10TeVcuts/plotmtt.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/ZZ_tt/10TeVcuts/plotmttratio1.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/ZZ_tt/10TeVcuts/plotmttratio2.pdf}
 %\end{figure}
 
-%\begin{figure}[ht]
+%\begin{figure}[!t]
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/ZZ_tt/10TeVnocuts/plotetat.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/ZZ_tt/10TeVnocuts/plotetatratio1.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/ZZ_tt/10TeVnocuts/plotetatratio2.pdf}
 %\end{figure}
 
-%\begin{figure}[ht]
+%\begin{figure}[!t]
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/ZZ_tt/10TeVnocuts/plotmtt.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/ZZ_tt/10TeVnocuts/plotmttratio1.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/ZZ_tt/10TeVnocuts/plotmttratio2.pdf}
 %\end{figure}
 
-%%\begin{figure}[ht]
+%%\begin{figure}[!t]
 %%\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/10TeV/lumis/WmL-WpL.pdf}
 %%\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/10TeV/lumis/WmL-WpT.pdf}
 %%\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/10TeV/lumis/WmT-WpL.pdf}
@@ -448,7 +635,7 @@ This good agreement deteriorates if the $\eta(t)$ distribution is considered. \p
 %%\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/10TeV/lumis/Wmm-Wpp.pdf}
 %%\end{figure}
 %
-%%\begin{figure}[ht]
+%%\begin{figure}[!t]
 %%\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/10TeV/lumis/Wmp-Wpm.pdf}
 %%\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/10TeV/lumis/Wmp-Wpp.pdf}
 %%\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/10TeV/lumis/ZL-ZL.pdf}
@@ -457,7 +644,7 @@ This good agreement deteriorates if the $\eta(t)$ distribution is considered. \p
 %%\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/10TeV/lumis/ZT-ZT.pdf}
 %%\end{figure}
 %
-%%\begin{figure}[ht]
+%%\begin{figure}[!t]
 %%\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/10TeV/lumis/Zm-Zm.pdf}
 %%\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/10TeV/lumis/Zp-Zm.pdf}
 %%\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/10TeV/lumis/Zp-Zp.pdf}
@@ -469,7 +656,7 @@ This good agreement deteriorates if the $\eta(t)$ distribution is considered. \p
 
 \subsection{10 TeV}
 
-%\begin{figure}[ht]
+%\begin{figure}[!t]
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/10TeV/lumis/plotWWpolRandL.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/10TeV/lumis/plotWWpolTand0.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/10TeV/lumis/plotWmWpandWpWm.pdf}
@@ -484,7 +671,7 @@ This good agreement deteriorates if the $\eta(t)$ distribution is considered. \p
 \clearpage
 \subsubsection{Comparisons with EVAs}
 
-%\begin{figure}[ht]
+%\begin{figure}[!t]
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/10TeV/ratios/WmL-WpL.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/10TeV/ratios/WmL-WpT.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/10TeV/ratios/WmT-WpL.pdf}
@@ -493,7 +680,7 @@ This good agreement deteriorates if the $\eta(t)$ distribution is considered. \p
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/10TeV/ratios/Wmm-Wpp.pdf}
 %\end{figure}
 
-%\begin{figure}[ht]
+%\begin{figure}[!t]
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/10TeV/ratios/Wmp-Wpm.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/10TeV/ratios/Wmp-Wpp.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/10TeV/ratios/ZL-ZL.pdf}
@@ -502,13 +689,13 @@ This good agreement deteriorates if the $\eta(t)$ distribution is considered. \p
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/10TeV/ratios/ZT-ZT.pdf}
 %\end{figure}
 
-%\begin{figure}[ht]
+%\begin{figure}[!t]
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/10TeV/ratios/Zm-Zm.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/10TeV/ratios/Zp-Zm.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/10TeV/ratios/Zp-Zp.pdf}
 %\end{figure}
 
-%%\begin{figure}[ht]
+%%\begin{figure}[!t]
 %%\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/1TeV/lumis/WmL-WpL.pdf}
 %%\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/1TeV/lumis/WmL-WpT.pdf}
 %%\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/1TeV/lumis/WmT-WpL.pdf}
@@ -517,7 +704,7 @@ This good agreement deteriorates if the $\eta(t)$ distribution is considered. \p
 %%\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/1TeV/lumis/Wmm-Wpp.pdf}
 %%\end{figure}
 %
-%%\begin{figure}[ht]
+%%\begin{figure}[!t]
 %%\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/1TeV/lumis/Wmp-Wpm.pdf}
 %%\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/1TeV/lumis/Wmp-Wpp.pdf}
 %%\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/1TeV/lumis/ZL-ZL.pdf}
@@ -526,7 +713,7 @@ This good agreement deteriorates if the $\eta(t)$ distribution is considered. \p
 %%\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/1TeV/lumis/ZT-ZT.pdf}
 %%\end{figure}
 %
-%%\begin{figure}[ht]
+%%\begin{figure}[!t]
 %%\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/1TeV/lumis/Zm-Zm.pdf}
 %%\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/1TeV/lumis/Zp-Zm.pdf}
 %%\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/1TeV/lumis/Zp-Zp.pdf}
@@ -535,7 +722,7 @@ This good agreement deteriorates if the $\eta(t)$ distribution is considered. \p
 \clearpage
 \subsection{1 TeV}
 
-%\begin{figure}[ht]
+%\begin{figure}[!t]
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/1TeV/lumis/plotWWpolRandL.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/1TeV/lumis/plotWWpolTand0.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/1TeV/lumis/plotWmWpandWpWm.pdf}
@@ -551,7 +738,7 @@ This good agreement deteriorates if the $\eta(t)$ distribution is considered. \p
 \subsubsection{Comparisons with EVAs}
 
 
-%\begin{figure}[ht]
+%\begin{figure}[!t]
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/1TeV/ratios/WmL-WpL.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/1TeV/ratios/WmL-WpT.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/1TeV/ratios/WmT-WpL.pdf}
@@ -560,7 +747,7 @@ This good agreement deteriorates if the $\eta(t)$ distribution is considered. \p
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/1TeV/ratios/Wmm-Wpp.pdf}
 %\end{figure}
 
-%\begin{figure}[ht]
+%\begin{figure}[!t]
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/1TeV/ratios/Wmp-Wpm.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/1TeV/ratios/Wmp-Wpp.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/1TeV/ratios/ZL-ZL.pdf}
@@ -569,13 +756,13 @@ This good agreement deteriorates if the $\eta(t)$ distribution is considered. \p
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/1TeV/ratios/ZT-ZT.pdf}
 %\end{figure}
 
-%\begin{figure}[ht]
+%\begin{figure}[!t]
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/1TeV/ratios/Zm-Zm.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/1TeV/ratios/Zp-Zm.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/1TeV/ratios/Zp-Zp.pdf}
 %\end{figure}
 
-%%\begin{figure}[ht]
+%%\begin{figure}[!t]
 %%\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/30TeV/lumis/WmL-WpL.pdf}
 %%\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/30TeV/lumis/WmL-WpT.pdf}
 %%\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/30TeV/lumis/WmT-WpL.pdf}
@@ -584,7 +771,7 @@ This good agreement deteriorates if the $\eta(t)$ distribution is considered. \p
 %%\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/30TeV/lumis/Wmm-Wpp.pdf}
 %%\end{figure}
 %
-%%\begin{figure}[ht]
+%%\begin{figure}[!t]
 %%\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/30TeV/lumis/Wmp-Wpm.pdf}
 %%\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/30TeV/lumis/Wmp-Wpp.pdf}
 %%\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/30TeV/lumis/ZL-ZL.pdf}
@@ -593,7 +780,7 @@ This good agreement deteriorates if the $\eta(t)$ distribution is considered. \p
 %%\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/30TeV/lumis/ZT-ZT.pdf}
 %%\end{figure}
 %
-%%\begin{figure}[ht]
+%%\begin{figure}[!t]
 %%\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/30TeV/lumis/Zm-Zm.pdf}
 %%\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/30TeV/lumis/Zp-Zm.pdf}
 %%\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/30TeV/lumis/Zp-Zp.pdf}
@@ -603,7 +790,7 @@ This good agreement deteriorates if the $\eta(t)$ distribution is considered. \p
 \clearpage
 \subsection{30 TeV}
 
-%\begin{figure}[ht]
+%\begin{figure}[!t]
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/30TeV/lumis/plotWWpolRandL.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/30TeV/lumis/plotWWpolTand0.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/30TeV/lumis/plotWmWpandWpWm.pdf}
@@ -619,7 +806,7 @@ This good agreement deteriorates if the $\eta(t)$ distribution is considered. \p
 \subsubsection{Comparisons with EVAs}
 
 
-%\begin{figure}[ht]
+%\begin{figure}[!t]
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/30TeV/ratios/WmL-WpL.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/30TeV/ratios/WmL-WpT.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/30TeV/ratios/WmT-WpL.pdf}
@@ -628,7 +815,7 @@ This good agreement deteriorates if the $\eta(t)$ distribution is considered. \p
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/30TeV/ratios/Wmm-Wpp.pdf}
 %\end{figure}
 
-%\begin{figure}[ht]
+%\begin{figure}[!t]
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/30TeV/ratios/Wmp-Wpm.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/30TeV/ratios/Wmp-Wpp.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/30TeV/ratios/ZL-ZL.pdf}
@@ -637,13 +824,13 @@ This good agreement deteriorates if the $\eta(t)$ distribution is considered. \p
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/30TeV/ratios/ZT-ZT.pdf}
 %\end{figure}
 
-%\begin{figure}[ht]
+%\begin{figure}[!t]
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/30TeV/ratios/Zm-Zm.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/30TeV/ratios/Zp-Zm.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/30TeV/ratios/Zp-Zp.pdf}
 %\end{figure}
 
-%%\begin{figure}[ht]
+%%\begin{figure}[!t]
 %%\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/3TeV/lumis/WmL-WpL.pdf}
 %%\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/3TeV/lumis/WmL-WpT.pdf}
 %%\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/3TeV/lumis/WmT-WpL.pdf}
@@ -652,7 +839,7 @@ This good agreement deteriorates if the $\eta(t)$ distribution is considered. \p
 %%\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/3TeV/lumis/Wmm-Wpp.pdf}
 %%\end{figure}
 %
-%%\begin{figure}[ht]
+%%\begin{figure}[!t]
 %%\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/3TeV/lumis/Wmp-Wpm.pdf}
 %%\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/3TeV/lumis/Wmp-Wpp.pdf}
 %%\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/3TeV/lumis/ZL-ZL.pdf}
@@ -661,7 +848,7 @@ This good agreement deteriorates if the $\eta(t)$ distribution is considered. \p
 %%\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/3TeV/lumis/ZT-ZT.pdf}
 %%\end{figure}
 %
-%%\begin{figure}[ht]
+%%\begin{figure}[!t]
 %%\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/3TeV/lumis/Zm-Zm.pdf}
 %%\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/3TeV/lumis/Zp-Zm.pdf}
 %%\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/3TeV/lumis/Zp-Zp.pdf}
@@ -670,7 +857,7 @@ This good agreement deteriorates if the $\eta(t)$ distribution is considered. \p
 \clearpage
 \subsection{3 TeV}
 
-%\begin{figure}[ht]
+%\begin{figure}[!t]
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/3TeV/lumis/plotWWpolRandL.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/3TeV/lumis/plotWWpolTand0.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/3TeV/lumis/plotWmWpandWpWm.pdf}
@@ -688,7 +875,7 @@ This good agreement deteriorates if the $\eta(t)$ distribution is considered. \p
 
 
 
-%\begin{figure}[ht]
+%\begin{figure}[!t]
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/3TeV/ratios/WmL-WpL.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/3TeV/ratios/WmL-WpT.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/3TeV/ratios/WmT-WpL.pdf}
@@ -697,7 +884,7 @@ This good agreement deteriorates if the $\eta(t)$ distribution is considered. \p
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/3TeV/ratios/Wmm-Wpp.pdf}
 %\end{figure}
 
-%\begin{figure}[ht]
+%\begin{figure}[!t]
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/3TeV/ratios/Wmp-Wpm.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/3TeV/ratios/Wmp-Wpp.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/3TeV/ratios/ZL-ZL.pdf}
@@ -706,7 +893,7 @@ This good agreement deteriorates if the $\eta(t)$ distribution is considered. \p
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/3TeV/ratios/ZT-ZT.pdf}
 %\end{figure}
 
-%\begin{figure}[ht]
+%\begin{figure}[!t]
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/3TeV/ratios/Zm-Zm.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/3TeV/ratios/Zp-Zm.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/3TeV/ratios/Zp-Zp.pdf}
@@ -719,50 +906,50 @@ This good agreement deteriorates if the $\eta(t)$ distribution is considered. \p
 
 \subsection{All together, for $\mu+$ and $\mu-$ but same partons}
 
-%\begin{figure}[ht]
+%\begin{figure}[!t]
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/alltogether/10TeV_mu+scaleQ.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/alltogether/10TeV_mu+scaleQsqrtx.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/alltogether/10TeV_mu+scaleQx.pdf}
 %\end{figure}
 
-%\begin{figure}[ht]
+%\begin{figure}[!t]
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/alltogether/10TeV_mu-scaleQ.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/alltogether/10TeV_mu-scaleQsqrtx.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/alltogether/10TeV_mu-scaleQx.pdf}
 %\end{figure}
 
-%\begin{figure}[ht]
+%\begin{figure}[!t]
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/alltogether/1TeV_mu+scaleQ.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/alltogether/1TeV_mu+scaleQsqrtx.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/alltogether/1TeV_mu+scaleQx.pdf}
 %\end{figure}
 
 
-%\begin{figure}[ht]
+%\begin{figure}[!t]
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/alltogether/1TeV_mu-scaleQ.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/alltogether/1TeV_mu-scaleQsqrtx.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/alltogether/1TeV_mu-scaleQx.pdf}
 %\end{figure}
 
-%\begin{figure}[ht]
+%\begin{figure}[!t]
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/alltogether/30TeV_mu+scaleQ.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/alltogether/30TeV_mu+scaleQsqrtx.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/alltogether/30TeV_mu+scaleQx.pdf}
 %\end{figure}
 
-%\begin{figure}[ht]
+%\begin{figure}[!t]
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/alltogether/30TeV_mu-scaleQ.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/alltogether/30TeV_mu-scaleQsqrtx.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/alltogether/30TeV_mu-scaleQx.pdf}
 %\end{figure}
 
-%\begin{figure}[ht]
+%\begin{figure}[!t]
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/alltogether/3TeV_mu+scaleQ.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/alltogether/3TeV_mu+scaleQsqrtx.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/alltogether/3TeV_mu+scaleQx.pdf}
 %\end{figure}
 
-%\begin{figure}[ht]
+%\begin{figure}[!t]
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/alltogether/3TeV_mu-scaleQ.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/alltogether/3TeV_mu-scaleQsqrtx.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/alltogether/3TeV_mu-scaleQx.pdf}
@@ -773,55 +960,55 @@ This good agreement deteriorates if the $\eta(t)$ distribution is considered. \p
 \clearpage
 \subsection{Individuals PDF vs EVAs 10 TeV}
 
-%\begin{figure}[ht]
+%\begin{figure}[!t]
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/10TeV/W-_0_Q.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/10TeV/W-_0_Qsqrtx.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/10TeV/W-_0_Qx.pdf}
 %\end{figure}
 
-%\begin{figure}[ht]
+%\begin{figure}[!t]
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/10TeV/W-_L_Q.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/10TeV/W-_L_Qsqrtx.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/10TeV/W-_L_Qx.pdf}
 %\end{figure}
 
-%\begin{figure}[ht]
+%\begin{figure}[!t]
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/10TeV/W-_R_Q.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/10TeV/W-_R_Qsqrtx.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/10TeV/W-_R_Qx.pdf}
 %\end{figure}
 
-%\begin{figure}[ht]
+%\begin{figure}[!t]
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/10TeV/W-_T_Q.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/10TeV/W-_T_Qsqrtx.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/10TeV/W-_T_Qx.pdf}
 %\end{figure}
 
-%\begin{figure}[ht]
+%\begin{figure}[!t]
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/10TeV/Z_0_Q.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/10TeV/Z_0_Qsqrtx.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/10TeV/Z_0_Qx.pdf}
 %\end{figure}
 
-%\begin{figure}[ht]
+%\begin{figure}[!t]
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/10TeV/Z_L-_Q.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/10TeV/Z_L-_Qsqrtx.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/10TeV/Z_L-_Qx.pdf}
 %\end{figure}
 
-%\begin{figure}[ht]
+%\begin{figure}[!t]
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/10TeV/Z_R_Q.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/10TeV/Z_R_Qsqrtx.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/10TeV/Z_R_Qx.pdf}
 %\end{figure}
 
-%\begin{figure}[ht]
+%\begin{figure}[!t]
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/10TeV/Z_T_Q.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/10TeV/Z_T_Qsqrtx.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/10TeV/Z_T_Qx.pdf}
 %\end{figure}
 
-%\begin{figure}[ht]
+%\begin{figure}[!t]
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/1TeV/W-_0_Q.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/1TeV/W-_0_Qsqrtx.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/1TeV/W-_0_Qx.pdf}
@@ -830,43 +1017,43 @@ This good agreement deteriorates if the $\eta(t)$ distribution is considered. \p
 \clearpage
 \subsection{Individuals PDF vs EVAs 1 TeV}
 
-%\begin{figure}[ht]
+%\begin{figure}[!t]
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/1TeV/W-_L_Q.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/1TeV/W-_L_Qsqrtx.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/1TeV/W-_L_Qx.pdf}
 %\end{figure}
 
-%\begin{figure}[ht]
+%\begin{figure}[!t]
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/1TeV/W-_R_Q.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/1TeV/W-_R_Qsqrtx.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/1TeV/W-_R_Qx.pdf}
 %\end{figure}
 
-%\begin{figure}[ht]
+%\begin{figure}[!t]
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/1TeV/W-_T_Q.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/1TeV/W-_T_Qsqrtx.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/1TeV/W-_T_Qx.pdf}
 %\end{figure}
 
-%\begin{figure}[ht]
+%\begin{figure}[!t]
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/1TeV/Z_0_Q.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/1TeV/Z_0_Qsqrtx.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/1TeV/Z_0_Qx.pdf}
 %\end{figure}
 
-%\begin{figure}[ht]
+%\begin{figure}[!t]
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/1TeV/Z_L-_Q.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/1TeV/Z_L-_Qsqrtx.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/1TeV/Z_L-_Qx.pdf}
 %\end{figure}
 
-%\begin{figure}[ht]
+%\begin{figure}[!t]
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/1TeV/Z_R_Q.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/1TeV/Z_R_Qsqrtx.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/1TeV/Z_R_Qx.pdf}
 %\end{figure}
 
-%\begin{figure}[ht]
+%\begin{figure}[!t]
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/1TeV/Z_T_Q.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/1TeV/Z_T_Qsqrtx.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/1TeV/Z_T_Qx.pdf}
@@ -875,68 +1062,68 @@ This good agreement deteriorates if the $\eta(t)$ distribution is considered. \p
 \clearpage
 \subsection{Individuals PDF vs EVAs 30 TeV}
 
-%\begin{figure}[ht]
+%\begin{figure}[!t]
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/30TeV/W-_0_Q.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/30TeV/W-_0_Qsqrtx.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/30TeV/W-_0_Qx.pdf}
 %\end{figure}
 
-%\begin{figure}[ht]
+%\begin{figure}[!t]
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/30TeV/W-_L_Q.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/30TeV/W-_L_Qsqrtx.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/30TeV/W-_L_Qx.pdf}
 %\end{figure}
 
-%\begin{figure}[ht]
+%\begin{figure}[!t]
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/30TeV/W-_R_Q.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/30TeV/W-_R_Qsqrtx.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/30TeV/W-_R_Qx.pdf}
 %\end{figure}
 
 
-%\begin{figure}[ht]
+%\begin{figure}[!t]
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/30TeV/W-_T_Q.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/30TeV/W-_T_Qsqrtx.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/30TeV/W-_T_Qx.pdf}
 %\end{figure}
 
-%\begin{figure}[ht]
+%\begin{figure}[!t]
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/30TeV/Z_0_Q.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/30TeV/Z_0_Qsqrtx.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/30TeV/Z_0_Qx.pdf}
 %\end{figure}
 
-%\begin{figure}[ht]
+%\begin{figure}[!t]
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/30TeV/Z_L-_Q.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/30TeV/Z_L-_Qsqrtx.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/30TeV/Z_L-_Qx.pdf}
 %\end{figure}
 
-%\begin{figure}[ht]
+%\begin{figure}[!t]
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/30TeV/Z_R_Q.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/30TeV/Z_R_Qsqrtx.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/30TeV/Z_R_Qx.pdf}
 %\end{figure}
 
-%\begin{figure}[ht]
+%\begin{figure}[!t]
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/30TeV/Z_T_Q.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/30TeV/Z_T_Qsqrtx.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/30TeV/Z_T_Qx.pdf}
 %\end{figure}
 
-%\begin{figure}[ht]
+%\begin{figure}[!t]
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/3TeV/W-_0_Q.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/3TeV/W-_0_Qsqrtx.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/3TeV/W-_0_Qx.pdf}
 %\end{figure}
 
-%\begin{figure}[ht]
+%\begin{figure}[!t]
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/3TeV/W-_L_Q.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/3TeV/W-_L_Qsqrtx.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/3TeV/W-_L_Qx.pdf}
 %\end{figure}
 
-%\begin{figure}[ht]
+%\begin{figure}[!t]
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/3TeV/W-_R_Q.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/3TeV/W-_R_Qsqrtx.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/3TeV/W-_R_Qx.pdf}
@@ -945,31 +1132,31 @@ This good agreement deteriorates if the $\eta(t)$ distribution is considered. \p
 \clearpage
 \subsection{Individuals PDF vs EVAs 3 TeV}
 
-%\begin{figure}[ht]
+%\begin{figure}[!t]
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/3TeV/W-_T_Q.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/3TeV/W-_T_Qsqrtx.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/3TeV/W-_T_Qx.pdf}
 %\end{figure}
 
-%\begin{figure}[ht]
+%\begin{figure}[!t]
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/3TeV/Z_0_Q.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/3TeV/Z_0_Qsqrtx.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/3TeV/Z_0_Qx.pdf}
 %\end{figure}
 
-%\begin{figure}[ht]
+%\begin{figure}[!t]
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/3TeV/Z_L-_Q.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/3TeV/Z_L-_Qsqrtx.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/3TeV/Z_L-_Qx.pdf}
 %\end{figure}
 
-%\begin{figure}[ht]
+%\begin{figure}[!t]
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/3TeV/Z_R_Q.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/3TeV/Z_R_Qsqrtx.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/3TeV/Z_R_Qx.pdf}
 %\end{figure}
 
-%\begin{figure}[ht]
+%\begin{figure}[!t]
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/3TeV/Z_T_Q.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/3TeV/Z_T_Qsqrtx.pdf}
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotPDFs/ratios/3TeV/Z_T_Qx.pdf}
