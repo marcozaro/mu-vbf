@@ -67,7 +67,7 @@ A VBF process at muon collider can either be described via a Matrix-Element (ME)
 The former exactly takes into account all the contributions at a given perturbative order for the corresponding process, including those originating  contributions originating from  topologies that have nothing in common with VBF.  The latter leads to a much easier computation, which is the reason why it is appealing, since it features two less legs in the final state. However, topologies different than VBS are completely neglected and also for them 
 power corrections ($\mv/\sqrt{s}$) are not under control. \footnote{In all this note we neglect the PDF or the ``EVA'' of the muon in the muon. In the case of $2\to 4$ processes considered we simply consider the ME so $\hat s= s$.}, and logarithm-enhanced terms depend on a factorisation scale, which is as usual arbitrary. Such logarithms are precisely the origin of the common lore: EVA is a good description of the process and leads to a large contribution, so VBF is the dominant process and we can use EVA instead of VBF.
 
-First of all we want to explore at what level the previous statement is true. In doing so we compare  ME vs.~EVA and for the EVA we use two different parameterisations. Using the notation of \cite{Garosi:2023bvq}, the EVA can be defined for the longitudinal the transverse and longitudinal $W^-$ boson as 
+First of all we want to explore at what level the previous statement is true. In doing so we compare  ME vs.~EVA and for the EVA we use two different parameterisations. Using the notation of Ref.~\cite{Garosi:2023bvq}, the EVA can be defined for the longitudinal the transverse and longitudinal $W^-$ boson as 
 \begin{eqnarray}
    { \color{blue} f_{W^-_\pm}^{(\alpha)}(x, Q^2)} &=& \int_{m_\mu^2}^{Q^2} d p_T^2 \frac{1}{2} \frac{d \mathcal{P}_{\psi \to W_T \psi}}{d p_T^2}(x, p_T^2) \, 
     = \int_{m_\mu^2}^{Q^2} d p_T^2 \, \frac{\alpha_2}{8 \pi} \frac{p_T^2}{(p_T^2 + (1-x) m_W^2)^2} P_{V_\pm f_L}^f(x) = \nonumber \\
@@ -222,17 +222,45 @@ Comparisons for same luminosities with different polarisation are shown in the c
 
 \section{$ZZ$ initiated $t \bar t$ production}
 
+We start analysing the $ZZ\to t \bar t$ process, which is a VBF subcomponent of the complete process (ME) $\mu^+\mu^-\to\mu^+\mu^- t \bar t$. As it is clear, this process involves also the VBF process $\gamma \gamma \to t \bar t$, which is dominant. This can be guessed from Fig.~\ref{fig:lumicomparison} and by the fact that $\log(m(t\bar t)/m_\mu)\gg \log(m(t\bar t)/m_Z)$. Moreover, this process features also a $\mu^+\mu^-\to- t \bar t \gamma (\gamma\to t \bar t )$ topology, which in a massless computation would be removed at NNLO. \footnote{Still, we have verified this contribution to be negligible w.r.t.~our NNLO total phenomenological prediction when a cut on $m(\mu^+ \mu-)$ is applied }Luckily, for such process the purely QED and purely weak component of the $\mu^+\mu^-\to\mu^+\mu^- t \bar t$ amplitude can be separated in a gauge invariant way, therefore we veto the photons in the amplitude. In order to be as close as possible to the $VBF$ configuration we avoid also the process $\mu^+\mu^-\to- t \bar t Z (Z \to t \bar t )$, by actually generating the ME as $\mu^+e^-\to\mu^+e^- t \bar t$ and setting the mass and the Yukawa of the electron equal to the one of the muon. We denote in the plots such prediction as ME no-QED.
+
+We start with a set of cuts defined as follows
+%
+\begin{equation}
+m(t \bar t) > 500~\gev, p_T(t/ \bar t) > 150~\gev, |\eta(t/\bar t)|<2.5 
+\end{equation}
+%
+we show in Fig.~\ref{fig:cutsZZtt} the $m(t \bar t)$ distribution at ME-noQED versus the EVA predictions using the notation of Ref.~\cite{Garosi:2023bvq} with a central scale definition for the EVA $\mu=m(t \bar t) /2$ and a variation around it by a factor of 2.
+We also explicitly  show the ratio of the EVA predictions with the ME-noQED one. The same plot is also shown for parameterisation of the EVA from Ref.~\cite{Ruiz:2021tdt}, which we denoted in the plots as ``EVA only Log[mu/MV]''.
+
+For both EVA definitions we observe a good agreement within the scale uncertainty band with the EVA-noQED. The case $\mu=m(t \bar t)/2$ is actually at the a few percents from the  EVA-noQED, and at 10\% for the case  ``EVA only Log[mu/MV]''. Still the scale uncertainty band is at the $\pm40\%$ level.
+
+This good agreement deteriorates if the $\eta(t)$ distribution is considered. \pnote{I fear there is a bug here, and EVA results could be in the partonic res frame. The same applies in all the other eta plots. The bug is not present for the invariant mass because it is Lrentz-invariant. To be checked!} 
+
+ 
+
+
+\begin{figure}[ht]
+\includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/ZZ_tt/10TeVcuts/plotmtt.pdf}
+\includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/ZZ_tt/10TeVcuts/plotmttratio1.pdf}
+\includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/ZZ_tt/10TeVcuts/plotmttratio2.pdf}
+\label{fig:cutsZZtt}
+\end{figure}
+
+
 \begin{figure}[ht]
 \includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/ZZ_tt/10TeVcuts/plotetat.pdf}
 \includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/ZZ_tt/10TeVcuts/plotetatratio1.pdf}
 \includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/ZZ_tt/10TeVcuts/plotetatratio2.pdf}
 \end{figure}
 
+
 \begin{figure}[ht]
-\includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/ZZ_tt/10TeVcuts/plotmtt.pdf}
-\includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/ZZ_tt/10TeVcuts/plotmttratio1.pdf}
-\includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/ZZ_tt/10TeVcuts/plotmttratio2.pdf}
+\includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/ZZ_tt/10TeVnocuts/plotmtt.pdf}
+\includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/ZZ_tt/10TeVnocuts/plotmttratio1.pdf}
+\includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/ZZ_tt/10TeVnocuts/plotmttratio2.pdf}
 \end{figure}
+
 
 \begin{figure}[ht]
 \includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/ZZ_tt/10TeVnocuts/plotetat.pdf}
@@ -240,11 +268,6 @@ Comparisons for same luminosities with different polarisation are shown in the c
 \includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/ZZ_tt/10TeVnocuts/plotetatratio2.pdf}
 \end{figure}
 
-\begin{figure}[ht]
-\includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/ZZ_tt/10TeVnocuts/plotmtt.pdf}
-\includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/ZZ_tt/10TeVnocuts/plotmttratio1.pdf}
-\includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/ZZ_tt/10TeVnocuts/plotmttratio2.pdf}
-\end{figure}
 
 
 
@@ -262,16 +285,13 @@ Comparisons for same luminosities with different polarisation are shown in the c
 %\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/10TeV/ratios/Wmp-Wpp.pdf}
 
 \begin{figure}[ht]
-\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/10TeV/lumis/plotWWpolRandL.pdf}
-\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/10TeV/lumis/plotWWpolTand0.pdf}
-\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/10TeV/lumis/plotWmWpandWpWm.pdf}
+%\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/10TeV/lumis/plotWWpolRandL.pdf}
+%\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/10TeV/lumis/plotWWpolTand0.pdf}
+%\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/10TeV/lumis/plotWmWpandWpWm.pdf}
 \includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/10TeV/lumis/plotZZpolRandL.pdf}
 \includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/10TeV/lumis/plotZZpolTand0.pdf}
 \end{figure}
 
-\begin{figure}
-\includegraphics[width=0.46\linewidth]{Notebooks/PlotLumi/10TeV/lumis/plotgammaWZ.pdf}
-\end{figure}
 
 
 
