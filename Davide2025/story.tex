@@ -31,7 +31,7 @@
 \maxdeadcycles=2000
 \extrafloats{100}
 
-\title{Many plots and a story}
+\title{The story with less plots}
 
 \author[a]{John}
 \author[a]{Paul}
@@ -51,7 +51,7 @@
 }
 
 \abstract{
-Showing that myths are false
+Showing that myths are false.  All the plots are improvable, both in layout and precision.
 }
 
 \keywords{NLO Computations, Monte Carlo, Collider Physics, BDSM}
@@ -60,6 +60,118 @@ Showing that myths are false
 \maketitle
 \flushbottom
 
+
+\section{Intro}
+
+A VBF process at muon collider can either be described via a Matrix-Element (ME) approach or exploiting the Effective-Vector-boson-Approximation. 
+The former exactly takes into account all the contributions at a given perturbative order for the corresponding process, including those originating  contributions originating from  topologies that have nothing in common with VBF.  The latter leads to a much easier computation, which is the reason why it is appealing, since it features two less legs in the final state. However, topologies different than VBS are completely neglected and also for them 
+power corrections ($\mv/\sqrt{s}$) are not under control. \footnote{In all this note we neglect the PDF or the ``EVA'' of the muon in the muon. In the case of $2\to 4$ processes considered we simply consider the ME so $\hat s= s$.}, and logarithm-enhanced terms depend on a factorisation scale, which is as usual arbitrary. Such logarithms are precisely the origin of the common lore: EVA is a good description of the process and leads to a large contribution, so VBF is the dominant process and we can use EVA instead of VBF.
+
+First of all we want to explore at what level the previous statement is true. In doing so we compare  ME vs.~EVA and for the EVA we use two different parameterisations. Using the notation of \cite{Garosi:2023bvq}, the EVA can be defined for the longitudinal the transverse and longitudinal $W^-$ boson as 
+\begin{eqnarray}
+   { \color{blue} f_{W^-_\pm}^{(\alpha)}(x, Q^2)} &=& \int_{m_\mu^2}^{Q^2} d p_T^2 \frac{1}{2} \frac{d \mathcal{P}_{\psi \to W_T \psi}}{d p_T^2}(x, p_T^2) \, 
+    = \int_{m_\mu^2}^{Q^2} d p_T^2 \, \frac{\alpha_2}{8 \pi} \frac{p_T^2}{(p_T^2 + (1-x) m_W^2)^2} P_{V_\pm f_L}^f(x) = \nonumber \\
+    &=& { \color{blue}\frac{\alpha_2}{8 \pi} P_{V_\pm f_L}^f(x) \left( \log \frac{Q^2 + (1-x) m_W^2}{m_{\mu}^2 + (1-x) m_W^2} 
+    - \frac{Q^2}{Q^2 + (1-x) m_W^2} \right) }= \nonumber \\
+    &\approx& \frac{\alpha_2}{8 \pi} P_{V_\pm f_L}^f(x) \left( \log \frac{Q^2}{m_W^2} - \log(1-x) - 1\right) + \mathcal{O}\left( \frac{m_W^2}{Q^2} \right)~, \label{eq:EWA_WT} \\
+%
+    {\color{blue} f_{W^-_L}^{(\alpha)}(x, Q^2)} &=& \int_{0}^{Q^2} d p_T^2 \frac{1}{2} \frac{d \mathcal{P}_{\psi \to W_L \psi}}{d p_T^2} (x, p_T^2) \, 
+    = \int_{0}^{Q^2} d p_T^2 \, \frac{\alpha_2}{4 \pi} \frac{m_W^2}{(p_T^2 + (1-x) m_W^2)^2} \frac{(1-x)^2}{x} = \nonumber \\
+    &=& { \color{blue} \frac{\alpha_2}{4 \pi} \frac{1-x}{x}
+    \frac{Q^2}{Q^2 + (1-x) m_W^2}}
+    \approx \frac{\alpha_2}{4 \pi} \frac{1-x}{x} + \mathcal{O}\left( \frac{m_W^2}{Q^2} \right) ~,\label{eq:EWA_WL}
+\end{eqnarray}
+and analogously for the $Z$ and $Z/\gamma$ PDFs
+\begin{eqnarray}
+    {\color{blue}f_{Z_\pm}^{(\alpha)}(x, Q^2)} &=& 
+    {\color{blue}\frac{\alpha_2}{4 \pi c_W^2} \left(P_{V_\pm f_L}^f(x) (Q^Z_{\mu_L})^2 + P_{V_\pm f_R}^f(x) (Q^Z_{\mu_R})^2 \right) }\nonumber \\
+    && \quad {\color{blue}\left( \log \frac{Q^2 + (1-x) m_Z^2}{m_{\mu}^2 + (1-x) m_Z^2} 
+    - \frac{Q^2}{Q^2 + (1-x) m_Z^2} \right)} ~, \label{eq:EWA_ZT} \\
+%
+    f_{Z/\gamma_\pm}^{(\alpha)}(x, Q^2) &=& 
+    -\frac{\sqrt{\alpha_\gamma \alpha_2}}{2 \pi c_W} \left(P_{V_\pm f_L}^f(x) Q^Z_{\mu_L} + P_{V_\pm f_R}^f(x) Q^Z_{\mu_R} \right) \log \frac{Q^2 + (1-x) m_Z^2}{m_{\mu}^2 + (1-x) m_Z^2}  ~, \label{eq:EWA_ZgaT} \\
+%
+   {\color{blue} f_{Z_L}^{(\alpha)}(x, Q^2)} &=&
+    {\color{blue}\frac{\alpha_2}{2 \pi c_W^2} \frac{1-x}{x} \left( (Q^Z_{\mu_L})^2 + (Q^Z_{\mu_R})^2\right) 
+    \frac{Q^2}{Q^2 + (1-x) m_Z^2} }~,\label{eq:EWA_ZL}
+\end{eqnarray}
+where $P_{V_+ f_L}^f(x) = P_{V_- f_R}^f(x) = (1-x)^2 / x$ and $P_{V_- f_L}^f(x) = P_{V_+ f_R}^f(x) = 1 / x$.
+The muon mass here serves as an IR cutoff for the logarithm in the transverse case to cure the $x\to 1$ limit, while it is neglected it in the other terms. Notably, the $W^+$ has no contribution at this order.
+In our comparison with ME we use the formula in {\color{blue} blue}, therefore we are not considering the case of the mixed photon-$Z$ and of the photon itself.
+In other words, just $W$ and $Z$ bosons.
+
+The other EVA parameterisation  according to Ref.~\cite{Ruiz:2021tdt}, assuming $q^2$ evolution,
+ for polarized $V_\lambda\in\{W_\lambda^\pm,Z_\lambda\}$ from LH $(\tilde{f}_L)$ and RH $(\tilde{f}_R)$ fermions in the hard scattering frame are 
+\begin{subequations}
+\label{eq:formalism_pdfs_q2}
+\begin{align}
+\tilde{f}_{V_+/f_L}(\xi,\mu_f^2) 	&= \frac{g_V^2}{4\pi^2} \frac{g_L^2(1-\xi)^2}{2\xi} \log \left[\frac{\mu_f^2}{M_V^2}\right], \\
+\tilde{f}_{V_-/f_L}(\xi,\mu_f^2) 	&= \frac{g_V^2}{4\pi^2} \frac{g_L^2}{2\xi} \log \left[\frac{\mu_f^2}{M_V^2}\right], \\
+\tilde{f}_{V_0 / f_L}(\xi,\mu_f^2) 	&= \frac{g_V^2}{4\pi^2} \frac{g_L^2(1-\xi)}{\xi},\\  
+\tilde{f}_{V_+/f_R}(\xi,\mu_f^2) 	&= \left(\frac{g_R}{g_L}\right)^2 \times \tilde{f}_{V_-/f_L}(\xi,\mu_f^2), \\
+\tilde{f}_{V_-/f_R}(\xi,\mu_f^2) 	&= \left(\frac{g_R}{g_L}\right)^2 \times \tilde{f}_{V_+/f_L}(\xi,\mu_f^2), \\
+\tilde{f}_{V_0/f_R}(\xi,\mu_f^2) 	&= \left(\frac{g_R}{g_L}\right)^2 \times \tilde{f}_{V_0/f_L}(\xi,\mu_f^2). 
+\end{align}
+\end{subequations}
+
+with couplings defined in Table~\ref{tab:ewa_coup}.
+
+Here we report on purpose the two definitions using the two different notations in order to check their consistency.
+First of all we note that in Eq.~\eqref{eq:formalism_pdfs_q2}, the quantity $g_V$ is wrong and should be replaced with $\tilde{g}$. Second,
+polarized EVA for \textit{unpolarized} muon beams, denoted by $\tilde{f}_{V_\lambda/\mu^\pm}$, can be constructed from those PDFs for \textit{polarized} muons, denote by $\tilde{f}_{V_\lambda/\mu^\pm_\lambda}$, through the relation
+\begin{equation}
+ \tilde{f}_{V_\lambda/\mu^\pm}(\xi,\mu_f) =
+ \cfrac{\tilde{f}_{V_\lambda/\mu^\pm_L}(\xi,\mu_f) + \tilde{f}_{V_\lambda/\mu^\pm_R}(\xi,\mu_f)}{2}
+\label{eq:pdfDef_unpolarizedMuon}
+\end{equation}
+
+and 
+
+\begin{equation}
+ \tilde{f}_{V_T/\mu^\pm}(\xi,\mu_f) =
+\tilde{f}_{V_+/\mu^\pm_L}(\xi,\mu_f) + \tilde{f}_{V_-/\mu^\pm_R}(\xi,\mu_f).
+\label{eq:pdfDef_unpolarizedMuon}
+\end{equation}
+
+
+
+\begin{table}[!t]
+\begin{center}
+\resizebox{\textwidth}{!}{
+\renewcommand*{\arraystretch}{0.95}
+\begin{tabular}{c|c|c|c|c|c}
+\hline\hline
+\multirow{2}{*}{Vertex} & Coupling  & \multirow{2}{*}{$g_R^f$}  & \multirow{2}{*}{$g_L^f$}  & \multirow{2}{*}{$g_V^f$}  & \multirow{2}{*}{$g_A^f$} \\
+	& strength	&	& &  & \\
+\hline\hline
+$V-f-f'$	& $\tilde{g}$				& $(g_V^f+g_A^f)$		& $(g_V^f-g_A^f)$		& $\frac{(g_R+g_L)}{2}$ 	& $\frac{(g_R-g_L)}{2}$ \\
+$\gamma-f-f$	& $e Q^f$				& $1$				& $1$				& $1$				& $0$\\
+$Z-f-f$	    & $\frac{g}{\cos\theta_W}$	& $-Q^f\sin^2\theta_W$	& $(T_3^f)_L-Q^f\sin^2\theta_W$				& $\frac{1}{2}(T_3^f)_L-Q^f\sin^2\theta_W$ 			& $-\frac{1}{2}(T_3^f)_L$ \\
+$W-f-f'$	& $\frac{g}{\sqrt{2}}$			& $0$				& $1$				& $\frac{1}{2}$ 			& $-\frac{1}{2}$ \\
+\hline\hline
+\end{tabular}
+}
+\caption{
+EW chiral couplings and coupling strength normalizations used in the EVA for fermions $f,f'$ with weak isospin charge $(T_3^f)_L=\pm1/2$ and electric charge $Q^f$, with normalization $Q^\ell=-1$.
+}
+\label{tab:ewa_coup}
+\end{center}
+\end{table}
+
+\pnote{TEXT TO BE WRITTEN FOR THE CASE OF THE ANTIMUON}
+
+
+After having compared ME vs EVA predictions for some representative distribution and cuts set-ups, which are mostly the same considered in the pheno paper, we discuss than the second step: moving from the EVA to the PDFs, and we use the {\small \sc LePDF} parameterisation.
+We compare individual PDFs and luminosities against their EVA counterparts.
+ 
+
+
+\section{$ZZ$ initiated $t \bar t$ production}
+
+
+
+
+\clearpage
 \appendix
 
 \section{ME vs EVA}
