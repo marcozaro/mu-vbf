@@ -246,7 +246,7 @@ We start analysing the $ZZ\to t \bar t$ process, which is a VBF subcomponent of 
 We start with a set of cuts defined as follows
 %
 \begin{equation}
-m(t \bar t) > 500~\gev, p_T(t/ \bar t) > 150~\gev, |\eta(t/\bar t)|<2.5 
+m(t \bar t) > 500~\gev,~~ p_T(t/ \bar t) > 150~\gev,~~ |\eta(t/\bar t)|<2.5 
 \end{equation}
 %
 we show in Fig.~\ref{fig:cutsZZtt} the $m(t \bar t)$ distribution at ME-noQED versus the EVA predictions using the notation of Ref.~\cite{Garosi:2023bvq} with a central scale definition for the EVA $\mu=m(t \bar t) /2$ and a variation around it by a factor of 2.
@@ -432,6 +432,115 @@ The equivalent of Fig.~\ref{fig:lumiZZpol} for the $WW$ initiated process is Fig
 
 \clearpage
 
+\subsection{$WW$ into $WW$}
+
+We move now to $WW$ production ($W^+W^-$), which as we will show is a very different case w.r.t.~the $t \bar t~$ production.
+First of all we notice that we cannot easily isolate the $ZZ\to WW$ component in the ME via vetoing photons in $\mu^+e^-\to\mu^+e^- WW$ production, such operation violate gauge invariance and leads in numerical simulation to bogus numbers. We therefore perform this test only for the charged channel, $WW\to WW$ and its ME counterpart following the same logic of the case of $t \bar t$ production: selecting $\mu^+e^-\to\bar \nu_\mu \nu_e WW$.
+
+
+\begin{figure}[!t]
+\includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/WW_WW/10TeVolnlyptcut/plotmWW.pdf}
+\includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/WW_WW/10TeVolnlyptcut/plotmWWratio1.pdf}
+\includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/WW_WW/10TeVolnlyptcut/plotmWWratio2.pdf}
+\caption{$p_T(W)$ cut only, $m(WW)$ distributions. \label{fig:ptcutWWWW}}
+
+\end{figure}
+
+\begin{figure}[!t]
+\includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/WW_WW/10TeVolnlyptcut/plotetaW.pdf}
+\includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/WW_WW/10TeVolnlyptcut/plotetaWratio1.pdf}
+\includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/WW_WW/10TeVolnlyptcut/plotetaWratio2.pdf}
+\caption{$p_T(W)$ cut only, $\eta(W)$ distributions. \label{fig:ptcutWWWW2}}
+\end{figure}
+
+
+In the case of $WW \to WW$ (EVA) vs $\mu^+e^-\to\bar \nu_\mu \nu_e WW$ (ME) there is an important point to note: with no cuts on the $W$ bosons the former diverges and the latter does not. The problem in $WW\to WW$ is not due to the EVA but to the partonic cross section, which is divergent! This is the same effect observed in Bhabha scattering with not restriction on the angle of the final state particles w.r.t.~the beam. The same process within the $\mu^+e^-\to\bar \nu_\mu \nu_e WW$ ME has an important difference: the $W$ bosons in the initial state are space-like and this condition automatically screens the appearance of the divergence. All in all, this tell us that we have already identified a situation, which is not very exotic being the inclusive cross section, where the EVA is badly failing. Nevertheless, we continue our analysis by requiring a minimum $p_T$ for the W bosons, $p_T(W)>150$ GeV, so that the EVA is finite, and we show the relevant plots as done in the previous sections in Figs.~\ref{fig:ptcutWWWW} and \ref{fig:ptcutWWWW2}. 
+
+The prediction of the EVA are completely off from the ME, overshooting the result. This is not surprising since with a cut  $p_T(W)>p_{T,cut}$ in the limit $p_{T,cut}\to 0$ the EVA diverges while the ME prediction remain finite. Moreover, for a given $p_{T,cut}$ the corresponding angular cut on the $\theta$ of the outgoing $W$ bosons decreases for larger $m(WW)$, leading to a larger discrepancy between ME and EVA. \pnote{statements to check numerically by varying the cut}
+
+A way to avoid small $\theta$ angles is applying a cut on $\eta(W)$. We therefore apply similar cuts to those of the $t \bar t$ case 
+%
+\begin{equation}
+m(WW) > 500~\gev, ~~p_T(W) > 150~\gev,~~ |\eta(W)|<2.5 
+\end{equation}
+ %
+ and we show the corresponding results in Figs.~\ref{fig:cutsWWWW} and \ref{fig:cutsWWWW2}.
+
+
+
+
+\begin{figure}[!t]
+\includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/WW_WW/10TeVcuts/plotmWW.pdf}
+\includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/WW_WW/10TeVcuts/plotmWWratio1.pdf}
+\includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/WW_WW/10TeVcuts/plotmWWratio2.pdf}
+\caption{With cuts, $m(WW)$ distributions. \label{fig:cutsWWWW}}
+\end{figure}
+
+
+
+\begin{figure}[!t]
+\includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/WW_WW/10TeVcuts/plotetaW.pdf}
+\includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/WW_WW/10TeVcuts/plotetaWratio1.pdf}
+\includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/WW_WW/10TeVcuts/plotetaWratio2.pdf}
+\caption{With cuts, $\eta(W)$ distributions. \label{fig:cutsWWWW2}}
+\end{figure}
+
+
+Now the ME are in agreement with the EVA uncertainty band, not in the case ``EVA only Log[mu/MV]'', but this band involves a variation of order $+80\%$ and $-60\%$, which is much larger than the differences between the EVA and the PDF luminosities, which have already been shown in Figs.~\ref{fig:lumiWWpol}--\ref{fig:lumiratioWWpol2}.
+
+We notice also that within the $\mu^+e^-\to\bar \nu_\mu \nu_e WW$ ME, there are other contributions that are logarithmically enhanced, for instance,
+\begin{itemize}
+\item via the radiation of $W$ bosons in the initial state $\bar \nu_\mu \nu_e \to \bar \nu_\mu \nu_e $.
+\item via the radiation of one $W$  and one $\nu$ in the initial state $\nu W \to \nu W  $.
+\item radiation of $W$ bosons in the final state from the process  $\mu^+e^-\to \mu^+e^-$.
+\end{itemize}
+
+The cuts applied should suppress such contributions, but a component should still survive, especially if only the $p_T(W)$ cut or no cuts at all are applied, which is a physically well defined configuration that as we have already said can only be performed via ME.
+
+In addition we remind the reader that we are simulating ME for  $\mu^+e^-\to\bar \nu_\mu \nu_e WW$, if we had chosen $\mu^+\mu^-\to\bar \nu_\mu \nu_\mu WW$ additional new topologies would appear, such as
+
+\begin{itemize}
+\item $\mu^+\mu^-\to ZH (Z\to \bar \nu_\mu \nu_\mu ) (H \to WW )$
+\item $\mu^+\mu^-\to ZWW (Z\to \bar \nu_\mu \nu_\mu ) $
+\item $\mu^+\mu^-\to Z_1Z_2 (Z\to \bar \nu_\mu \nu_\mu ) (Z_2 \to WW) $
+\item $\mu^+\mu^-\to Z \gamma (Z\to \bar \nu_\mu \nu_\mu ) (\gamma \to WW) $
+\end{itemize}
+
+None of them is VBF-like and therefore the agreement with the EVA could get only worse.
+
+As last study we try to find a situation where the EVA could work. We take a $(\rm hypothetical)^2$ collider: hypothetical being a muon collider and hypothetical because is at 100 TeV, something that could be built in the next century. We also increase by a factor of 10 the $m(WW)$ and $p_T(W)$ cuts 
+\begin{equation}
+m(WW) > 5~\tev, ~~p_T(W) > 1.5~\tev,~~ |\eta(W)|<2.5 \,.
+\end{equation}
+
+Results are shown in Fig.~
+
+
+
+\begin{figure}[!t]
+\includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/WW_WW/100TeVcuts/plotmWW.pdf}
+\includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/WW_WW/100TeVcuts/plotmWWratio1.pdf}
+\includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/WW_WW/100TeVcuts/plotmWWratio2.pdf}
+\caption{100 TeV with cuts, $m(WW)$ distributions. \label{fig:100cutsWWWW}}
+\end{figure}
+
+
+
+\begin{figure}[!t]
+\includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/WW_WW/100TeVcuts/plotetaW.pdf}
+\includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/WW_WW/100TeVcuts/plotetaWratio1.pdf}
+\includegraphics[width=0.46\linewidth]{Notebooks/PlotDistr/WW_WW/100TeVcuts/plotetaWratio2.pdf}
+\caption{100 TeV with cuts, $\eta(W)$ distributions. \label{fig:100cutsWWWW2}}
+\end{figure}
+
+
+
+
+
+
+\clearpage
+\pagebreak
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -504,9 +613,9 @@ Here we show for the individual PDFs, with different polarisation the difference
 \end{figure}
 
 
-
 \clearpage
-\pagebreak
+
+
 
 \subsection{W PDF}
 \label{app:PDFsEVA_W}
