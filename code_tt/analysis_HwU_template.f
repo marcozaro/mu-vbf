@@ -35,15 +35,16 @@ c In the weights_info, there is an text string that explains what each
 c weight will mean. The size of this array of strings is equal to nwgt.
       character*(*) weights_info(*)
       integer i,l
-      character*8 orders(0:3)
-      data orders /' |T@LO  ',' |T@NLO ',' |T@NNLO',' |T@TOT '/
+      character*9 orders(0:7)
+      data orders /' |T@LO   ',' |T@NLO  ',' |T@NNLO ',' |T@TOT  ',
+     $             ' |T@LOC  ',' |T@NLOC ',' |T@NNLOC',' |T@TOTC '/
       include 'input.inc'
 
 c Initialize the histogramming package (HwU). Pass the number of
 c weights and the information on the weights:
       call HwU_inithist(nwgt,weights_info)
 
-      do i = 0,3
+      do i = 0,7
 c declare (i.e. book) the histograms
         l=i*20
         call HwU_book(l+1,'total rate      '//orders(i), 5,0.5d0,5.5d0)
@@ -141,8 +142,9 @@ c local variable
       double precision rap2
       external rap2
 
-      integer orders_tag ! 0->LO,1->NLO,2->NNLO
+      integer orders_tag, icut ! 0->LO,1->NLO,2->NNLO
       common/to_orderstag/orders_tag
+      logical passcuts_an
 c
 c Fill the histograms here using a call to the HwU_fill()
 c subroutine. The first argument is the histogram label, the second is
@@ -193,8 +195,12 @@ c phase-space point.
       if (p_mum(0).gt.0d0) th_mm = datan2(pt_mm, p_mum(3))
 
 
-      do i = 0,3
-        l=i*20
+      passcuts_an = pt_t.gt.150d0.and.pt_tx.gt.150d0.and.m_tt.gt.500d0
+     $                .and.abs(y_t).lt.2.5d0.and.abs(y_tx).lt.2.5d0
+      do icut = 0, 1
+       if (icut.eq.1.and..not.passcuts_an) cycle
+       do i = 0,3
+        l=(i+4*icut)*20
         if (i.ne.3.and.i.ne.orders_tag) cycle
 c always fill the total rate
         call HwU_fill(l+1,var,wgts)
@@ -218,6 +224,7 @@ c always fill the total rate
         call HwU_fill(l+18,y_mp,wgts)
         call HwU_fill(l+19,y_mm,wgts)
         call HwU_fill(l+20,y_tt,wgts)
+       enddo
       enddo
       return
       end
