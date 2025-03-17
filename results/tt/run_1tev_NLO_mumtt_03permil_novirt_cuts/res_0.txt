@@ -1,0 +1,25 @@
+
+
+Cross section per integration channel:
+       P0_mupmum_ttx                1   1.79137727e-01    9.0400e-04       0.5046%  
+           P0_aa_ttx                1   1.08454830e-03    5.9429e-05       5.4796%  
+
+
+ABS cross section per integration channel:
+       P0_mupmum_ttx                1   1.80125585e-01    8.9228e-04       0.4954%  
+           P0_aa_ttx                1   1.47781868e-03    5.9107e-05       3.9996%  
+
+
+ABS cross section per dir
+       P0_mupmum_ttx   1.80125585e-01    8.9228e-04 
+           P0_aa_ttx   1.47781868e-03    5.9107e-05 
+
+
+Cross section per dir
+       P0_mupmum_ttx   1.79137727e-01    9.0400e-04 
+           P0_aa_ttx   1.08454830e-03    5.9429e-05 
+
+Total ABS and 
+Total: 
+                      1.81603404e-01 +- 8.9424e-04  (4.9241e-01%)
+                      1.80222275e-01 +- 9.0595e-04  (5.0269e-01%) 
