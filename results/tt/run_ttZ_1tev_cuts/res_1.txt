@@ -1,0 +1,69 @@
+
+
+Cross section per integration channel:
+      P0_mupmum_ttxz                1   1.82302541e-04    7.3495e-07       0.4031%  
+      P0_mupmum_ttxz                1   1.81965138e-04    7.3477e-07       0.4038%  
+      P0_mupmum_ttxz                1   1.83347927e-04    7.3348e-07       0.4000%  
+      P0_mupmum_ttxz                1   1.83647558e-04    7.3127e-07       0.3982%  
+      P0_mupmum_ttxz                1   1.82629682e-04    7.2978e-07       0.3996%  
+      P0_mupmum_ttxz                1   1.82310820e-04    7.2975e-07       0.4003%  
+      P0_mupmum_ttxz                1   1.82685086e-04    7.2869e-07       0.3989%  
+      P0_mupmum_ttxz                1   1.81125843e-04    7.2731e-07       0.4015%  
+      P0_mupmum_ttxz                1   1.81402275e-04    7.2540e-07       0.3999%  
+      P0_mupmum_ttxz                1   1.81875703e-04    7.2486e-07       0.3985%  
+      P0_mupmum_ttxz                1   1.83307132e-04    7.2478e-07       0.3954%  
+      P0_mupmum_ttxz                1   1.80939568e-04    7.2463e-07       0.4005%  
+      P0_mupmum_ttxz                1   1.82414813e-04    7.2318e-07       0.3965%  
+      P0_mupmum_ttxz                1   1.81950517e-04    7.2297e-07       0.3973%  
+      P0_mupmum_ttxz                1   1.81670504e-04    7.2254e-07       0.3977%  
+      P0_mupmum_ttxz                1   1.81532833e-04    7.2252e-07       0.3980%  
+      P0_mupmum_ttxz                1   1.82370455e-04    7.2233e-07       0.3961%  
+      P0_mupmum_ttxz                1   1.82333214e-04    7.2207e-07       0.3960%  
+      P0_mupmum_ttxz                1   1.82151120e-04    7.2152e-07       0.3961%  
+      P0_mupmum_ttxz                1   1.81463110e-04    7.1969e-07       0.3966%  
+      P0_mupmum_ttxz                1   1.81888096e-04    7.1952e-07       0.3956%  
+      P0_mupmum_ttxz                1   1.82291033e-04    7.1777e-07       0.3938%  
+      P0_mupmum_ttxz                1   1.82066483e-04    7.1763e-07       0.3942%  
+      P0_mupmum_ttxz                1   1.81451331e-04    7.1548e-07       0.3943%  
+      P0_mupmum_ttxz                1   1.81687254e-04    7.1281e-07       0.3923%  
+
+
+ABS cross section per integration channel:
+      P0_mupmum_ttxz                1   1.82302541e-04    7.3495e-07       0.4031%  
+      P0_mupmum_ttxz                1   1.81965138e-04    7.3477e-07       0.4038%  
+      P0_mupmum_ttxz                1   1.83347927e-04    7.3348e-07       0.4000%  
+      P0_mupmum_ttxz                1   1.83647558e-04    7.3127e-07       0.3982%  
+      P0_mupmum_ttxz                1   1.82629682e-04    7.2978e-07       0.3996%  
+      P0_mupmum_ttxz                1   1.82310820e-04    7.2975e-07       0.4003%  
+      P0_mupmum_ttxz                1   1.82685086e-04    7.2869e-07       0.3989%  
+      P0_mupmum_ttxz                1   1.81125843e-04    7.2731e-07       0.4015%  
+      P0_mupmum_ttxz                1   1.81402275e-04    7.2540e-07       0.3999%  
+      P0_mupmum_ttxz                1   1.81875703e-04    7.2486e-07       0.3985%  
+      P0_mupmum_ttxz                1   1.83307132e-04    7.2478e-07       0.3954%  
+      P0_mupmum_ttxz                1   1.80939568e-04    7.2463e-07       0.4005%  
+      P0_mupmum_ttxz                1   1.82414813e-04    7.2318e-07       0.3965%  
+      P0_mupmum_ttxz                1   1.81950517e-04    7.2297e-07       0.3973%  
+      P0_mupmum_ttxz                1   1.81670504e-04    7.2254e-07       0.3977%  
+      P0_mupmum_ttxz                1   1.81532833e-04    7.2252e-07       0.3980%  
+      P0_mupmum_ttxz                1   1.82370455e-04    7.2233e-07       0.3961%  
+      P0_mupmum_ttxz                1   1.82333214e-04    7.2207e-07       0.3960%  
+      P0_mupmum_ttxz                1   1.82151120e-04    7.2152e-07       0.3961%  
+      P0_mupmum_ttxz                1   1.81463110e-04    7.1969e-07       0.3966%  
+      P0_mupmum_ttxz                1   1.81888096e-04    7.1952e-07       0.3956%  
+      P0_mupmum_ttxz                1   1.82291033e-04    7.1777e-07       0.3938%  
+      P0_mupmum_ttxz                1   1.82066483e-04    7.1763e-07       0.3942%  
+      P0_mupmum_ttxz                1   1.81451331e-04    7.1548e-07       0.3943%  
+      P0_mupmum_ttxz                1   1.81687254e-04    7.1281e-07       0.3923%  
+
+
+ABS cross section per dir
+      P0_mupmum_ttxz   4.55281004e-03    3.6221e-06 
+
+
+Cross section per dir
+      P0_mupmum_ttxz   4.55281004e-03    3.6221e-06 
+
+Total ABS and 
+Total: 
+                      4.55281004e-03 +- 3.6221e-06  (7.9557e-02%)
+                      4.55281004e-03 +- 3.6221e-06  (7.9557e-02%) 

@@ -1,0 +1,11 @@
+
+   --------------------------------------------------------------
+      Final results and run summary:
+      Process mu+ mu- > t t~ z [LOonly=QCD]
+      Run at mu+-mu- collider (5000.0 + 5000.0 GeV)
+      Total cross section: 3.631e-04 +- 1.8e-07 pb
+   --------------------------------------------------------------
+      Scale variation (computed from histogram information):
+          Dynamical_scale_choice 5 (envelope of 9 values): 
+              3.631e-04 pb  +2.9% -2.3%
+   --------------------------------------------------------------
