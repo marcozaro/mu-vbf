@@ -1,0 +1,11 @@
+
+   --------------------------------------------------------------
+      Final results and run summary:
+      Process mup mum > w+ w- [QED]
+      Run at mu+-mu- collider (500.0 + 500.0 GeV)
+      Total cross section: 3.336e+00 +- 5.2e-04 pb
+   --------------------------------------------------------------
+      Scale variation (computed from histogram information):
+          Dynamical_scale_choice 5 (envelope of 9 values): 
+              3.336e+00 pb  +0.3% -0.1%
+   --------------------------------------------------------------
