@@ -177,4 +177,5 @@
 #  Additional hidden parameters
 #*********************************************************************
   0.0	= misset # hidden_parameter
+  dummy_mio	= bias_module # hidden_parameter
   -1.0	= missetmax # hidden_parameter
