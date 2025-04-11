@@ -58,6 +58,9 @@ C         information (color, resonances, helicities, etc..)
           data requires_full_event_info/.False./ 
           common/bias/stored_bias_weight,impact_xsec,
      &                requires_full_event_info
+
+          double precision minvtwo
+
 C
 C Accessingt the details of the event
 C
@@ -95,7 +98,20 @@ c          endif
 
 c          bias_weight = (max_ptj/ptj_bias_target_ptj)
 c     &                                      **ptj_bias_enhancement_power
-          bias_weight =max(1d0,(p(1,5)**2+p(2,5)**2)**3/(1000d0)**6)
+
+           minvtwo=(p(0,5)+p(0,6))**2 - (p(1,5)+p(1,6))**2 - (p(2,5)+p(2,6))**2 - (p(3,5)+p(3,6))**2
+
+c          bias_weight =max(1d0,(p(1,5)**2+p(2,5)**2)**3/(1000d0)**6)
+         
+           bias_weight =max(1d0,(minvtwo/(1500d0**2d0))**2.5d0)
+
+
+
+
+
+
+
+
           return
 
       end subroutine bias_wgt
