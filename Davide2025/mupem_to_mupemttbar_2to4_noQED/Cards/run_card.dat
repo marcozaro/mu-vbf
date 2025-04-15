@@ -23,7 +23,7 @@
 # Number of events and rnd seed                                      *
 # Warning: Do not generate more than 1M events in a single run       *
 #*********************************************************************
-  100000	= nevents ! Number of unweighted events requested 
+  1000000	= nevents ! Number of unweighted events requested 
   0	= iseed ! rnd seed (0=assigned automatically=default))
 #*********************************************************************
 # Collider type and energy                                           *
@@ -66,7 +66,7 @@
   91.188	= dsqrt_q2fact1 ! fixed fact scale for pdf1
   91.188	= dsqrt_q2fact2 ! fixed fact scale for pdf2
   -1	= dynamical_scale_choice ! Choose one of the preselected dynamical choices
-  1.0	= scalefact ! scale factor for event-by-event scales
+  0.25	= scalefact ! scale factor for event-by-event scales
 
  
 #*********************************************************************
@@ -176,6 +176,5 @@
 #********************************************************************* 
 #  Additional hidden parameters
 #*********************************************************************
-  0.0	= misset # hidden_parameter
-  dummy_mio	= bias_module # hidden_parameter
   -1.0	= missetmax # hidden_parameter
+  0.0	= misset # hidden_parameter
