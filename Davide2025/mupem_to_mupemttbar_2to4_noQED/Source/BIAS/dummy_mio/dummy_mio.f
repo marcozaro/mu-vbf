@@ -101,9 +101,16 @@ c     &                                      **ptj_bias_enhancement_power
 
            minvtwo=(p(0,5)+p(0,6))**2 - (p(1,5)+p(1,6))**2 - (p(2,5)+p(2,6))**2 - (p(3,5)+p(3,6))**2
 
-c          bias_weight =max(1d0,(p(1,5)**2+p(2,5)**2)**3/(1000d0)**6)
-         
-           bias_weight =max(1d0,(minvtwo/(1500d0**2d0))**2.5d0)
+
+
+c         nobias
+          bias_weight = 1d0
+
+c         PTBIAS
+c         bias_weight =max(1d0,(p(1,5)**2+p(2,5)**2)**3/(1000d0)**6)
+
+c         MINVBIAS         
+c         bias_weight =max(1d0,(minvtwo/(1500d0**2d0))**2.5d0)
 
 
 
