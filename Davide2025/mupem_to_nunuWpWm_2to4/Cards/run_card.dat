@@ -119,14 +119,14 @@
 # Maximum and minimum absolute rapidity (for max, -1 means no cut)   *
 #*********************************************************************
   {}	= eta_min_pdg ! rap cut for other particles (use pdg code). Applied on particle and anti-particle
-  {'24': 2.5}	= eta_max_pdg ! rap cut for other particles (syntax e.g. {6: 2.5, 23: 5})
+  {'24': -1.0}	= eta_max_pdg ! rap cut for other particles (syntax e.g. {6: 2.5, 23: 5})
 #*********************************************************************
 # Minimum and maximum DeltaR distance                                *
 #*********************************************************************
 #*********************************************************************
 # Minimum and maximum invariant mass for pairs                       *
 #*********************************************************************
-  {'24': 500.0}	= mxx_min_pdg ! min invariant mass of a pair of particles X/X~ (e.g. {6:250})
+  {'24': 0.0}	= mxx_min_pdg ! min invariant mass of a pair of particles X/X~ (e.g. {6:250})
   {'default': False}	= mxx_only_part_antipart ! if True the invariant mass is applied only 
                        ! to pairs of particle/antiparticle and not to pairs of the same pdg codes.  
  #*********************************************************************
@@ -160,19 +160,19 @@
 #********************************************************************* 
 #  Additional hidden parameters
 #*********************************************************************
-  -1.0	= drllmax # hidden_parameter
-  dummy_mio	= bias_module # hidden_parameter
-  -1.0	= ptlmax # hidden_parameter
   -1.0	= mmllmax # hidden_parameter
+  0.0	= ptllmin # hidden_parameter
+  -1.0	= drllmax # hidden_parameter
+  0.0	= ptl1min # hidden_parameter
   -1.0	= etal # hidden_parameter
+  0.0	= xptl # hidden_parameter
+  dummy_mio	= bias_module # hidden_parameter
   0.0	= etalmin # hidden_parameter
   -1.0	= ptl2max # hidden_parameter
-  0.0	= ptl1min # hidden_parameter
-  0.0	= ptl # hidden_parameter
-  0.0	= drll # hidden_parameter
-  0.0	= mmll # hidden_parameter
-  -1.0	= ptl1max # hidden_parameter
   -1.0	= ptllmax # hidden_parameter
-  0.0	= xptl # hidden_parameter
+  -1.0	= ptlmax # hidden_parameter
+  0.0	= mmll # hidden_parameter
+  0.0	= drll # hidden_parameter
+  -1.0	= ptl1max # hidden_parameter
   0.0	= ptl2min # hidden_parameter
-  0.0	= ptllmin # hidden_parameter
+  0.0	= ptl # hidden_parameter
