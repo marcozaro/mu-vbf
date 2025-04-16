@@ -104,10 +104,10 @@ c     &                                      **ptj_bias_enhancement_power
 
 
 c         nobias
-c          bias_weight = 1d0
+          bias_weight = 1d0
 
 c         PTBIAS
-         bias_weight =max(1d0,(p(1,5)**2+p(2,5)**2)**3/(1000d0)**6)
+c         bias_weight =max(1d0,(p(1,5)**2+p(2,5)**2)**3/(1000d0)**6)
 
 c         MINVBIAS         
 c         bias_weight =max(1d0,(minvtwo/(1500d0**2d0))**2.5d0)

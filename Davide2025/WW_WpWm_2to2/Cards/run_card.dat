@@ -164,8 +164,8 @@
 #********************************************************************* 
 #  Additional hidden parameters
 #*********************************************************************
-  dummy_mio	= bias_module # hidden_parameter
-  -1.0	= mmnlmax # hidden_parameter
   -1.0	= missetmax # hidden_parameter
+  dummy_mio	= bias_module # hidden_parameter
   0.0	= misset # hidden_parameter
+  -1.0	= mmnlmax # hidden_parameter
   0.0	= mmnl # hidden_parameter
