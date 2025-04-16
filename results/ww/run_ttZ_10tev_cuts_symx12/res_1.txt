@@ -1,0 +1,69 @@
+
+
+Cross section per integration channel:
+     P0_mupmum_wpzwm                1   5.37636477e-04    1.4292e-04       26.5831%  
+     P0_mupmum_wpzwm                1   4.54990329e-04    6.2430e-05       13.7212%  
+     P0_mupmum_wpzwm                1   4.22907820e-04    2.3482e-05       5.5526%  
+     P0_mupmum_wpzwm                1   4.27027015e-04    2.2818e-05       5.3434%  
+     P0_mupmum_wpzwm                1   4.20935062e-04    2.1151e-05       5.0248%  
+     P0_mupmum_wpzwm                1   4.11410367e-04    1.7129e-05       4.1636%  
+     P0_mupmum_wpzwm                1   4.14061135e-04    1.6661e-05       4.0238%  
+     P0_mupmum_wpzwm                1   4.10359313e-04    1.5351e-05       3.7409%  
+     P0_mupmum_wpzwm                1   4.23323115e-04    1.4913e-05       3.5229%  
+     P0_mupmum_wpzwm                1   4.04258092e-04    1.4439e-05       3.5716%  
+     P0_mupmum_wpzwm                1   4.04839265e-04    1.3489e-05       3.3318%  
+     P0_mupmum_wpzwm                1   4.08382053e-04    1.3122e-05       3.2131%  
+     P0_mupmum_wpzwm                1   4.00629119e-04    1.1840e-05       2.9555%  
+     P0_mupmum_wpzwm                1   4.00015880e-04    1.1706e-05       2.9263%  
+     P0_mupmum_wpzwm                1   4.02046105e-04    1.1535e-05       2.8691%  
+     P0_mupmum_wpzwm                1   3.90976111e-04    1.1211e-05       2.8674%  
+     P0_mupmum_wpzwm                1   4.03586216e-04    1.0056e-05       2.4917%  
+     P0_mupmum_wpzwm                1   3.90184177e-04    9.9744e-06       2.5563%  
+     P0_mupmum_wpzwm                1   3.98955559e-04    9.8083e-06       2.4585%  
+     P0_mupmum_wpzwm                1   3.98430471e-04    9.6890e-06       2.4318%  
+     P0_mupmum_wpzwm                1   3.89577063e-04    9.4089e-06       2.4152%  
+     P0_mupmum_wpzwm                1   3.86927670e-04    9.3115e-06       2.4065%  
+     P0_mupmum_wpzwm                1   3.81899494e-04    9.1988e-06       2.4087%  
+     P0_mupmum_wpzwm                1   3.89396114e-04    8.5345e-06       2.1917%  
+     P0_mupmum_wpzwm                1   3.80544155e-04    8.0734e-06       2.1215%  
+
+
+ABS cross section per integration channel:
+     P0_mupmum_wpzwm                1   5.37636477e-04    1.4292e-04       26.5831%  
+     P0_mupmum_wpzwm                1   4.54990329e-04    6.2430e-05       13.7212%  
+     P0_mupmum_wpzwm                1   4.22907820e-04    2.3482e-05       5.5526%  
+     P0_mupmum_wpzwm                1   4.27027015e-04    2.2818e-05       5.3434%  
+     P0_mupmum_wpzwm                1   4.20935062e-04    2.1151e-05       5.0248%  
+     P0_mupmum_wpzwm                1   4.11410367e-04    1.7129e-05       4.1636%  
+     P0_mupmum_wpzwm                1   4.14061135e-04    1.6661e-05       4.0238%  
+     P0_mupmum_wpzwm                1   4.10359313e-04    1.5351e-05       3.7409%  
+     P0_mupmum_wpzwm                1   4.23323115e-04    1.4913e-05       3.5229%  
+     P0_mupmum_wpzwm                1   4.04258092e-04    1.4439e-05       3.5716%  
+     P0_mupmum_wpzwm                1   4.04839265e-04    1.3489e-05       3.3318%  
+     P0_mupmum_wpzwm                1   4.08382053e-04    1.3122e-05       3.2131%  
+     P0_mupmum_wpzwm                1   4.00629119e-04    1.1840e-05       2.9555%  
+     P0_mupmum_wpzwm                1   4.00015880e-04    1.1706e-05       2.9263%  
+     P0_mupmum_wpzwm                1   4.02046105e-04    1.1535e-05       2.8691%  
+     P0_mupmum_wpzwm                1   3.90976111e-04    1.1211e-05       2.8674%  
+     P0_mupmum_wpzwm                1   4.03586216e-04    1.0056e-05       2.4917%  
+     P0_mupmum_wpzwm                1   3.90184177e-04    9.9744e-06       2.5563%  
+     P0_mupmum_wpzwm                1   3.98955559e-04    9.8083e-06       2.4585%  
+     P0_mupmum_wpzwm                1   3.98430471e-04    9.6890e-06       2.4318%  
+     P0_mupmum_wpzwm                1   3.89577063e-04    9.4089e-06       2.4152%  
+     P0_mupmum_wpzwm                1   3.86927670e-04    9.3115e-06       2.4065%  
+     P0_mupmum_wpzwm                1   3.81899494e-04    9.1988e-06       2.4087%  
+     P0_mupmum_wpzwm                1   3.89396114e-04    8.5345e-06       2.1917%  
+     P0_mupmum_wpzwm                1   3.80544155e-04    8.0734e-06       2.1215%  
+
+
+ABS cross section per dir
+     P0_mupmum_wpzwm   1.02532982e-02    1.6959e-04 
+
+
+Cross section per dir
+     P0_mupmum_wpzwm   1.02532982e-02    1.6959e-04 
+
+Total ABS and 
+Total: 
+                      1.02532982e-02 +- 1.6959e-04  (1.6540e+00%)
+                      1.02532982e-02 +- 1.6959e-04  (1.6540e+00%) 
