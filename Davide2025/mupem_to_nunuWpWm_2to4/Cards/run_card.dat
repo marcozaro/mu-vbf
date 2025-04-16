@@ -23,7 +23,7 @@
 # Number of events and rnd seed                                      *
 # Warning: Do not generate more than 1M events in a single run       *
 #*********************************************************************
-  100000	= nevents ! Number of unweighted events requested 
+  1000000	= nevents ! Number of unweighted events requested 
   0	= iseed ! rnd seed (0=assigned automatically=default))
 #*********************************************************************
 # Collider type and energy                                           *
@@ -160,19 +160,19 @@
 #********************************************************************* 
 #  Additional hidden parameters
 #*********************************************************************
-  -1.0	= ptl1max # hidden_parameter
-  -1.0	= ptl2max # hidden_parameter
-  0.0	= mmll # hidden_parameter
-  0.0	= ptl # hidden_parameter
   0.0	= etalmin # hidden_parameter
-  0.0	= xptl # hidden_parameter
-  0.0	= drll # hidden_parameter
-  -1.0	= ptlmax # hidden_parameter
-  -1.0	= drllmax # hidden_parameter
-  0.0	= ptllmin # hidden_parameter
-  dummy_mio	= bias_module # hidden_parameter
-  0.0	= ptl2min # hidden_parameter
-  -1.0	= mmllmax # hidden_parameter
   0.0	= ptl1min # hidden_parameter
-  -1.0	= ptllmax # hidden_parameter
+  0.0	= mmll # hidden_parameter
   -1.0	= etal # hidden_parameter
+  -1.0	= drllmax # hidden_parameter
+  0.0	= ptl2min # hidden_parameter
+  -1.0	= ptl2max # hidden_parameter
+  -1.0	= ptlmax # hidden_parameter
+  -1.0	= ptllmax # hidden_parameter
+  0.0	= xptl # hidden_parameter
+  -1.0	= mmllmax # hidden_parameter
+  0.0	= ptl # hidden_parameter
+  -1.0	= ptl1max # hidden_parameter
+  0.0	= ptllmin # hidden_parameter
+  0.0	= drll # hidden_parameter
+  dummy_mio	= bias_module # hidden_parameter
