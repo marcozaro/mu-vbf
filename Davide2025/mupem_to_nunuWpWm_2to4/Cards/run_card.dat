@@ -110,7 +110,7 @@
 #*********************************************************************
   0.0	= misset ! minimum missing Et (sum of neutrino's momenta)
   -1.0	= missetmax ! maximum missing Et (sum of neutrino's momenta)
-  {'24': 150.0}	= pt_min_pdg ! pt cut for other particles (use pdg code). Applied on particle and anti-particle
+  {'24': 1000.0}	= pt_min_pdg ! pt cut for other particles (use pdg code). Applied on particle and anti-particle
   {}	= pt_max_pdg ! pt cut for other particles (syntax e.g. {6: 100, 25: 50}) 
 #
 # For display option for energy cut in the partonic center of mass frame type 'update ecut'
@@ -161,18 +161,18 @@
 #  Additional hidden parameters
 #*********************************************************************
   -1.0	= mmllmax # hidden_parameter
-  0.0	= ptllmin # hidden_parameter
-  -1.0	= drllmax # hidden_parameter
+  0.0	= mmll # hidden_parameter
   0.0	= ptl1min # hidden_parameter
-  -1.0	= etal # hidden_parameter
+  -1.0	= ptlmax # hidden_parameter
   0.0	= xptl # hidden_parameter
+  0.0	= ptl2min # hidden_parameter
   dummy_mio	= bias_module # hidden_parameter
-  0.0	= etalmin # hidden_parameter
+  0.0	= drll # hidden_parameter
+  0.0	= ptllmin # hidden_parameter
+  -1.0	= etal # hidden_parameter
   -1.0	= ptl2max # hidden_parameter
   -1.0	= ptllmax # hidden_parameter
-  -1.0	= ptlmax # hidden_parameter
-  0.0	= mmll # hidden_parameter
-  0.0	= drll # hidden_parameter
-  -1.0	= ptl1max # hidden_parameter
-  0.0	= ptl2min # hidden_parameter
+  0.0	= etalmin # hidden_parameter
+  -1.0	= drllmax # hidden_parameter
   0.0	= ptl # hidden_parameter
+  -1.0	= ptl1max # hidden_parameter

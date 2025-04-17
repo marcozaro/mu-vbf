@@ -123,7 +123,7 @@
 #*********************************************************************
 # Minimum and maximum pt's (for max, -1 means no cut)                *
 #*********************************************************************
-  {'24': 150.0}	= pt_min_pdg ! pt cut for other particles (use pdg code). Applied on particle and anti-particle
+  {'24': 1000.0}	= pt_min_pdg ! pt cut for other particles (use pdg code). Applied on particle and anti-particle
   {}	= pt_max_pdg ! pt cut for other particles (syntax e.g. {6: 100, 25: 50}) 
 #
 # For display option for energy cut in the partonic center of mass frame type 'update ecut'
@@ -164,8 +164,8 @@
 #********************************************************************* 
 #  Additional hidden parameters
 #*********************************************************************
-  -1.0	= missetmax # hidden_parameter
-  dummy_mio	= bias_module # hidden_parameter
   0.0	= misset # hidden_parameter
+  dummy_mio	= bias_module # hidden_parameter
+  -1.0	= missetmax # hidden_parameter
   -1.0	= mmnlmax # hidden_parameter
   0.0	= mmnl # hidden_parameter
